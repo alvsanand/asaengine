@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">asaengine</string>
+    <string name="button_play">Reproducir</string>
+    <string name="button_pause">Pausar</string>
+    <string name="button_resume">Resumir</string>
+    <string name="button_stop">Parar</string>
+    <string name="text_lyrics"><![CDATA[De por qué te estoy queriendo, no me pidas la razón\n
+Pues yo mismo no me entiendo con mi propio corazón\n
+Al llegar la madrugada mi canción desesperada\n
+Te dará la explicación\n
+Te quiero vida mía, te quiero noche y día\n
+No he querido nunca así, te quiero con ternura\n
+Con miedo, con locura, sólo vivo para ti\n
+Yo te seré siempre fiel, pues para mí quiero en flor\n
+Ese clavel de tu piel y de tu amor\n
+Mi voz igual que un niño te pide con cariño\n
+"Ven mi, abrázame"\n
+porque te quiero te quiero, te quiero\n
+te quiero, te quiero, te quiero\n\n
+Y hasta el fin te querré\n
+Te quiero con ternura\n
+Con miedo, con locura, sólo vivo para ti\n
+Yo te seré siempre fiel, pues para mí quiero en flor\n
+Ese clavel de tu piel y de tu amor\n
+Mi voz igual que un niño te pide con cariño:\n
+"Ven a mi, abrázame"\n
+porque te quiero te quiero, te quiero\n
+te quiero, te quiero, te quiero\n\n
+Y hasta el fin te querré\n
+Y hasta el fin te querré]]></string>
+    <string name="menu_about">Acerca de</string>
+    <string name="text_about_dialog"><![CDATA[Esto es una simple prueba de Android]]></string>
+</resources>
