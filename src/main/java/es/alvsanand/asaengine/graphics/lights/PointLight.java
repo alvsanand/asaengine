@@ -2,50 +2,56 @@ package es.alvsanand.asaengine.graphics.lights;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import es.alvsanand.asaengine.graphics.color.Color;
+import es.alvsanand.asaengine.math.Vector3;
+
 public class PointLight extends Light {
-	float[] ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
-	float[] diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float[] specular = { 0.0f, 0.0f, 0.0f, 1.0f };
+	Color ambient = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+	Color diffuse = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+	Color specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 	float[] position = { 0, 0, 0, 1 };
 	int id = 0;
+	
+	public PointLight(){
+		
+	}
+	
+	public PointLight(Color ambient, Color diffuse, Color specular, Vector3 position, int id) {
+		this.ambient = ambient;
+		this.diffuse = diffuse;
+		this.specular = specular;
+		setPosition(position);
+		this.id = id;
+	}
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
-	public void setAmbient(float r, float g, float b, float a) {
-		ambient[0] = r;
-		ambient[1] = g;
-		ambient[2] = b;
-		ambient[3] = a;
+	public void setAmbient(Color ambient) {
+		this.ambient = ambient;
 	}
 
-	public void setDiffuse(float r, float g, float b, float a) {
-		diffuse[0] = r;
-		diffuse[1] = g;
-		diffuse[2] = b;
-		diffuse[3] = a;
+	public void setDiffuse(Color diffuse) {
+		this.diffuse = diffuse;
 	}
 
-	public void setSpecular(float r, float g, float b, float a) {
-		specular[0] = r;
-		specular[1] = g;
-		specular[2] = b;
-		specular[3] = a;
+	public void setSpecular(Color specular) {
+		this.specular = specular;
 	}
 
-	public void setPosition(float x, float y, float z) {
-		position[0] = x;
-		position[1] = y;
-		position[2] = z;
+	public void setPosition(Vector3 position) {
+		this.position[0] = position.x;
+		this.position[1] = position.y;
+		this.position[2] = position.z;
 	}
 
 	@Override
 	public void enable(GL10 gl) {
 		gl.glEnable(id);
-		gl.glLightfv(id, GL10.GL_AMBIENT, ambient, 0);
-		gl.glLightfv(id, GL10.GL_DIFFUSE, diffuse, 0);
-		gl.glLightfv(id, GL10.GL_SPECULAR, specular, 0);
+		gl.glLightfv(id, GL10.GL_AMBIENT, ambient.toArray(), 0);
+		gl.glLightfv(id, GL10.GL_DIFFUSE, diffuse.toArray(), 0);
+		gl.glLightfv(id, GL10.GL_SPECULAR, specular.toArray(), 0);
 		gl.glLightfv(id, GL10.GL_POSITION, position, 0);
 	}
 

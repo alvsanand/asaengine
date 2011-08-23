@@ -1,4 +1,4 @@
-package es.alvsanand.asaengine.graphics;
+package es.alvsanand.asaengine.graphics.objects;
 
 import javax.microedition.khronos.opengles.GL10;
 
