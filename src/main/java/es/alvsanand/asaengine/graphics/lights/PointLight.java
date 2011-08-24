@@ -6,11 +6,11 @@ import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class PointLight extends Light {
-	Color ambient = new Color(0.2f, 0.2f, 0.2f, 1.0f);
-	Color diffuse = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-	Color specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-	float[] position = { 0, 0, 0, 1 };
-	int id = 0;
+	protected Color ambient = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+	protected Color diffuse = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+	protected Color specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+	protected float[] position = { 0, 0, 0, 1 };
+	protected int id = 0;
 	
 	public PointLight(){
 		

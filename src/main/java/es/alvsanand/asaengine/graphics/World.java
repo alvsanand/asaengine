@@ -8,18 +8,15 @@ import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
 
 public class World {
-	GL10 gl;
-	ArrayList<Light> lights;
-	ArrayList<Object3D> object3ds;
+	protected ArrayList<Light> lights;
+	protected ArrayList<Object3D> object3ds;
 	
-	public World(GL10 gl, ArrayList<Light> lights, ArrayList<Object3D> object3ds) {
-		super();
-		this.gl = gl;
+	public World(ArrayList<Light> lights, ArrayList<Object3D> object3ds) {
 		this.lights = lights;
 		this.object3ds = object3ds;
 	}
 
-	public void render() {		
+	public void render(GL10 gl) {		
 		// Set the background color to black ( rgba ).
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 		// Enable Smooth Shading, default not really needed.
@@ -35,33 +32,25 @@ public class World {
 		gl.glEnable(GL10.GL_LIGHTING);					
 		gl.glEnable(GL10.GL_COLOR_MATERIAL);
 
-		enableLights();
+		enableLights(gl);
 		
-		renderObject3ds();
+		renderObject3ds(gl);
 
 		gl.glDisable(GL10.GL_COLOR_MATERIAL);
 		gl.glDisable(GL10.GL_LIGHTING);
 		gl.glDisable(GL10.GL_DEPTH_TEST);		
 	}
 
-	void renderObject3ds() {
+	void renderObject3ds(GL10 gl) {
 		for(Object3D object3d: object3ds){
 			object3d.render(gl);
 		}
 	}
 
-	void enableLights() {
+	void enableLights(GL10 gl) {
 		for(Light light: lights){
 			light.enable(gl);
 		}
-	}
-	
-	public GL10 getGl() {
-		return gl;
-	}
-
-	public void setGl(GL10 gl) {
-		this.gl = gl;
 	}
 
 	public ArrayList<Light> getLights() {

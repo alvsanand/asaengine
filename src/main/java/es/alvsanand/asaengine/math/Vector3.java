@@ -23,6 +23,10 @@ public class Vector3 {
 		this.y = other.y;
 		this.z = other.z;
 	}
+	
+	public float[] toArray(){
+		return new float[]{x, y, z};
+	}
 
 	public Vector3 cpy() {
 		return new Vector3(x, y, z);

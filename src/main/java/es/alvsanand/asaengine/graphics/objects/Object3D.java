@@ -5,7 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import es.alvsanand.asaengine.math.Vector3;
 
 public abstract class Object3D {
-	private Vector3 position;
+	protected Vector3 position;
 
 	public Object3D(Vector3 position) {
 		super();

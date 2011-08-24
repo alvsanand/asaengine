@@ -11,25 +11,26 @@ import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class Mesh extends PrimitiveObject {
-
 	// Our vertex buffer.
-	private FloatBuffer vertexsBuffer = null;
+	private FloatBuffer vertexesBuffer = null;
 
 	// Our index buffer.
-	private ShortBuffer indicesBuffer = null;
+	private ShortBuffer indexesBuffer = null;
+	
+	// Our vertex buffer.
+	private FloatBuffer borderVertexsBuffer = null;
+
+	// Our index buffer.
+	private ShortBuffer borderIndexesBuffer = null;
 
 	// The number of indices.
 	private int numOfIndices = -1;
 
+	// The number of indices.
+	private int numOfBorderIndices = -1;
+
 	// Smooth Colors
 	private FloatBuffer colorBuffer = null;
-
-	// Translate params.
-	public float x = 0;
-
-	public float y = 0;
-
-	public float z = 0;
 
 	// Rotate params.
 	public float rx = 0;
@@ -42,22 +43,34 @@ public class Mesh extends PrimitiveObject {
 		super(position, color);
 	}
 
+	public Mesh(Vector3 position, Color fillColor, Color borderColor) {
+		super(position, fillColor, borderColor);
+	}
+
 	@Override
 	public void render(GL10 gl) {
-		// Counter-clockwise winding.
-		gl.glFrontFace(GL10.GL_CCW);
-		// Enable face culling.
-		gl.glEnable(GL10.GL_CULL_FACE);
-		// What faces to remove with the face culling.
-		gl.glCullFace(GL10.GL_BACK);
+//		// Counter-clockwise winding.
+//		gl.glFrontFace(GL10.GL_CCW);
+//		// Enable face culling.
+//		gl.glEnable(GL10.GL_CULL_FACE);
+//		// What faces to remove with the face culling.
+//		gl.glCullFace(GL10.GL_BACK);
 		// Enabled the vertices buffer for writing and to be used during
 		// rendering.
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		// Specifies the location and data format of an array of vertex
 		// coordinates to use when rendering.
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexsBuffer);
-		// Set flat color
-		gl.glColor4f(color.r, color.g, color.b, color.a);
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexesBuffer);
+		
+		gl.glPushMatrix();
+		
+		gl.glTranslatef(position.x, position.y, position.z);
+		gl.glRotatef(rx, 1, 0, 0);
+		gl.glRotatef(ry, 0, 1, 0);
+		gl.glRotatef(rz, 0, 0, 1);	
+		
+		// Set flat fill color
+		gl.glColor4f(fillColor.r, fillColor.g, fillColor.b, fillColor.a);
 		// Smooth color
 		if (colorBuffer != null) {
 			// Enable the color array buffer to be used during rendering.
@@ -65,38 +78,66 @@ public class Mesh extends PrimitiveObject {
 			gl.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
 		}
 
-		gl.glTranslatef(x, y, z);
-		gl.glRotatef(rx, 1, 0, 0);
-		gl.glRotatef(ry, 0, 1, 0);
-		gl.glRotatef(rz, 0, 0, 1);
-
 		// Point out the where the color buffer is.
-		gl.glDrawElements(GL10.GL_TRIANGLES, numOfIndices, GL10.GL_UNSIGNED_SHORT, indicesBuffer);
+		gl.glDrawElements(GL10.GL_TRIANGLES, numOfIndices, GL10.GL_UNSIGNED_SHORT, indexesBuffer);	
+
+		//Draw border
+		if(printBorder){
+			gl.glPolygonOffset(1.0f, 1.0f);
+			// Set flat border color
+			gl.glColor4f(borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+		
+			gl.glDrawElements(GL10.GL_LINES, numOfBorderIndices, GL10.GL_UNSIGNED_SHORT, borderIndexesBuffer);
+		}
+		
+		gl.glPopMatrix();
+		
 		// Disable the vertices buffer.
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		// Disable face culling.
 		gl.glDisable(GL10.GL_CULL_FACE);
 	}
 
-	protected void setVertices(float[] vertices) {
+	protected void setVertexes(float[] vertexes) {
 		// a float is 4 bytes, therefore we multiply the number if
 		// vertices with 4.
-		ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
+		ByteBuffer vbb = ByteBuffer.allocateDirect(vertexes.length * 4);
 		vbb.order(ByteOrder.nativeOrder());
-		vertexsBuffer = vbb.asFloatBuffer();
-		vertexsBuffer.put(vertices);
-		vertexsBuffer.position(0);
+		vertexesBuffer = vbb.asFloatBuffer();
+		vertexesBuffer.put(vertexes);
+		vertexesBuffer.position(0);
 	}
 
-	protected void setIndices(short[] indices) {
+	protected void setIndexes(short[] indexes) {
 		// short is 2 bytes, therefore we multiply the number if
 		// vertices with 2.
-		ByteBuffer ibb = ByteBuffer.allocateDirect(indices.length * 2);
+		ByteBuffer ibb = ByteBuffer.allocateDirect(indexes.length * 2);
 		ibb.order(ByteOrder.nativeOrder());
-		indicesBuffer = ibb.asShortBuffer();
-		indicesBuffer.put(indices);
-		indicesBuffer.position(0);
-		numOfIndices = indices.length;
+		indexesBuffer = ibb.asShortBuffer();
+		indexesBuffer.put(indexes);
+		indexesBuffer.position(0);
+		numOfIndices = indexes.length;
+	}
+
+	protected void setBorderVertexes(float[] borderVertexes) {
+		// a float is 4 bytes, therefore we multiply the number if
+		// vertices with 4.
+		ByteBuffer vbb = ByteBuffer.allocateDirect(borderVertexes.length * 4);
+		vbb.order(ByteOrder.nativeOrder());
+		borderVertexsBuffer = vbb.asFloatBuffer();
+		borderVertexsBuffer.put(borderVertexes);
+		borderVertexsBuffer.position(0);
+	}
+
+	protected void setBorderIndexes(short[] borderIndexes) {
+		// short is 2 bytes, therefore we multiply the number if
+		// vertices with 2.
+		ByteBuffer ibb = ByteBuffer.allocateDirect(borderIndexes.length * 2);
+		ibb.order(ByteOrder.nativeOrder());
+		borderIndexesBuffer = ibb.asShortBuffer();
+		borderIndexesBuffer.put(borderIndexes);
+		borderIndexesBuffer.position(0);
+		numOfBorderIndices = borderIndexes.length;
 	}
 
 	protected void setColors(float[] colors) {

@@ -7,37 +7,54 @@ import android.opengl.Matrix;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class EulerCamera extends Camera {
-	float yaw;
-	float pitch;
-	float fieldOfView;
-	float aspectRatio;
-	float near;
-	float far;
+	protected float yaw;
+	protected float pitch;
 
-	final float[] matrix = new float[16];
-	final float[] inVec = { 0, 0, -1, 1 };
-	final float[] outVec = new float[4];
-	final Vector3 direction = new Vector3();
+	protected float near;
+	protected float far;
+
+	protected final float[] matrix = new float[16];
+	protected final float[] inVec = { 0, 0, -1, 1 };
+	protected final float[] outVec = new float[4];
+	protected final Vector3 direction = new Vector3();
 
 	public EulerCamera(Vector3 position, float fieldOfView, float aspectRatio, float near, float far) {
-		super(position);
-		
-		this.fieldOfView = fieldOfView;
-		this.aspectRatio = aspectRatio;
+		super(position, fieldOfView, aspectRatio);
+
 		this.near = near;
 		this.far = far;
-	}
-
-	public Vector3 getPosition() {
-		return position;
 	}
 
 	public float getYaw() {
 		return yaw;
 	}
 
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
 	public float getPitch() {
 		return pitch;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public float getNear() {
+		return near;
+	}
+
+	public void setNear(float near) {
+		this.near = near;
+	}
+
+	public float getFar() {
+		return far;
+	}
+
+	public void setFar(float far) {
+		this.far = far;
 	}
 
 	public void setAngles(float yaw, float pitch) {
