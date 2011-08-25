@@ -6,7 +6,7 @@
   <artifactId>asaengine</artifactId>
   <version>0.1</version>
   <name>asaengine</name>
-  <packaging>jar</packaging>
+  <packaging>apk</packaging>
 
   <dependencies>
     <dependency>
