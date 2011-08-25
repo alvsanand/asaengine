@@ -5,7 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import es.alvsanand.asaengine.graphics.color.Color;
 
 public class AmbientLight extends Light{
-	protected Color color = new Color(0.2f, 0.2f, 0.2f, 1);
+	public Color color = new Color(0.2f, 0.2f, 0.2f, 1);
 	
 	public AmbientLight(Color color) {
 		super();
@@ -22,13 +22,5 @@ public class AmbientLight extends Light{
 	@Override
 	public void disable(GL10 gl) {	
 		gl.glDisable(GL10.GL_LIGHT_MODEL_AMBIENT);
-	}
-
-	public Color getColor() {
-		return color;
-	}
-	
-	public void setColor(Color color) {
-		this.color = color;		
 	}
 }

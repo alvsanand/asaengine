@@ -6,27 +6,11 @@ import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class DirectionalLight extends Light {
-	protected Color ambient = new Color(0.2f, 0.2f, 0.2f, 1.0f);
-	protected Color diffuse = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-	protected Color specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-	protected float[] direction = { 0, 0, -1, 0 };
-	protected int id = 0;
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void setAmbient(Color ambient) {
-		this.ambient = ambient;
-	}
-
-	public void setDiffuse(Color diffuse) {
-		this.diffuse = diffuse;
-	}
-
-	public void setSpecular(Color specular) {
-		this.specular = specular;
-	}
+	public Color ambient = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+	public Color diffuse = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+	public Color specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+	public float[] direction = { 0, 0, -1, 0 };
+	public int id = 0;
 
 	public void setDirection(Vector3 direction) {
 		this.direction[0] = -direction.x;

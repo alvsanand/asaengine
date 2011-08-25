@@ -6,11 +6,11 @@ import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class PointLight extends Light {
-	protected Color ambient = new Color(0.2f, 0.2f, 0.2f, 1.0f);
-	protected Color diffuse = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-	protected Color specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-	protected float[] position = { 0, 0, 0, 1 };
-	protected int id = 0;
+	public Color ambient = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+	public Color diffuse = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+	public Color specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+	public float[] position = { 0, 0, 0, 1 };
+	public int id = 0;
 	
 	public PointLight(){
 		
@@ -22,22 +22,6 @@ public class PointLight extends Light {
 		this.specular = specular;
 		setPosition(position);
 		this.id = id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void setAmbient(Color ambient) {
-		this.ambient = ambient;
-	}
-
-	public void setDiffuse(Color diffuse) {
-		this.diffuse = diffuse;
-	}
-
-	public void setSpecular(Color specular) {
-		this.specular = specular;
 	}
 
 	public void setPosition(Vector3 position) {

@@ -6,10 +6,10 @@ import android.opengl.GLU;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class LookAtCamera extends Camera {
-	protected Vector3 up;
-	protected Vector3 lookAt;
-	protected float near;
-	protected float far;
+	public Vector3 up;
+	public Vector3 lookAt;
+	public float near;
+	public float far;
 
 	public LookAtCamera(Vector3 position, float fieldOfView, float aspectRatio, float near, float far) {
 		super(position, fieldOfView, aspectRatio);
@@ -19,38 +19,6 @@ public class LookAtCamera extends Camera {
 
 		up = new Vector3(0, 1, 0);
 		lookAt = new Vector3(0, 0, -1);
-	}
-
-	public Vector3 getUp() {
-		return up;
-	}
-
-	public void setUp(Vector3 up) {
-		this.up = up;
-	}
-
-	public Vector3 getLookAt() {
-		return lookAt;
-	}
-
-	public void setLookAt(Vector3 lookAt) {
-		this.lookAt = lookAt;
-	}
-
-	public float getNear() {
-		return near;
-	}
-
-	public void setNear(float near) {
-		this.near = near;
-	}
-
-	public float getFar() {
-		return far;
-	}
-
-	public void setFar(float far) {
-		this.far = far;
 	}
 
 	@Override

@@ -7,11 +7,11 @@ import android.opengl.Matrix;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class EulerCamera extends Camera {
-	protected float yaw;
-	protected float pitch;
+	public float yaw;
+	public float pitch;
 
-	protected float near;
-	protected float far;
+	public float near;
+	public float far;
 
 	protected final float[] matrix = new float[16];
 	protected final float[] inVec = { 0, 0, -1, 1 };
@@ -22,38 +22,6 @@ public class EulerCamera extends Camera {
 		super(position, fieldOfView, aspectRatio);
 
 		this.near = near;
-		this.far = far;
-	}
-
-	public float getYaw() {
-		return yaw;
-	}
-
-	public void setYaw(float yaw) {
-		this.yaw = yaw;
-	}
-
-	public float getPitch() {
-		return pitch;
-	}
-
-	public void setPitch(float pitch) {
-		this.pitch = pitch;
-	}
-
-	public float getNear() {
-		return near;
-	}
-
-	public void setNear(float near) {
-		this.near = near;
-	}
-
-	public float getFar() {
-		return far;
-	}
-
-	public void setFar(float far) {
 		this.far = far;
 	}
 
@@ -80,7 +48,11 @@ public class EulerCamera extends Camera {
 		Matrix.rotateM(matrix, 0, yaw, 0, 1, 0);
 		Matrix.rotateM(matrix, 0, pitch, 1, 0, 0);
 		Matrix.multiplyMV(outVec, 0, matrix, 0, inVec, 0);
-		direction.set(outVec[0], outVec[1], outVec[2]);
+		
+		direction.x = outVec[0];
+		direction.y = outVec[1];
+		direction.z = outVec[2];
+		
 		return direction;
 	}
 

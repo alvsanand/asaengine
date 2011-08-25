@@ -1,9 +1,10 @@
-package es.alvsanand.asaengine.graphics;
+package es.alvsanand.asaengine.graphics.renderer;
 
 import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import es.alvsanand.asaengine.graphics.Dynamic;
 import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
 
@@ -42,13 +43,21 @@ public class World {
 	}
 
 	void renderObject3ds(GL10 gl) {
-		for(Object3D object3d: object3ds){
+		for(Object3D object3d: object3ds){		
+			if(object3d instanceof Dynamic){
+				((Dynamic) object3d).updatePosition();
+			}
+			
 			object3d.render(gl);
 		}
 	}
 
 	void enableLights(GL10 gl) {
-		for(Light light: lights){
+		for(Light light: lights){			
+			if(light instanceof Dynamic){
+				((Dynamic) light).updatePosition();
+			}
+			
 			light.enable(gl);
 		}
 	}
