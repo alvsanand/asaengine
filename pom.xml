@@ -5,8 +5,8 @@
   <groupId>es.alvsanand</groupId>
   <artifactId>asaengine</artifactId>
   <version>0.1</version>
-  <packaging>apk</packaging>
   <name>asaengine</name>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
