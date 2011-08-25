@@ -8,7 +8,7 @@ import es.alvsanand.asaengine.math.Vector3;
 
 public class OverlapTester {
     public static boolean overlapCircles(Circle c1, Circle c2) {
-        float distance = c1.center.distSquared(c2.center);
+        float distance = Vector2Utils.distSquared(c1.center,c2.center);
         float radiusSum = c1.radius + c2.radius;
         return distance <= radiusSum * radiusSum;
     }
@@ -41,29 +41,29 @@ public class OverlapTester {
             closestY = r.lowerLeft.y + r.height;
         }
         
-        return c.center.distSquared(closestX, closestY) < c.radius * c.radius;           
+        return Vector2Utils.distSquared(c.center, closestX, closestY) < c.radius * c.radius;           
     }
     
 	public static boolean overlapSpheres(Sphere s1, Sphere s2) {
-		  float distance = s1.center.distSquared(s2.center);
+		  float distance = Vector3Utils.distSquared(s1.center, s2.center);
 	      float radiusSum = s1.radius + s2.radius;
 	      return distance <= radiusSum * radiusSum;
 	}
 	
 	public static boolean pointInSphere(Sphere c, Vector3 p) {
-	    return c.center.distSquared(p) < c.radius * c.radius;
+	    return Vector3Utils.distSquared(c.center,p) < c.radius * c.radius;
 	}
 	
 	public static boolean pointInSphere(Sphere c, float x, float y, float z) {
-	    return c.center.distSquared(x, y, z) < c.radius * c.radius;
+	    return Vector3Utils.distSquared(c.center,x, y, z) < c.radius * c.radius;
 	}
     
     public static boolean pointInCircle(Circle c, Vector2 p) {
-        return c.center.distSquared(p) < c.radius * c.radius;
+        return Vector2Utils.distSquared(c.center, p) < c.radius * c.radius;
     }
     
     public static boolean pointInCircle(Circle c, float x, float y) {
-        return c.center.distSquared(x, y) < c.radius * c.radius;
+        return Vector2Utils.distSquared(c.center, x, y) < c.radius * c.radius;
     }
     
     public static boolean pointInRectangle(Rectangle r, Vector2 p) {

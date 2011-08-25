@@ -22,6 +22,7 @@ import es.alvsanand.asaengine.input.Input;
 import es.alvsanand.asaengine.input.InputImpl;
 import es.alvsanand.asaengine.input.InputThread;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.trajectory.PointsTrajectory;
 
 public class TestActivity extends Activity{
 	private static String TAG = "TestActivity";
@@ -33,6 +34,8 @@ public class TestActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		
 		Log.i(TAG, "onCreate");
+		
+		PointsTrajectory.main();		
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

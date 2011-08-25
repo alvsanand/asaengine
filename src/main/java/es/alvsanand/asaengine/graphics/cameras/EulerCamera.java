@@ -80,7 +80,11 @@ public class EulerCamera extends Camera {
 		Matrix.rotateM(matrix, 0, yaw, 0, 1, 0);
 		Matrix.rotateM(matrix, 0, pitch, 1, 0, 0);
 		Matrix.multiplyMV(outVec, 0, matrix, 0, inVec, 0);
-		direction.set(outVec[0], outVec[1], outVec[2]);
+		
+		direction.x = outVec[0];
+		direction.y = outVec[1];
+		direction.z = outVec[2];
+		
 		return direction;
 	}
 
