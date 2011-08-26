@@ -79,16 +79,12 @@ public class PointsTrajectory extends Trajectory {
 			actualPointVector3 = points[actualPoint];
 		}
 
-		Vector3 n = Vector3Utils.sub(actualPointVector3, fromPointVector3);
+		this.direction = Vector3Utils.sub(actualPointVector3, fromPointVector3);
 
-		if (n.x + n.y + n.z == 0) {
-			return null;
-		}
+		float t = distance / (this.direction.x + this.direction.y + this.direction.z);
 
-		float t = distance / (n.x + n.y + n.z);
-
-		Vector3 a1 = new Vector3(fromPointVector3.x + n.x * t, fromPointVector3.y + n.y * t, fromPointVector3.z + n.z * t);
-		Vector3 a2 = new Vector3(fromPointVector3.x + n.x * (-t), fromPointVector3.y + n.y * (-t), fromPointVector3.z + n.z * (-t));
+		Vector3 a1 = new Vector3(fromPointVector3.x + this.direction.x * t, fromPointVector3.y + this.direction.y * t, fromPointVector3.z + this.direction.z * t);
+		Vector3 a2 = new Vector3(fromPointVector3.x + this.direction.x * (-t), fromPointVector3.y + this.direction.y * (-t), fromPointVector3.z + this.direction.z * (-t));
 
 		Vector3 actualPositionVector3;
 

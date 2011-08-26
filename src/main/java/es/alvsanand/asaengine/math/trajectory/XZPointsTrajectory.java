@@ -108,6 +108,8 @@ public class XZPointsTrajectory extends Trajectory {
 		
 		this.lastPoint = actualPoint;
 		
+		this.direction = new Vector3(n.x, 0, n.y);
+		
 		return new Vector3(actualPositionVector2.x, y, actualPositionVector2.y);
 	}
 }
