@@ -15,22 +15,22 @@ public class Plane extends Mesh {
 		short[] indices = new short[(widthSegments + 1) * (heightSegments + 1) * 6];
 
 		float xOffset = width / -2;
-		float yOffset = height / -2;
+		float zOffset = height / -2;
 		float xWidth = width / (widthSegments);
-		float yHeight = height / (heightSegments);
+		float zHeight = height / (heightSegments);
 		int currentVertex = 0;
 		int currentIndex = 0;
 		short w = (short) (widthSegments + 1);
-		for (int y = 0; y < heightSegments + 1; y++) {
+		for (int z = 0; z < heightSegments + 1; z++) {
 			for (int x = 0; x < widthSegments + 1; x++) {
 				vertices[currentVertex] = xOffset + x * xWidth;
-				vertices[currentVertex + 1] = yOffset + y * yHeight;
-				vertices[currentVertex + 2] = 0;
+				vertices[currentVertex + 1] = 0;
+				vertices[currentVertex + 2] = zOffset + z * zHeight;
 				currentVertex += 3;
 
-				int n = y * (widthSegments + 1) + x;
+				int n = z * (widthSegments + 1) + x;
 
-				if (y < heightSegments && x < widthSegments) {
+				if (z < heightSegments && x < widthSegments) {
 					// Face one
 					indices[currentIndex] = (short) n;
 					indices[currentIndex + 1] = (short) (n + 1);
@@ -60,22 +60,22 @@ public class Plane extends Mesh {
 		short[] indices = new short[(widthSegments + 1) * (heightSegments + 1) * 6];
 
 		float xOffset = width / -2;
-		float yOffset = height / -2;
+		float zOffset = height / -2;
 		float xWidth = width / (widthSegments);
-		float yHeight = height / (heightSegments);
+		float zHeight = height / (heightSegments);
 		int currentVertex = 0;
 		int currentIndex = 0;
 		short w = (short) (widthSegments + 1);
-		for (int y = 0; y < heightSegments + 1; y++) {
+		for (int z = 0; z < heightSegments + 1; z++) {
 			for (int x = 0; x < widthSegments + 1; x++) {
 				vertices[currentVertex] = xOffset + x * xWidth;
-				vertices[currentVertex + 1] = yOffset + y * yHeight;
-				vertices[currentVertex + 2] = 0;
+				vertices[currentVertex + 1] = 0;
+				vertices[currentVertex + 2] = zOffset + z * zHeight;
 				currentVertex += 3;
 
-				int n = y * (widthSegments + 1) + x;
+				int n = z * (widthSegments + 1) + x;
 
-				if (y < heightSegments && x < widthSegments) {
+				if (z < heightSegments && x < widthSegments) {
 					// Face one
 					indices[currentIndex] = (short) n;
 					indices[currentIndex + 1] = (short) (n + 1);

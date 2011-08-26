@@ -16,13 +16,15 @@ import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.lights.PointLight;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
 import es.alvsanand.asaengine.graphics.objects.primitives.Cube;
+import es.alvsanand.asaengine.graphics.objects.primitives.Plane;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
 import es.alvsanand.asaengine.input.Input;
 import es.alvsanand.asaengine.input.InputImpl;
 import es.alvsanand.asaengine.input.InputThread;
+import es.alvsanand.asaengine.math.Vector2;
 import es.alvsanand.asaengine.math.Vector3;
-import es.alvsanand.asaengine.math.trajectory.PointsTrajectory;
+import es.alvsanand.asaengine.math.trajectory.XZPointsTrajectory;
 
 public class TestActivity extends Activity{
 	private static String TAG = "TestActivity";
@@ -46,6 +48,9 @@ public class TestActivity extends Activity{
 		lights.add(pointLight);
 
 		ArrayList<Object3D> object3ds = new ArrayList<Object3D>();
+		
+		Plane plane = new Plane(new Vector3(0,-1f,0), new Color(256f, 256f, 256f, 1.0f), 10, 10);
+		object3ds.add(plane);
 		
 		for(int i=0; i<5; i++){
 			Cube cube = new Cube(new Vector3(i-2,0,-2), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
@@ -75,9 +80,9 @@ public class TestActivity extends Activity{
 		World world = new World(lights, object3ds);
 
 
-		Vector3[] points = new Vector3[] { new Vector3(5, 5, 5), new Vector3(-5, 5, 5), new Vector3(-5, 5, -5), new Vector3(5, 5, -5)};
+		Vector2[] points = new Vector2[] { new Vector2(5, 5), new Vector2(-5, 5), new Vector2(-5, -5), new Vector2(5, -5)};
 
-		PointsTrajectory pointsTrayectory = new PointsTrajectory(0.3f, 0.5f, 5f, points);
+		XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.3f, 0.5f, 5f, points);
 		
 		DynamicLookAtCamera camera = new DynamicLookAtCamera(new Vector3(5, 5, 5), 67,(float) glView.getWidth() / (float)glView.getHeight(), 0.1f, 100, pointsTrayectory);
 		camera.lookAt = new Vector3(0,0,0);
