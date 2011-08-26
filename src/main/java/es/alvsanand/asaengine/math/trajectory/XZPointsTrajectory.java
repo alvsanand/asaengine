@@ -1,15 +1,16 @@
 package es.alvsanand.asaengine.math.trajectory;
 
-import android.util.Log;
+import es.alvsanand.asaengine.math.Vector2;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.util.Vector2Utils;
 import es.alvsanand.asaengine.math.util.Vector3Utils;
 
-public class PointsTrajectory extends Trajectory {
+public class XZPointsTrajectory extends Trajectory {
 	protected int lastPoint;
 
-	protected Vector3[] points;
+	protected Vector2[] points;
 
-	public PointsTrajectory(float acceleration, float initialSpeed, float maxSpeed, Vector3[] points) {
+	public XZPointsTrajectory(float acceleration, float initialSpeed, float maxSpeed, Vector2[] points) {
 		super(acceleration, initialSpeed, maxSpeed);
 		this.points = points;
 		this.lastPoint = 0;
@@ -17,6 +18,8 @@ public class PointsTrajectory extends Trajectory {
 
 	@Override
 	public Vector3 getActualPosition(Vector3 lastPosition) {
+		float y = lastPosition.y;
+		
 		if(!running){
 			return Vector3Utils.cpy(lastPosition);
 		}
@@ -67,35 +70,35 @@ public class PointsTrajectory extends Trajectory {
 			return Vector3Utils.cpy(lastPosition);
 		}
 		
-		Vector3 actualPointVector3 = points[actualPoint];
-		Vector3 fromPointVector3 = Vector3Utils.cpy(lastPosition);
+		Vector2 actualPointVector2 = points[actualPoint];
+		Vector2 fromPointVector2 = new Vector2(lastPosition.x, lastPosition.z);
 		
-		while (Vector3Utils.dist(fromPointVector3, actualPointVector3) <= distance) {
-			distance -= Vector3Utils.dist(fromPointVector3, actualPointVector3);
+		while (Vector2Utils.dist(fromPointVector2, actualPointVector2) <= distance) {
+			distance -= Vector2Utils.dist(fromPointVector2, actualPointVector2);
 
 			actualPoint = (actualPoint + 1 == points.length) ? 0 : actualPoint + 1;
 
-			fromPointVector3 = Vector3Utils.cpy(actualPointVector3);
-			actualPointVector3 = points[actualPoint];
+			fromPointVector2 = Vector2Utils.cpy(actualPointVector2);
+			actualPointVector2 = points[actualPoint];
 		}
 
-		Vector3 n = Vector3Utils.sub(actualPointVector3, fromPointVector3);
+		Vector2 n = Vector2Utils.sub(actualPointVector2, fromPointVector2);
 
-		if (n.x + n.y + n.z == 0) {
+		if (n.x + n.y == 0) {
 			return null;
 		}
 
-		float t = distance / (n.x + n.y + n.z);
+		float t = distance / (n.x + n.y);
 
-		Vector3 a1 = new Vector3(fromPointVector3.x + n.x * t, fromPointVector3.y + n.y * t, fromPointVector3.z + n.z * t);
-		Vector3 a2 = new Vector3(fromPointVector3.x + n.x * (-t), fromPointVector3.y + n.y * (-t), fromPointVector3.z + n.z * (-t));
+		Vector2 a1 = new Vector2(fromPointVector2.x + n.x * t, fromPointVector2.y + n.y * t);
+		Vector2 a2 = new Vector2(fromPointVector2.x + n.x * (-t), fromPointVector2.y + n.y * (-t));
 
-		Vector3 actualPositionVector3;
+		Vector2 actualPositionVector2;
 
-		if (Vector3Utils.dist(a1, actualPointVector3) > Vector3Utils.dist(fromPointVector3, actualPointVector3)) {
-			actualPositionVector3 = a2;
+		if (Vector2Utils.dist(a1, actualPointVector2) > Vector2Utils.dist(fromPointVector2, actualPointVector2)) {
+			actualPositionVector2 = a2;
 		} else {
-			actualPositionVector3 = a1;
+			actualPositionVector2 = a1;
 		}
 
 		// Calculate parameters for next interaction
@@ -104,26 +107,7 @@ public class PointsTrajectory extends Trajectory {
 		this.lastTimeCalculated = now;
 		
 		this.lastPoint = actualPoint;
-
-		return actualPositionVector3;
-	}
-
-	public static void main() {
-		Vector3[] points = new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 1), new Vector3(0, 1, 1), new Vector3(0, 1, 0) };
-
-		PointsTrajectory pointsTrayectory = new PointsTrajectory(0, 0.5f, 0.5f, points);
-
-		Vector3 lastPosition = new Vector3(0, 0, 0);
-
-		for(int i=0; i<10; i++) {
-			lastPosition = pointsTrayectory.getActualPosition(lastPosition);
-			Log.i("PointsTrajectory", lastPosition.toString());
-
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		
+		return new Vector3(actualPositionVector2.x, y, actualPositionVector2.y);
 	}
 }
