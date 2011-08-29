@@ -1,5 +1,6 @@
 package es.alvsanand.asaengine;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -14,9 +15,9 @@ import es.alvsanand.asaengine.graphics.cameras.DynamicLookAtCamera;
 import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.lights.PointLight;
+import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
-import es.alvsanand.asaengine.graphics.objects.primitives.Cube;
-import es.alvsanand.asaengine.graphics.objects.primitives.Plane;
+import es.alvsanand.asaengine.graphics.objects.loaders.obj.ObjLoader;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
 import es.alvsanand.asaengine.input.Input;
@@ -49,36 +50,44 @@ public class TestActivity extends Activity{
 
 		ArrayList<Object3D> object3ds = new ArrayList<Object3D>();
 		
-		Plane plane = new Plane(new Vector3(0,-1f,0), new Color(256f, 256f, 256f, 1.0f), 10, 10);
-		object3ds.add(plane);
-		
-		for(int i=0; i<5; i++){
-			Cube cube = new Cube(new Vector3(i-2,0,-2), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
-			object3ds.add(cube);
-		}
-		
-		for(int i=0; i<5; i++){
-			Cube cube = new Cube(new Vector3(i-2,0,-1), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
-			object3ds.add(cube);
-		}
-		
-		for(int i=0; i<5; i++){
-			Cube cube = new Cube(new Vector3(i-2,0,0), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
-			object3ds.add(cube);
-		}
-		
-		for(int i=0; i<5; i++){
-			Cube cube = new Cube(new Vector3(i-2,0,1), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
-			object3ds.add(cube);
-		}
-		
-		for(int i=0; i<5; i++){
-			Cube cube = new Cube(new Vector3(i-2,0,2), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
-			object3ds.add(cube);
-		}
+//		Plane plane = new Plane(new Vector3(0,-1f,0), new Color(0f, 256f, 0f, 1.0f), 10, 10);
+//		object3ds.add(plane);
+//		
+//		for(int i=0; i<5; i++){
+//			Cube cube = new Cube(new Vector3(i-2,0,-2), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			object3ds.add(cube);
+//		}
+//		
+//		for(int i=0; i<5; i++){
+//			Cube cube = new Cube(new Vector3(i-2,0,-1), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			object3ds.add(cube);
+//		}
+//		
+//		for(int i=0; i<5; i++){
+//			Cube cube = new Cube(new Vector3(i-2,0,0), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			object3ds.add(cube);
+//		}
+//		
+//		for(int i=0; i<5; i++){
+//			Cube cube = new Cube(new Vector3(i-2,0,1), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			object3ds.add(cube);
+//		}
+//		
+//		for(int i=0; i<5; i++){
+//			Cube cube = new Cube(new Vector3(i-2,0,2), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			object3ds.add(cube);
+//		}
+//		
+		for(int i=0; i<3; i++){			
+			InputStream inputStream = getResources().openRawResource(R.raw.ship);
+
+			Mesh mesh = ObjLoader.loadObj(inputStream);
+			mesh.position = new Vector3(i*1.5f,0,0);
+
+			object3ds.add(mesh);
+		}		
 
 		World world = new World(lights, object3ds);
-
 
 		Vector2[] points = new Vector2[] { new Vector2(5, 5), new Vector2(-5, 5), new Vector2(-5, -5), new Vector2(5, -5)};
 

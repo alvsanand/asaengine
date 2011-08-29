@@ -1,7 +1,5 @@
 package es.alvsanand.asaengine.graphics.cameras;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import es.alvsanand.asaengine.math.Vector3;
 
 public abstract class Camera {
@@ -16,5 +14,5 @@ public abstract class Camera {
 		this.aspectRatio = aspectRatio;
 	}
 
-	public abstract void setMatrices(GL10 gl);
+	public abstract void setMatrices();
 }

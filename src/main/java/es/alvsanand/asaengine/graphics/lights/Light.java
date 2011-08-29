@@ -1,8 +1,8 @@
 package es.alvsanand.asaengine.graphics.lights;
 
-import javax.microedition.khronos.opengles.GL10;
+import es.alvsanand.asaengine.util.Disposable;
 
-public abstract class Light {
-	public abstract void enable(GL10 gl);
-	public abstract void disable(GL10 gl);
+public abstract class Light implements Disposable{	
+	public abstract void enable();
+	public abstract void disable();
 }

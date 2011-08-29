@@ -3,7 +3,7 @@ package es.alvsanand.asaengine.graphics.objects.primitives;
 import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.math.Vector3;
 
-public class Plane extends Mesh {
+public class Plane extends PrimitiveObject {
 	public Plane(Vector3 position, Color color, float width, float height) {
 		this(position, color, width, height, 1, 1);
 	}

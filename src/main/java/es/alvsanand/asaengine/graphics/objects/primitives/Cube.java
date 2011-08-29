@@ -3,7 +3,7 @@ package es.alvsanand.asaengine.graphics.objects.primitives;
 import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.math.Vector3;
 
-public class Cube extends Mesh {
+public class Cube extends PrimitiveObject {
 	public Cube(Vector3 position, Color color, float width, float height, float depth) {
 		super(position, color);
 		

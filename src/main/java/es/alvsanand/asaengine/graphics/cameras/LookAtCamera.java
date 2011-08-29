@@ -3,6 +3,7 @@ package es.alvsanand.asaengine.graphics.cameras;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLU;
+import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class LookAtCamera extends Camera {
@@ -22,18 +23,18 @@ public class LookAtCamera extends Camera {
 	}
 
 	@Override
-	public void setMatrices(GL10 gl) {
+	public void setMatrices() {
 		// Select the projection matrix
-		gl.glMatrixMode(GL10.GL_PROJECTION);
+		OpenGLRenderer.gl.glMatrixMode(GL10.GL_PROJECTION);
 		// Reset the projection matrix
-		gl.glLoadIdentity();
+		OpenGLRenderer.gl.glLoadIdentity();
 
 		// Calculate the aspect ratio of the window
-		GLU.gluPerspective(gl, fieldOfView, aspectRatio, near, far);
+		GLU.gluPerspective(OpenGLRenderer.gl, fieldOfView, aspectRatio, near, far);
 
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
+		OpenGLRenderer.gl.glMatrixMode(GL10.GL_MODELVIEW);
+		OpenGLRenderer.gl.glLoadIdentity();
 
-		GLU.gluLookAt(gl, position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
+		GLU.gluLookAt(OpenGLRenderer.gl, position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
 	}
 }

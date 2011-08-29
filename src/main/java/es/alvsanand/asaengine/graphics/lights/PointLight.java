@@ -3,6 +3,7 @@ package es.alvsanand.asaengine.graphics.lights;
 import javax.microedition.khronos.opengles.GL10;
 
 import es.alvsanand.asaengine.graphics.color.Color;
+import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class PointLight extends Light {
@@ -13,7 +14,6 @@ public class PointLight extends Light {
 	public int id = 0;
 	
 	public PointLight(){
-		
 	}
 	
 	public PointLight(Color ambient, Color diffuse, Color specular, Vector3 position, int id) {
@@ -31,16 +31,20 @@ public class PointLight extends Light {
 	}
 
 	@Override
-	public void enable(GL10 gl) {
-		gl.glEnable(id);
-		gl.glLightfv(id, GL10.GL_AMBIENT, ambient.toArray(), 0);
-		gl.glLightfv(id, GL10.GL_DIFFUSE, diffuse.toArray(), 0);
-		gl.glLightfv(id, GL10.GL_SPECULAR, specular.toArray(), 0);
-		gl.glLightfv(id, GL10.GL_POSITION, position, 0);
+	public void enable() {
+		OpenGLRenderer.gl.glEnable(id);
+		OpenGLRenderer.gl.glLightfv(id, GL10.GL_AMBIENT, ambient.toArray(), 0);
+		OpenGLRenderer.gl.glLightfv(id, GL10.GL_DIFFUSE, diffuse.toArray(), 0);
+		OpenGLRenderer.gl.glLightfv(id, GL10.GL_SPECULAR, specular.toArray(), 0);
+		OpenGLRenderer.gl.glLightfv(id, GL10.GL_POSITION, position, 0);
 	}
 
 	@Override
-	public void disable(GL10 gl) {
-		gl.glDisable(id);
+	public void disable() {
+		OpenGLRenderer.gl.glDisable(id);
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

@@ -4,6 +4,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLU;
 import android.opengl.Matrix;
+import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class EulerCamera extends Camera {
@@ -57,14 +58,14 @@ public class EulerCamera extends Camera {
 	}
 
 	@Override
-	public void setMatrices(GL10 gl) {
-		gl.glMatrixMode(GL10.GL_PROJECTION);
-		gl.glLoadIdentity();
-		GLU.gluPerspective(gl, fieldOfView, aspectRatio, near, far);
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		gl.glRotatef(-pitch, 1, 0, 0);
-		gl.glRotatef(-yaw, 0, 1, 0);
-		gl.glTranslatef(-position.x, -position.y, -position.z);
+	public void setMatrices() {
+		OpenGLRenderer.gl.glMatrixMode(GL10.GL_PROJECTION);
+		OpenGLRenderer.gl.glLoadIdentity();
+		GLU.gluPerspective(OpenGLRenderer.gl, fieldOfView, aspectRatio, near, far);
+		OpenGLRenderer.gl.glMatrixMode(GL10.GL_MODELVIEW);
+		OpenGLRenderer.gl.glLoadIdentity();
+		OpenGLRenderer.gl.glRotatef(-pitch, 1, 0, 0);
+		OpenGLRenderer.gl.glRotatef(-yaw, 0, 1, 0);
+		OpenGLRenderer.gl.glTranslatef(-position.x, -position.y, -position.z);
 	}
 }

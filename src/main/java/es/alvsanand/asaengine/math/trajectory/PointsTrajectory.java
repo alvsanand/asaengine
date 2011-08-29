@@ -2,7 +2,6 @@ package es.alvsanand.asaengine.math.trajectory;
 
 import android.util.Log;
 import es.alvsanand.asaengine.math.Vector3;
-import es.alvsanand.asaengine.math.util.Vector3Utils;
 
 public class PointsTrajectory extends Trajectory {
 	protected int lastPoint;
@@ -18,7 +17,7 @@ public class PointsTrajectory extends Trajectory {
 	@Override
 	public Vector3 getActualPosition(Vector3 lastPosition) {
 		if(!running){
-			return Vector3Utils.cpy(lastPosition);
+			return new Vector3(lastPosition);
 		}
 		
 		long now = System.currentTimeMillis();
@@ -45,7 +44,7 @@ public class PointsTrajectory extends Trajectory {
 			actualSpeed = this.speed + time * this.acceleration;
 			
 			if(actualSpeed<=0){
-				return Vector3Utils.cpy(lastPosition);
+				return new Vector3(lastPosition);
 			}
 			
 			if(actualSpeed >= this.maxSpeed)
@@ -64,22 +63,22 @@ public class PointsTrajectory extends Trajectory {
 		float distance = totalDistance;
 
 		if (distance == 0) {
-			return Vector3Utils.cpy(lastPosition);
+			return new Vector3(lastPosition);
 		}
 		
 		Vector3 actualPointVector3 = points[actualPoint];
-		Vector3 fromPointVector3 = Vector3Utils.cpy(lastPosition);
+		Vector3 fromPointVector3 = new Vector3(lastPosition);
 		
-		while (Vector3Utils.dist(fromPointVector3, actualPointVector3) <= distance) {
-			distance -= Vector3Utils.dist(fromPointVector3, actualPointVector3);
+		while (fromPointVector3.dst(actualPointVector3) <= distance) {
+			distance -= fromPointVector3.dst(actualPointVector3);
 
 			actualPoint = (actualPoint + 1 == points.length) ? 0 : actualPoint + 1;
 
-			fromPointVector3 = Vector3Utils.cpy(actualPointVector3);
+			fromPointVector3 = new Vector3(actualPointVector3);
 			actualPointVector3 = points[actualPoint];
 		}
 
-		this.direction = Vector3Utils.sub(actualPointVector3, fromPointVector3);
+		this.direction = (new Vector3(actualPointVector3)).sub(fromPointVector3);
 
 		float t = distance / (this.direction.x + this.direction.y + this.direction.z);
 
@@ -88,7 +87,7 @@ public class PointsTrajectory extends Trajectory {
 
 		Vector3 actualPositionVector3;
 
-		if (Vector3Utils.dist(a1, actualPointVector3) > Vector3Utils.dist(fromPointVector3, actualPointVector3)) {
+		if (a1.dst(actualPointVector3) > fromPointVector3.dst(actualPointVector3)) {
 			actualPositionVector3 = a2;
 		} else {
 			actualPositionVector3 = a1;

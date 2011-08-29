@@ -17,48 +17,48 @@ public class World {
 		this.object3ds = object3ds;
 	}
 
-	public void render(GL10 gl) {		
+	public void render() {		
 		// Set the background color to black ( rgba ).
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
+		OpenGLRenderer.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 		// Enable Smooth Shading, default not really needed.
-		gl.glShadeModel(GL10.GL_SMOOTH);
+		OpenGLRenderer.gl.glShadeModel(GL10.GL_SMOOTH);
 		// Depth buffer setup.
-		gl.glClearDepthf(1.0f);
+		OpenGLRenderer.gl.glClearDepthf(1.0f);
 		// The type of depth testing to do.
-		gl.glDepthFunc(GL10.GL_LEQUAL);
+		OpenGLRenderer.gl.glDepthFunc(GL10.GL_LEQUAL);
 		// Really nice perspective calculations.
-		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		OpenGLRenderer.gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 		
-		gl.glEnable(GL10.GL_DEPTH_TEST);
-		gl.glEnable(GL10.GL_LIGHTING);					
-		gl.glEnable(GL10.GL_COLOR_MATERIAL);
+		OpenGLRenderer.gl.glEnable(GL10.GL_DEPTH_TEST);
+		OpenGLRenderer.gl.glEnable(GL10.GL_LIGHTING);					
+		OpenGLRenderer.gl.glEnable(GL10.GL_COLOR_MATERIAL);
 
-		enableLights(gl);
+		enableLights();
 		
-		renderObject3ds(gl);
+		renderObject3ds();
 
-		gl.glDisable(GL10.GL_COLOR_MATERIAL);
-		gl.glDisable(GL10.GL_LIGHTING);
-		gl.glDisable(GL10.GL_DEPTH_TEST);		
+		OpenGLRenderer.gl.glDisable(GL10.GL_COLOR_MATERIAL);
+		OpenGLRenderer.gl.glDisable(GL10.GL_LIGHTING);
+		OpenGLRenderer.gl.glDisable(GL10.GL_DEPTH_TEST);		
 	}
 
-	void renderObject3ds(GL10 gl) {
+	void renderObject3ds() {
 		for(Object3D object3d: object3ds){		
 			if(object3d instanceof Dynamic){
 				((Dynamic) object3d).updatePosition();
 			}
 			
-			object3d.render(gl);
+			object3d.render();
 		}
 	}
 
-	void enableLights(GL10 gl) {
+	void enableLights() {
 		for(Light light: lights){			
 			if(light instanceof Dynamic){
 				((Dynamic) light).updatePosition();
 			}
 			
-			light.enable(gl);
+			light.enable();
 		}
 	}
 

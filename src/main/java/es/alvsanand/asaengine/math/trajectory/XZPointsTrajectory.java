@@ -2,8 +2,6 @@ package es.alvsanand.asaengine.math.trajectory;
 
 import es.alvsanand.asaengine.math.Vector2;
 import es.alvsanand.asaengine.math.Vector3;
-import es.alvsanand.asaengine.math.util.Vector2Utils;
-import es.alvsanand.asaengine.math.util.Vector3Utils;
 
 public class XZPointsTrajectory extends Trajectory {
 	protected int lastPoint;
@@ -21,7 +19,7 @@ public class XZPointsTrajectory extends Trajectory {
 		float y = lastPosition.y;
 		
 		if(!running){
-			return Vector3Utils.cpy(lastPosition);
+			return new Vector3(lastPosition);
 		}
 		
 		long now = System.currentTimeMillis();
@@ -48,7 +46,7 @@ public class XZPointsTrajectory extends Trajectory {
 			actualSpeed = this.speed + time * this.acceleration;
 			
 			if(actualSpeed<=0){
-				return Vector3Utils.cpy(lastPosition);
+				return new Vector3(lastPosition);
 			}
 			
 			if(actualSpeed >= this.maxSpeed)
@@ -67,22 +65,22 @@ public class XZPointsTrajectory extends Trajectory {
 		float distance = totalDistance;
 
 		if (distance == 0) {
-			return Vector3Utils.cpy(lastPosition);
+			return new Vector3(lastPosition);
 		}
 		
 		Vector2 actualPointVector2 = points[actualPoint];
 		Vector2 fromPointVector2 = new Vector2(lastPosition.x, lastPosition.z);
 		
-		while (Vector2Utils.dist(fromPointVector2, actualPointVector2) <= distance) {
-			distance -= Vector2Utils.dist(fromPointVector2, actualPointVector2);
+		while (fromPointVector2.dst(actualPointVector2) <= distance) {
+			distance -= fromPointVector2.dst(actualPointVector2);
 
 			actualPoint = (actualPoint + 1 == points.length) ? 0 : actualPoint + 1;
 
-			fromPointVector2 = Vector2Utils.cpy(actualPointVector2);
+			fromPointVector2 = new Vector2(actualPointVector2);
 			actualPointVector2 = points[actualPoint];
 		}
 
-		Vector2 n = Vector2Utils.sub(actualPointVector2, fromPointVector2);
+		Vector2 n = (new Vector2(actualPointVector2)).sub(fromPointVector2);
 
 		if (n.x + n.y == 0) {
 			return null;
@@ -95,7 +93,7 @@ public class XZPointsTrajectory extends Trajectory {
 
 		Vector2 actualPositionVector2;
 
-		if (Vector2Utils.dist(a1, actualPointVector2) > Vector2Utils.dist(fromPointVector2, actualPointVector2)) {
+		if (a1.dst(actualPointVector2) > fromPointVector2.dst(actualPointVector2)) {
 			actualPositionVector2 = a2;
 		} else {
 			actualPositionVector2 = a1;
