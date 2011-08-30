@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import es.alvsanand.asaengine.error.ASARuntimeException;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes.Usage;
@@ -33,6 +34,7 @@ import es.alvsanand.asaengine.graphics.objects.utils.VertexBufferObjectSubData;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexData;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer.GL_TYPE;
+import es.alvsanand.asaengine.graphics.textures.Texture;
 import es.alvsanand.asaengine.math.Vector3;
 import es.alvsanand.asaengine.math.collision.BoundingBox;
 
@@ -49,6 +51,8 @@ public class Mesh extends Object3D {
 	final IndexData indices;
 	boolean autoBind = true;	
 	final boolean isVertexArray;
+	
+	public Texture texture;
 
 	public Mesh (boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
 		super(new Vector3(0,0,0));
@@ -175,6 +179,10 @@ public class Mesh extends Object3D {
 	}
 	
 	public void bind () {
+		if(texture!=null){
+			texture.bind();
+		}
+		
 		vertices.bind();
 		if (!isVertexArray && indices.getNumIndices() > 0) indices.bind();
 	}
@@ -244,6 +252,10 @@ public class Mesh extends Object3D {
 		meshes.remove(this);
 		vertices.dispose();
 		indices.dispose();
+
+		if(texture!=null){
+			texture.dispose();
+		}
 	}
 
 	public VertexAttribute getVertexAttribute (int usage) {
@@ -266,7 +278,7 @@ public class Mesh extends Object3D {
 	public BoundingBox calculateBoundingBox() {
 		final int numVertices = getNumVertices();
 		if(numVertices==0)
-			throw new RuntimeException("No vertices defined");
+			throw new ASARuntimeException("No vertices defined");
 		
 		final BoundingBox bbox = new BoundingBox();		
 		final FloatBuffer verts = vertices.getBuffer();
@@ -316,5 +328,9 @@ public class Mesh extends Object3D {
 				meshes.get(i).indices.invalidate();
 			}
 		}
+	}
+
+	public void setTexture(Texture texture) {
+		this.texture = texture;
 	}
 }

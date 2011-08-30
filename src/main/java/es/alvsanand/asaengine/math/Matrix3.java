@@ -17,6 +17,8 @@ package es.alvsanand.asaengine.math;
 
 import java.io.Serializable;
 
+import es.alvsanand.asaengine.error.ASARuntimeException;
+
 public class Matrix3 implements Serializable {	
 	/**
 	 * 
@@ -137,9 +139,9 @@ public class Matrix3 implements Serializable {
 	public Matrix3 inv() {
 		float det = det();
 		if (det == 0)
-			throw new RuntimeException("Can't invert a singular matrix");
+			throw new ASARuntimeException("Can't invert a singular matrix");
 
-		throw new RuntimeException("Not implemented yet");
+		throw new ASARuntimeException("Not implemented yet");
 	}
 
 	public Matrix3 set(Matrix3 mat) {

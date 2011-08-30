@@ -80,6 +80,7 @@ public class IndexBufferObject implements IndexData {
 
 	public void setIndices (short[] indices, int offset, int count) {
 		isDirty = true;
+		
 		buffer.clear();
 		buffer.put(indices);
 		buffer.flip();

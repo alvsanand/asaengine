@@ -23,6 +23,7 @@ import java.nio.IntBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import es.alvsanand.asaengine.error.ASARuntimeException;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes.Usage;
@@ -150,7 +151,7 @@ public class VertexBufferObjectSubData implements VertexData {
 				break;
 
 			default:
-				throw new RuntimeException("unkown vertex attribute type: " + attribute.usage);
+				throw new ASARuntimeException("unkown vertex attribute type: " + attribute.usage);
 			}
 		}
 
@@ -181,7 +182,7 @@ public class VertexBufferObjectSubData implements VertexData {
 				textureUnit++;
 				break;
 			default:
-				throw new RuntimeException("unkown vertex attribute type: " + attribute.usage);
+				throw new ASARuntimeException("unkown vertex attribute type: " + attribute.usage);
 			}
 		}
 

@@ -22,6 +22,7 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import es.alvsanand.asaengine.error.ASARuntimeException;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes.Usage;
@@ -39,11 +40,12 @@ public class VertexArray implements VertexData {
 
 	public VertexArray(int numVertices, VertexAttributes attributes) {
 		this.attributes = attributes;
+		
 		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(this.attributes.vertexSize * numVertices);
 		byteBuffer.order(ByteOrder.nativeOrder());
-		buffer = byteBuffer.asFloatBuffer();
+		
+		buffer = byteBuffer.asFloatBuffer();		
 		buffer.flip();
-		byteBuffer.flip();
 	}
 
 	@Override
@@ -112,7 +114,7 @@ public class VertexArray implements VertexData {
 				break;
 
 			default:
-				throw new RuntimeException("unkown vertex attribute type: " + attribute.usage);
+				throw new ASARuntimeException("unkown vertex attribute type: " + attribute.usage);
 			}
 		}
 
@@ -143,7 +145,7 @@ public class VertexArray implements VertexData {
 				textureUnit++;
 				break;
 			default:
-				throw new RuntimeException("unkown vertex attribute type: " + attribute.usage);
+				throw new ASARuntimeException("unkown vertex attribute type: " + attribute.usage);
 			}
 		}
 		buffer.position(0);

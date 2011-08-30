@@ -10,12 +10,14 @@ import es.alvsanand.asaengine.graphics.Dynamic;
 import es.alvsanand.asaengine.graphics.cameras.Camera;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 
-public class OpenGLRenderer implements Renderer {
+public abstract class OpenGLRenderer implements Renderer {
 	private static String TAG = "OpenGLRenderer";
 	
-	public World world;
+	protected World world;
 
-	public Camera camera;
+	protected Camera camera;
+	
+	protected boolean loadedWorld;
 	
 	public static GL10 gl;
 	
@@ -27,9 +29,7 @@ public class OpenGLRenderer implements Renderer {
 	
 	public static GL_TYPE glType;
 	
-	public OpenGLRenderer(World world, Camera camera) {
-		this.world = world;
-		this.camera = camera;
+	public OpenGLRenderer() {
 	}
 
 	@Override
@@ -42,13 +42,16 @@ public class OpenGLRenderer implements Renderer {
 			if(gl!=null){
 				OpenGLRenderer.gl = gl;
 				if(gl instanceof GL11){
-					glType = GL_TYPE.GL11;
-					gl11 = (GL11)gl;
+					OpenGLRenderer.glType = GL_TYPE.GL11;
+					OpenGLRenderer.gl11 = (GL11)gl;
 				}
 				else{
-					glType = GL_TYPE.GL10;
+					OpenGLRenderer.glType = GL_TYPE.GL10;
 				}
 			}
+			
+			if(!loadedWorld)
+				loadWorld();
 			
 			// Set the background color to black ( rgba ).
 			gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
@@ -101,9 +104,28 @@ public class OpenGLRenderer implements Renderer {
 			
 			camera.setMatrices();
 
-			world.render();
+			if(loadedWorld)
+				world.render();
 		} catch (Throwable throwable) {
 			Log.e(TAG, "Error in onSurfaceCreated", throwable);
 		}
 	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+
+	public Camera getCamera() {
+		return camera;
+	}
+
+	public void setCamera(Camera camera) {
+		this.camera = camera;
+	}
+	
+	protected abstract void loadWorld();
 }
