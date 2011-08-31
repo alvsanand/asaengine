@@ -54,11 +54,11 @@ public class TestActivity extends Activity{
 	private Camera CAMERA;
 	
 	private void loadCamera() {		
-		Vector2[] points = new Vector2[] { new Vector2(5, 5), new Vector2(-5, 5), new Vector2(-5, -5), new Vector2(5, -5)};
+		Vector2[] points = new Vector2[] { new Vector2(2.5f, 2.5f), new Vector2(-2.5f, 2.5f), new Vector2(-2.5f, -2.5f), new Vector2(2.5f, -2.5f)};
 
-		XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.3f, 0.5f, 5f, points);
+		XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
 		
-		CAMERA = new DynamicLookAtCamera(new Vector3(5, 5, 5), 67, (float) glView.getWidth() / (float) glView.getHeight(), 0.1f, 100,
+		CAMERA = new DynamicLookAtCamera(new Vector3(2.5f, 2.5f, 2.5f), 67, (float) glView.getWidth() / (float) glView.getHeight(), 0.1f, 100,
 				pointsTrayectory);
 		((DynamicLookAtCamera)CAMERA).lookAt = new Vector3(0, 0, 0);
 	}	

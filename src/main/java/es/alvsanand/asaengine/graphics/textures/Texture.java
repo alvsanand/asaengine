@@ -14,13 +14,13 @@ import es.alvsanand.asaengine.util.io.FileIO;
 import es.alvsanand.asaengine.util.io.error.ASAIOException;
 
 public class Texture {
-	String fileName;
-	int textureId;
-	int minFilter;
-	int magFilter;
+	protected String fileName;
+	protected int textureId;
+	protected int minFilter;
+	protected int magFilter;
 	public int width;
 	public int height;
-	boolean mipmapped;
+	protected boolean mipmapped;
 
 	public Texture(String fileName) {
 		this(fileName, false);

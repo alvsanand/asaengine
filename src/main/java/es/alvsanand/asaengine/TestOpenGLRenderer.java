@@ -37,9 +37,11 @@ import es.alvsanand.asaengine.util.io.error.ASAIOException;
 public class TestOpenGLRenderer extends OpenGLRenderer {
 	
 	Texture SHIP_TEXTURE;
+	Texture INVADERSHIP_TEXTURE;
 	
 	private void loadTextures(){
 		SHIP_TEXTURE = new Texture("ship.png");
+		INVADERSHIP_TEXTURE = new Texture("invader.png", true);
 	}
 	
 	World WORLD;
@@ -81,26 +83,43 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //			object3ds.add(cube);
 //		}
 //		
-		for(int i=0; i<1; i++){	
+		{
+			try {
+				InputStream inputStream = FileIO.readAsset("invader.obj");
+
+				Mesh mesh = ObjLoader.loadObj(inputStream);
+				mesh.position = new Vector3(0,0,0);
+				mesh.setTexture(INVADERSHIP_TEXTURE);
+				
+				mesh.rx = 90;
+				
+				object3ds.add(mesh);
+			} catch (ASAIOException e) {
+				e.printStackTrace();
+			}	
+		}
+		{
 			try {
 				InputStream inputStream = FileIO.readAsset("ship.obj");
 
 				Mesh mesh = ObjLoader.loadObj(inputStream);
-				mesh.position = new Vector3(i*2.5f,0,0);
-//				mesh.setTexture(SHIP_TEXTURE);
-
+				mesh.position = new Vector3(0,0,1.5f);
+				mesh.setTexture(SHIP_TEXTURE);
+				
+				mesh.rx = 90f;
+				
 				object3ds.add(mesh);
 			} catch (ASAIOException e) {
 				e.printStackTrace();
-			}
-		}		
-
+			}	
+		}
+		
 		WORLD = new World(lights, object3ds);
 	}
 
 	@Override
 	protected void loadWorld() {
-//		loadTextures();
+		loadTextures();
 		
 		loadObjects();
 		

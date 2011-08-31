@@ -15,8 +15,6 @@
  ******************************************************************************/
 package es.alvsanand.asaengine.graphics.objects.utils;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -49,14 +47,11 @@ public class VertexBufferObject implements VertexData {
 		this.isStatic = isStatic;
 		this.attributes = attributes;
 
-		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(this.attributes.vertexSize * numVertices);
-		byteBuffer.order(ByteOrder.nativeOrder());	
-		
-		buffer = byteBuffer.asFloatBuffer();		
+		buffer = BufferUtils.newFloatBuffer(this.attributes.vertexSize * numVertices);
 		buffer.flip();
-		
+
 		bufferHandle = createBufferObject();
-		
+
 		usage = isStatic ? GL11.GL_STATIC_DRAW : GL11.GL_DYNAMIC_DRAW;
 	}
 
@@ -75,6 +70,7 @@ public class VertexBufferObject implements VertexData {
 		return buffer.limit() * 4 / attributes.vertexSize;
 	}
 
+	@Override
 	public int getNumMaxVertices() {
 		return buffer.capacity() * 4 / attributes.vertexSize;
 	}
@@ -88,10 +84,8 @@ public class VertexBufferObject implements VertexData {
 	@Override
 	public void setVertices(float[] vertices, int offset, int count) {
 		isDirty = true;
-		
+
 		BufferUtils.copy(vertices, buffer, count, offset);
-		buffer.position(0);
-		buffer.limit(count);
 
 		if (isBound) {
 			OpenGLRenderer.gl11.glBufferData(GL11.GL_ARRAY_BUFFER, buffer.limit() * 4, buffer, usage);
@@ -103,7 +97,7 @@ public class VertexBufferObject implements VertexData {
 	@Override
 	public void bind() {
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ARRAY_BUFFER, bufferHandle);
-		
+
 		if (isDirty) {
 			OpenGLRenderer.gl11.glBufferData(GL11.GL_ARRAY_BUFFER, buffer.limit() * 4, buffer, usage);
 			isDirty = false;
@@ -161,7 +155,6 @@ public class VertexBufferObject implements VertexData {
 			VertexAttribute attribute = attributes.get(i);
 			switch (attribute.usage) {
 			case Usage.Position:
-//				OpenGLRenderer.gl11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
 			case Usage.Color:
 			case Usage.ColorPacked:
 				OpenGLRenderer.gl11.glDisableClientState(GL11.GL_COLOR_ARRAY);
@@ -180,7 +173,7 @@ public class VertexBufferObject implements VertexData {
 		}
 
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
-		
+
 		isBound = false;
 	}
 

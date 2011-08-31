@@ -12,6 +12,12 @@ public abstract class Object3D implements Disposable{
 
 	public float rz = 0;
 
+	public float sx = 0;
+
+	public float sy = 0;
+
+	public float sz = 0;
+
 	public Object3D(Vector3 position) {
 		this.position = position;
 	}

@@ -15,8 +15,6 @@
  ******************************************************************************/
 package es.alvsanand.asaengine.graphics.objects.utils;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -35,9 +33,7 @@ public class VertexBufferObjectSubData implements VertexData {
 
 	final VertexAttributes attributes;
 	final FloatBuffer buffer;
-	final ByteBuffer byteBuffer;
 	int bufferHandle;
-	final boolean isDirect;
 	final boolean isStatic;
 	final int usage;
 	boolean isDirty = false;
@@ -46,20 +42,19 @@ public class VertexBufferObjectSubData implements VertexData {
 	public VertexBufferObjectSubData(boolean isStatic, int numVertices, VertexAttribute... attributes) {
 		this.isStatic = isStatic;
 		this.attributes = new VertexAttributes(attributes);
-		byteBuffer = ByteBuffer.allocateDirect(this.attributes.vertexSize * numVertices);
-		byteBuffer.order(ByteOrder.nativeOrder());
-		isDirect = true;
-		usage = isStatic ? GL11.GL_STATIC_DRAW : GL11.GL_DYNAMIC_DRAW;
-		buffer = byteBuffer.asFloatBuffer();
-		bufferHandle = createBufferObject();
+
+		buffer = BufferUtils.newFloatBuffer(this.attributes.vertexSize * numVertices);
 		buffer.flip();
-		byteBuffer.flip();
+		
+		bufferHandle = createBufferObject();
+
+		usage = isStatic ? GL11.GL_STATIC_DRAW : GL11.GL_DYNAMIC_DRAW;
 	}
 
 	private int createBufferObject() {
 		OpenGLRenderer.gl11.glGenBuffers(1, tmpHandle);
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ARRAY_BUFFER, tmpHandle.get(0));
-		OpenGLRenderer.gl11.glBufferData(GL11.GL_ARRAY_BUFFER, byteBuffer.capacity(), null, usage);
+		OpenGLRenderer.gl11.glBufferData(GL11.GL_ARRAY_BUFFER, buffer.capacity() * 4, null, usage);
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
 		return tmpHandle.get(0);
 	}
@@ -75,7 +70,7 @@ public class VertexBufferObjectSubData implements VertexData {
 	}
 
 	public int getNumMaxVertices() {
-		return byteBuffer.capacity() / attributes.vertexSize;
+		return buffer.capacity() * 4 / attributes.vertexSize;
 	}
 
 	@Override
@@ -87,32 +82,21 @@ public class VertexBufferObjectSubData implements VertexData {
 	@Override
 	public void setVertices(float[] vertices, int offset, int count) {
 		isDirty = true;
-		if (isDirect) {
-			BufferUtils.copy(vertices, byteBuffer, count, offset);
-			buffer.position(0);
-			buffer.limit(count);
-		} else {
-			buffer.clear();
-			buffer.put(vertices, offset, count);
-			buffer.flip();
-			byteBuffer.position(0);
-			byteBuffer.limit(buffer.limit() << 2);
-		}
+
+		BufferUtils.copy(vertices, buffer, count, offset);
 
 		if (isBound) {
-
-			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, byteBuffer.limit(), byteBuffer);
+			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, buffer.limit() * 4, buffer);
 			isDirty = false;
 		}
 	}
 
 	@Override
 	public void bind() {
-
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ARRAY_BUFFER, bufferHandle);
+		
 		if (isDirty) {
-			byteBuffer.limit(buffer.limit() * 4);
-			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, byteBuffer.limit(), byteBuffer);
+			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, buffer.limit() * 4, buffer);
 			isDirty = false;
 		}
 
@@ -125,7 +109,7 @@ public class VertexBufferObjectSubData implements VertexData {
 			switch (attribute.usage) {
 			case Usage.Position:
 				OpenGLRenderer.gl11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-				OpenGLRenderer.gl11.glVertexPointer(attribute.numComponents, GL10.GL_FLOAT, attributes.vertexSize, attribute.offset);
+				OpenGLRenderer.gl11.glVertexPointer(attribute.numComponents, GL10.GL_FLOAT, attributes.vertexSize, attribute.offset / 4);
 				break;
 
 			case Usage.Color:
@@ -135,18 +119,18 @@ public class VertexBufferObjectSubData implements VertexData {
 					colorType = GL11.GL_UNSIGNED_BYTE;
 
 				OpenGLRenderer.gl11.glEnableClientState(GL10.GL_COLOR_ARRAY);
-				OpenGLRenderer.gl11.glColorPointer(attribute.numComponents, colorType, attributes.vertexSize, attribute.offset);
+				OpenGLRenderer.gl11.glColorPointer(attribute.numComponents, colorType, attributes.vertexSize, attribute.offset / 4);
 				break;
 
 			case Usage.Normal:
 				OpenGLRenderer.gl11.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-				OpenGLRenderer.gl11.glNormalPointer(GL10.GL_FLOAT, attributes.vertexSize, attribute.offset);
+				OpenGLRenderer.gl11.glNormalPointer(GL10.GL_FLOAT, attributes.vertexSize, attribute.offset / 4);
 				break;
 
 			case Usage.TextureCoordinates:
 				OpenGLRenderer.gl11.glClientActiveTexture(GL10.GL_TEXTURE0 + textureUnit);
 				OpenGLRenderer.gl11.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-				OpenGLRenderer.gl11.glTexCoordPointer(attribute.numComponents, GL10.GL_FLOAT, attributes.vertexSize, attribute.offset);
+				OpenGLRenderer.gl11.glTexCoordPointer(attribute.numComponents, GL10.GL_FLOAT, attributes.vertexSize, attribute.offset / 4);
 				textureUnit++;
 				break;
 

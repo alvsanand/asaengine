@@ -30,6 +30,7 @@ public class World {
 		OpenGLRenderer.gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 		
 		OpenGLRenderer.gl.glEnable(GL10.GL_DEPTH_TEST);
+		OpenGLRenderer.gl.glEnable(GL10.GL_TEXTURE_2D);
 		OpenGLRenderer.gl.glEnable(GL10.GL_LIGHTING);					
 		OpenGLRenderer.gl.glEnable(GL10.GL_COLOR_MATERIAL);
 
@@ -37,6 +38,7 @@ public class World {
 		
 		renderObject3ds();
 
+		OpenGLRenderer.gl.glDisable(GL10.GL_TEXTURE_2D);
 		OpenGLRenderer.gl.glDisable(GL10.GL_COLOR_MATERIAL);
 		OpenGLRenderer.gl.glDisable(GL10.GL_LIGHTING);
 		OpenGLRenderer.gl.glDisable(GL10.GL_DEPTH_TEST);		

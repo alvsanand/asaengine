@@ -15,8 +15,6 @@
  ******************************************************************************/
 package es.alvsanand.asaengine.graphics.objects.utils;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -41,10 +39,8 @@ public class VertexArray implements VertexData {
 	public VertexArray(int numVertices, VertexAttributes attributes) {
 		this.attributes = attributes;
 		
-		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(this.attributes.vertexSize * numVertices);
-		byteBuffer.order(ByteOrder.nativeOrder());
+		buffer = BufferUtils.newFloatBuffer(this.attributes.vertexSize * numVertices);
 		
-		buffer = byteBuffer.asFloatBuffer();		
 		buffer.flip();
 	}
 
@@ -70,8 +66,6 @@ public class VertexArray implements VertexData {
 	@Override
 	public void setVertices(float[] vertices, int offset, int count) {
 		BufferUtils.copy(vertices, buffer, count, offset);
-		buffer.position(0);
-		buffer.limit(count);
 	}
 
 	@Override
@@ -84,7 +78,7 @@ public class VertexArray implements VertexData {
 
 			switch (attribute.usage) {
 			case Usage.Position:
-				buffer.position(attribute.offset);
+				buffer.position(attribute.offset / 4);
 				OpenGLRenderer.gl.glEnableClientState(GL11.GL_VERTEX_ARRAY);
 				OpenGLRenderer.gl.glVertexPointer(attribute.numComponents, GL10.GL_FLOAT, attributes.vertexSize, buffer);
 				break;
@@ -94,21 +88,21 @@ public class VertexArray implements VertexData {
 				int colorType = GL10.GL_FLOAT;
 				if (attribute.usage == Usage.ColorPacked)
 					colorType = GL11.GL_UNSIGNED_BYTE;
-				buffer.position(attribute.offset);
+				buffer.position(attribute.offset / 4);
 				OpenGLRenderer.gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 				OpenGLRenderer.gl.glColorPointer(attribute.numComponents, colorType, attributes.vertexSize, buffer);
 				break;
 
 			case Usage.Normal:
-				buffer.position(attribute.offset);
+				buffer.position(attribute.offset / 4);
 				OpenGLRenderer.gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
 				OpenGLRenderer.gl.glNormalPointer(GL10.GL_FLOAT, attributes.vertexSize, buffer);
 				break;
 
 			case Usage.TextureCoordinates:
-				OpenGLRenderer.gl.glClientActiveTexture(GL10.GL_TEXTURE0 + textureUnit);
+//				OpenGLRenderer.gl.glClientActiveTexture(GL10.GL_TEXTURE0 + textureUnit);
 				OpenGLRenderer.gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-				buffer.position(attribute.offset);
+				buffer.position(attribute.offset / 4);
 				OpenGLRenderer.gl.glTexCoordPointer(attribute.numComponents, GL10.GL_FLOAT, attributes.vertexSize, buffer);
 				textureUnit++;
 				break;
@@ -140,7 +134,7 @@ public class VertexArray implements VertexData {
 				OpenGLRenderer.gl.glDisableClientState(GL11.GL_NORMAL_ARRAY);
 				break;
 			case Usage.TextureCoordinates:
-				OpenGLRenderer.gl.glClientActiveTexture(GL11.GL_TEXTURE0 + textureUnit);
+//				OpenGLRenderer.gl.glClientActiveTexture(GL11.GL_TEXTURE0 + textureUnit);
 				OpenGLRenderer.gl.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 				textureUnit++;
 				break;

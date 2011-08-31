@@ -15,8 +15,6 @@
  ******************************************************************************/
 package es.alvsanand.asaengine.graphics.objects.utils;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
@@ -30,42 +28,34 @@ public class IndexBufferObjectSubData implements IndexData {
 	final static IntBuffer tmpHandle = BufferUtils.newIntBuffer(1);
 
 	ShortBuffer buffer;
-	ByteBuffer byteBuffer;
 	int bufferHandle;
-	final boolean isDirect;
 	boolean isDirty = true;
 	boolean isBound = false;
 	final int usage;
 
-	public IndexBufferObjectSubData (boolean isStatic, int maxIndices) {
-		byteBuffer = ByteBuffer.allocateDirect(maxIndices * 2);
-		byteBuffer.order(ByteOrder.nativeOrder());
-		isDirect = true;
+	public IndexBufferObjectSubData(boolean isStatic, int maxIndices) {
+		buffer = BufferUtils.newShortBuffer(maxIndices);
+		buffer.flip();
+
+		bufferHandle = createBufferObject();
 
 		usage = isStatic ? GL11.GL_STATIC_DRAW : GL11.GL_DYNAMIC_DRAW;
-		buffer = byteBuffer.asShortBuffer();
-		buffer.flip();
-		byteBuffer.flip();
-		bufferHandle = createBufferObject();
 	}
 
-	public IndexBufferObjectSubData (int maxIndices) {
-		byteBuffer = ByteBuffer.allocateDirect(maxIndices * 2);
-		byteBuffer.order(ByteOrder.nativeOrder());
-		this.isDirect = true;
+	public IndexBufferObjectSubData(int maxIndices) {
+		buffer = BufferUtils.newShortBuffer(maxIndices);
+		buffer.flip();
+
+		bufferHandle = createBufferObject();
 
 		usage = GL11.GL_STATIC_DRAW;
-		buffer = byteBuffer.asShortBuffer();
-		buffer.flip();
-		byteBuffer.flip();
-		bufferHandle = createBufferObject();
 	}
 
-	private int createBufferObject () {
+	private int createBufferObject() {
 		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
 			OpenGLRenderer.gl11.glGenBuffers(1, tmpHandle);
 			OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, tmpHandle.get(0));
-			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, byteBuffer.capacity(), null, usage);
+			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.capacity() * 2, null, usage);
 			OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, 0);
 			return tmpHandle.get(0);
 		}
@@ -73,60 +63,59 @@ public class IndexBufferObjectSubData implements IndexData {
 		return 0;
 	}
 
-	public int getNumIndices () {
-		return buffer.limit();
+	public int getNumIndices() {
+		return buffer.limit() * 2;
 	}
 
-	public int getNumMaxIndices () {
-		return buffer.capacity();
+	public int getNumMaxIndices() {
+		return buffer.capacity() * 2;
 	}
 
-	public void setIndices (short[] indices, int offset, int count) {
-		isDirty = true;
-		buffer.clear();
-		buffer.put(indices);
-		buffer.flip();
-		byteBuffer.position(0);
-		byteBuffer.limit(count << 1);
-
-		if (isBound) {
-			if (OpenGLRenderer.glType == GL_TYPE.GL11) {
-				OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, byteBuffer.limit(), byteBuffer);
-			}
-			isDirty = false;
-		}
-	}
-
-	public ShortBuffer getBuffer () {
+	public ShortBuffer getBuffer() {
 		isDirty = true;
 		return buffer;
 	}
 
-	public void bind () {
-		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
-			OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, bufferHandle);
-			if (isDirty) {
-				byteBuffer.limit(buffer.limit() * 2);
-				OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, byteBuffer.limit(), byteBuffer);
-				isDirty = false;
-			}
+	public void setIndices(short[] indices, int offset, int count) {
+		isDirty = true;
+
+		BufferUtils.copy(indices, buffer, count, offset);
+
+		if (isBound) {
+			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, buffer.limit() * 2, buffer);
+
+			isDirty = false;
 		}
+	}
+
+	@Override
+	public void bind() {
+		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, bufferHandle);
+		if (isDirty) {
+			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, buffer.limit() * 2, buffer);
+
+			isDirty = false;
+		}
+
 		isBound = true;
 	}
 
-	public void unbind () {
+	@Override
+	public void unbind() {
 		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
 			OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, 0);
 		}
 		isBound = false;
 	}
 
-	public void invalidate () {
+	@Override
+	public void invalidate() {
 		bufferHandle = createBufferObject();
 		isDirty = true;
 	}
 
-	public void dispose () {
+	@Override
+	public void dispose() {
 		tmpHandle.clear();
 		tmpHandle.put(bufferHandle);
 		tmpHandle.flip();

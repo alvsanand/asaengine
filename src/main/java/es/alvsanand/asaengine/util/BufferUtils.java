@@ -25,78 +25,93 @@ import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 
 public class BufferUtils {
-	public static FloatBuffer newFloatBuffer (int numFloats) {
+	public static FloatBuffer newFloatBuffer(int numFloats) {
 		ByteBuffer buffer = ByteBuffer.allocateDirect(numFloats * 4);
 		buffer.order(ByteOrder.nativeOrder());
 		return buffer.asFloatBuffer();
 	}
-	
-	public static DoubleBuffer newDoubleBuffer (int numDoubles) {
+
+	public static DoubleBuffer newDoubleBuffer(int numDoubles) {
 		ByteBuffer buffer = ByteBuffer.allocateDirect(numDoubles * 8);
 		buffer.order(ByteOrder.nativeOrder());
 		return buffer.asDoubleBuffer();
 	}
 
-	public static ByteBuffer newByteBuffer (int numBytes) {
+	public static ByteBuffer newByteBuffer(int numBytes) {
 		ByteBuffer buffer = ByteBuffer.allocateDirect(numBytes);
 		buffer.order(ByteOrder.nativeOrder());
 		return buffer;
 	}
-	
-	public static ShortBuffer newShortBuffer (int numShorts) {
+
+	public static ShortBuffer newShortBuffer(int numShorts) {
 		ByteBuffer buffer = ByteBuffer.allocateDirect(numShorts * 2);
 		buffer.order(ByteOrder.nativeOrder());
 		return buffer.asShortBuffer();
 	}
-	
+
 	public static CharBuffer newCharBuffer(int numChars) {
 		ByteBuffer buffer = ByteBuffer.allocateDirect(numChars * 2);
 		buffer.order(ByteOrder.nativeOrder());
 		return buffer.asCharBuffer();
 	}
 
-	public static IntBuffer newIntBuffer (int numInts) {
+	public static IntBuffer newIntBuffer(int numInts) {
 		ByteBuffer buffer = ByteBuffer.allocateDirect(numInts * 4);
 		buffer.order(ByteOrder.nativeOrder());
 		return buffer.asIntBuffer();
 	}
-	
-	public static LongBuffer newLongBuffer (int numLongs) {
+
+	public static LongBuffer newLongBuffer(int numLongs) {
 		ByteBuffer buffer = ByteBuffer.allocateDirect(numLongs * 8);
 		buffer.order(ByteOrder.nativeOrder());
 		return buffer.asLongBuffer();
 	}
-	
+
 	public static byte[] toByta(int data) {
-	    return new byte[] {
-	        (byte)((data >> 24) & 0xff),
-	        (byte)((data >> 16) & 0xff),
-	        (byte)((data >> 8) & 0xff),
-	        (byte)((data >> 0) & 0xff),
-	    };
+		return new byte[] { (byte) ((data >> 24) & 0xff), (byte) ((data >> 16) & 0xff), (byte) ((data >> 8) & 0xff), (byte) ((data >> 0) & 0xff), };
 	}
-	
-	public static void copy (float[] src, ByteBuffer dst, int numFloats, int offset) {
+
+	public static void copy(float[] src, ByteBuffer dst, int numFloats, int offset) {
 		dst.clear();
-		
+
 		dst.limit(numFloats << 2);
-		
-		for(int i=offset; i<offset+numFloats && i<src.length; i++){
+
+		for (int i = offset; i < offset + numFloats && i < src.length; i++) {
 			dst.put(toByta(Float.floatToRawIntBits(src[i])));
 		}
-		
+
 		dst.flip();
 	}
-	
-	public static void copy (float[] src, FloatBuffer dst, int numFloats, int offset) {
+
+	public static void copy(float[] src, FloatBuffer dst, int numFloats, int offset) {
 		dst.clear();
-		
+
 		dst.limit(numFloats);
-		
-		for(int i=offset; i<offset+numFloats && i<src.length; i++){
-			dst.put(src[i]);
+
+		dst.put(src, offset, numFloats);
+
+		dst.flip();
+	}
+
+	public static void copy(float[] src, IntBuffer dst, int numFloats, int offset) {
+		dst.clear();
+
+		dst.limit(numFloats);
+
+		for (int i = offset; i < offset + numFloats && i < src.length; i++) {
+			dst.put(Float.floatToRawIntBits(src[i]));
 		}
-		
+
+		dst.flip();
+	}
+
+	public static void copy(short[] src, ShortBuffer dst, int numShorts, int offset) {
+		dst.clear();
+
+		dst.limit(numShorts);
+
+		dst.put(src, offset, numShorts);
+
 		dst.flip();
 	}
 }

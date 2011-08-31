@@ -15,8 +15,6 @@
  ******************************************************************************/
 package es.alvsanand.asaengine.graphics.objects.utils;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
@@ -24,39 +22,32 @@ import javax.microedition.khronos.opengles.GL11;
 
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer.GL_TYPE;
+import es.alvsanand.asaengine.util.BufferUtils;
 
 public class IndexBufferObject implements IndexData {
 	final static IntBuffer tmpHandle = es.alvsanand.asaengine.util.BufferUtils.newIntBuffer(1);
 
 	ShortBuffer buffer;
-	ByteBuffer byteBuffer;
 	int bufferHandle;
-	final boolean isDirect;
 	boolean isDirty = true;
 	boolean isBound = false;
 	final int usage;
 
 	public IndexBufferObject (boolean isStatic, int maxIndices) {
-		byteBuffer = ByteBuffer.allocateDirect(maxIndices * 2);
-		byteBuffer.order(ByteOrder.nativeOrder());
-		isDirect = true;
-
-		buffer = byteBuffer.asShortBuffer();
+		buffer = BufferUtils.newShortBuffer(maxIndices);
 		buffer.flip();
-		byteBuffer.flip();
+		
 		bufferHandle = createBufferObject();
+		
 		usage = isStatic ? GL11.GL_STATIC_DRAW : GL11.GL_DYNAMIC_DRAW;
 	}
 
 	public IndexBufferObject (int maxIndices) {
-		byteBuffer = ByteBuffer.allocateDirect(maxIndices * 2);
-		byteBuffer.order(ByteOrder.nativeOrder());
-		this.isDirect = true;
-
-		buffer = byteBuffer.asShortBuffer();
+		buffer = BufferUtils.newShortBuffer(maxIndices);
 		buffer.flip();
-		byteBuffer.flip();
+		
 		bufferHandle = createBufferObject();
+		
 		usage = GL11.GL_STATIC_DRAW;
 	}
 
@@ -71,26 +62,21 @@ public class IndexBufferObject implements IndexData {
 	}
 
 	public int getNumIndices () {
-		return buffer.limit();
+		return buffer.limit() * 2;
 	}
 
 	public int getNumMaxIndices () {
-		return buffer.capacity();
+		return buffer.capacity() * 2;
 	}
 
 	public void setIndices (short[] indices, int offset, int count) {
 		isDirty = true;
 		
-		buffer.clear();
-		buffer.put(indices);
-		buffer.flip();
-		byteBuffer.position(0);
-		byteBuffer.limit(count << 1);
+		BufferUtils.copy(indices, buffer, count, offset);
 
 		if (isBound) {
-			if (OpenGLRenderer.glType == GL_TYPE.GL11) {
-				OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, byteBuffer.limit(), byteBuffer, usage);
-			}
+			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.limit() * 2, buffer, usage);
+			
 			isDirty = false;
 		}
 	}
@@ -101,14 +87,12 @@ public class IndexBufferObject implements IndexData {
 	}
 
 	public void bind () {
-		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
-			OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, bufferHandle);
-			if (isDirty) {
-				byteBuffer.limit(buffer.limit() * 2);
-				OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, byteBuffer.limit(), byteBuffer, usage);
-				isDirty = false;
-			}
+		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, bufferHandle);
+		if (isDirty) {
+			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.limit() * 2, buffer, usage);
+			isDirty = false;
 		}
+
 		isBound = true;
 	}
 

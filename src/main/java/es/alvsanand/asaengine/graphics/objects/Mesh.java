@@ -43,21 +43,19 @@ public class Mesh extends Object3D {
 		VertexArray, VertexBufferObject, VertexBufferObjectSubData,
 	}
 
-	static final ArrayList<Mesh> meshes = new ArrayList<Mesh>();
+	protected static final ArrayList<Mesh> meshes = new ArrayList<Mesh>();
 
-	public static boolean forceVBO = false;
+	protected final VertexData vertices;
+	protected final IndexData indices;
+	protected boolean autoBind = true;
+	protected final boolean isVertexArray;
 
-	final VertexData vertices;
-	final IndexData indices;
-	boolean autoBind = true;	
-	final boolean isVertexArray;
-	
-	public Texture texture;
+	protected Texture texture;
 
-	public Mesh (boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
-		super(new Vector3(0,0,0));
-		
-		if (OpenGLRenderer.glType == GL_TYPE.GL11 || Mesh.forceVBO) {
+	public Mesh(boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
+		super(new Vector3(0, 0, 0));
+
+		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
 			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
 			indices = new IndexBufferObject(isStatic, maxIndices);
 			isVertexArray = false;
@@ -70,25 +68,9 @@ public class Mesh extends Object3D {
 		addManagedMesh(this);
 	}
 
-	public Mesh (Vector3 position, boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
+	public Mesh(Vector3 position, boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
 		super(position);
-		if (OpenGLRenderer.glType == GL_TYPE.GL11 || Mesh.forceVBO) {
-			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObject(isStatic, maxIndices);
-			isVertexArray = false;
-		} else {
-			vertices = new VertexArray(maxVertices, attributes);
-			indices = new IndexBufferObject(maxIndices);
-			isVertexArray = true;
-		}
-
-		addManagedMesh(this);
-	}
-	
-	public Mesh(Vector3 position, boolean isStatic, int maxVertices, int maxIndices,
-			VertexAttributes attributes) {
-		super(position);
-		if (OpenGLRenderer.glType == GL_TYPE.GL11 || Mesh.forceVBO ) {
+		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
 			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
 			indices = new IndexBufferObject(isStatic, maxIndices);
 			isVertexArray = false;
@@ -101,9 +83,24 @@ public class Mesh extends Object3D {
 		addManagedMesh(this);
 	}
 
-	public Mesh (Vector3 position, VertexDataType type, boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
+	public Mesh(Vector3 position, boolean isStatic, int maxVertices, int maxIndices, VertexAttributes attributes) {
 		super(position);
-		
+		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
+			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
+			indices = new IndexBufferObject(isStatic, maxIndices);
+			isVertexArray = false;
+		} else {
+			vertices = new VertexArray(maxVertices, attributes);
+			indices = new IndexBufferObject(maxIndices);
+			isVertexArray = true;
+		}
+
+		addManagedMesh(this);
+	}
+
+	public Mesh(Vector3 position, VertexDataType type, boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
+		super(position);
+
 		if (type == VertexDataType.VertexBufferObject) {
 			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
 			indices = new IndexBufferObject(isStatic, maxIndices);
@@ -117,108 +114,120 @@ public class Mesh extends Object3D {
 			indices = new IndexBufferObject(maxIndices);
 			isVertexArray = true;
 		}
-		addManagedMesh(this);		
+		addManagedMesh(this);
 	}
 
-	public void setVertices (float[] vertices) {
+	public void setVertices(float[] vertices) {
 		this.vertices.setVertices(vertices, 0, vertices.length);
 	}
 
-	public void setVertices (float[] vertices, int offset, int count) {
+	public void setVertices(float[] vertices, int offset, int count) {
 		this.vertices.setVertices(vertices, offset, count);
 	}
-	
+
 	public void getVertices(float[] vertices) {
-		if(vertices.length < getNumVertices() * getVertexSize() / 4)
-			throw new IllegalArgumentException("not enough room in vertices array, has " + vertices.length + " floats, needs " + getNumVertices() * getVertexSize() / 4);
-		int pos = getVerticesBuffer().position();		
+		if (vertices.length < getNumVertices() * getVertexSize() / 4)
+			throw new IllegalArgumentException("not enough room in vertices array, has " + vertices.length + " floats, needs " + getNumVertices()
+					* getVertexSize() / 4);
+		int pos = getVerticesBuffer().position();
 		getVerticesBuffer().position(0);
 		getVerticesBuffer().get(vertices, 0, getNumVertices() * getVertexSize() / 4);
 		getVerticesBuffer().position(pos);
 	}
 
-	public void setIndices (short[] indices) {
+	public void setIndices(short[] indices) {
 		this.indices.setIndices(indices, 0, indices.length);
 	}
 
-	public void setIndices (short[] indices, int offset, int count) {
+	public void setIndices(short[] indices, int offset, int count) {
 		this.indices.setIndices(indices, offset, count);
 	}
-	
+
 	public void getIndices(short[] indices) {
-		if(indices.length < getNumIndices())
+		if (indices.length < getNumIndices())
 			throw new IllegalArgumentException("not enough room in indices array, has " + indices.length + " floats, needs " + getNumIndices());
-		int pos = getIndicesBuffer().position();		
+		int pos = getIndicesBuffer().position();
 		getIndicesBuffer().position(0);
 		getIndicesBuffer().get(indices, 0, getNumIndices());
 		getIndicesBuffer().position(pos);
 	}
 
-	public int getNumIndices () {
+	public int getNumIndices() {
 		return indices.getNumIndices();
 	}
 
-	public int getNumVertices () {
+	public int getNumVertices() {
 		return vertices.getNumVertices();
 	}
 
-	public int getMaxVertices () {
+	public int getMaxVertices() {
 		return vertices.getNumMaxVertices();
 	}
 
-	public int getMaxIndices () {
+	public int getMaxIndices() {
 		return indices.getNumMaxIndices();
 	}
 
-	public int getVertexSize () {
+	public int getVertexSize() {
 		return vertices.getAttributes().vertexSize;
 	}
 
-	public void setAutoBind (boolean autoBind) {
+	public void setAutoBind(boolean autoBind) {
 		this.autoBind = autoBind;
 	}
-	
-	public void bind () {
-		if(texture!=null){
+
+	public void bind() {
+		if (texture != null) {
 			texture.bind();
 		}
 		
+		OpenGLRenderer.gl.glFrontFace(GL10.GL_CCW);
+
 		vertices.bind();
-		if (!isVertexArray && indices.getNumIndices() > 0) indices.bind();
+		if (!isVertexArray && indices.getNumIndices() > 0)
+			indices.bind();
 	}
 
-	public void unbind () {
+	public void unbind() {
 		vertices.unbind();
-		if (!isVertexArray && indices.getNumIndices() > 0) indices.unbind();
-	}
-
-	public void render (int primitiveType) {
-		render(primitiveType, 0, indices.getNumMaxIndices() > 0 ? getNumIndices() : getNumVertices());
+		if (!isVertexArray && indices.getNumIndices() > 0)
+			indices.unbind();
 	}
 
 	@Override
-	public void render () {
-		render(0, indices.getNumMaxIndices() > 0 ? getNumIndices() : getNumVertices());
+	public void render() {
+		render(GL10.GL_TRIANGLES);
 	}
 
-	public void render (int offset, int count) {
+	public void render(int primitiveType) {
+		render(primitiveType, 0, indices.getNumMaxIndices() > 0 ? getNumIndices() : getNumVertices());
+	}
+
+	public void render(int offset, int count) {
 		render(GL10.GL_TRIANGLES, offset, count);
 	}
 
-	public void render (int primitiveType, int offset, int count) {		
-		if (autoBind){
+	public void render(int primitiveType, int offset, int count) {
+		if (autoBind) {
 			bind();
 		}
-		
+
 		OpenGLRenderer.gl.glPushMatrix();
-		
+
 		OpenGLRenderer.gl.glTranslatef(position.x, position.y, position.z);
-		OpenGLRenderer.gl.glRotatef(rx, 1, 0, 0);
-		OpenGLRenderer.gl.glRotatef(ry, 0, 1, 0);
-		OpenGLRenderer.gl.glRotatef(rz, 0, 0, 1);
 		
-		// Set flat fill color
-		OpenGLRenderer.gl.glColor4f(256f, 256f, 256f, 1.0f);
+		if(rx != 0)
+			OpenGLRenderer.gl.glRotatef(rx, 1, 0, 0);
+		if(ry != 0)
+			OpenGLRenderer.gl.glRotatef(ry, 0, 1, 0);
+		if(rz != 0)
+			OpenGLRenderer.gl.glRotatef(rz, 0, 0, 1);
+		
+		if(sx > 0 && sy > 0 && sz > 0)
+			OpenGLRenderer.gl.glScalef(sx, sy, sz);
+		
+//		// Set flat fill color
+//		OpenGLRenderer.gl.glColor4f(256f, 256f, 256f, 1.0f);
 		
 		if (isVertexArray) {
 			if (indices.getNumIndices() > 0) {
@@ -230,7 +239,7 @@ public class Mesh extends Object3D {
 				OpenGLRenderer.gl.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, buffer);
 				buffer.position(oldPosition);
 				buffer.limit(oldLimit);
-			} else{
+			} else {
 				OpenGLRenderer.gl.glDrawArrays(primitiveType, offset, count);
 			}
 		} else {
@@ -239,92 +248,94 @@ public class Mesh extends Object3D {
 			else
 				OpenGLRenderer.gl11.glDrawArrays(primitiveType, offset, count);
 		}
-		
+
 		OpenGLRenderer.gl.glPopMatrix();
 
-		if (autoBind){
+		if (autoBind) {
 			unbind();
 		}
 	}
 
 	@Override
-	public void dispose () {
+	public void dispose() {
 		meshes.remove(this);
 		vertices.dispose();
 		indices.dispose();
 
-		if(texture!=null){
+		if (texture != null) {
 			texture.dispose();
 		}
 	}
 
-	public VertexAttribute getVertexAttribute (int usage) {
+	public VertexAttribute getVertexAttribute(int usage) {
 		VertexAttributes attributes = vertices.getAttributes();
 		int len = attributes.size();
 		for (int i = 0; i < len; i++)
-			if (attributes.get(i).usage == usage) return attributes.get(i);
+			if (attributes.get(i).usage == usage)
+				return attributes.get(i);
 
 		return null;
 	}
 
-	public VertexAttributes getVertexAttributes () {
+	public VertexAttributes getVertexAttributes() {
 		return vertices.getAttributes();
 	}
 
-	public FloatBuffer getVerticesBuffer () {
+	public FloatBuffer getVerticesBuffer() {
 		return vertices.getBuffer();
 	}
-	
+
 	public BoundingBox calculateBoundingBox() {
 		final int numVertices = getNumVertices();
-		if(numVertices==0)
+		if (numVertices == 0)
 			throw new ASARuntimeException("No vertices defined");
-		
-		final BoundingBox bbox = new BoundingBox();		
+
+		final BoundingBox bbox = new BoundingBox();
 		final FloatBuffer verts = vertices.getBuffer();
 		bbox.inf();
 		final VertexAttribute posAttrib = getVertexAttribute(Usage.Position);
-		final int offset = posAttrib.offset / 4;		
+		final int offset = posAttrib.offset / 4;
 		final int vertexSize = vertices.getAttributes().vertexSize / 4;
 		int idx = offset;
-			
-		switch(posAttrib.numComponents) {
-			case 1:
-				for(int i = 0; i < numVertices; i++) {
-					bbox.ext(verts.get(idx), 0, 0);
-					idx+=vertexSize;
-				}
-				break;
-			case 2:
-				for(int i = 0; i < numVertices; i++) {
-					bbox.ext(verts.get(idx), verts.get(idx+1), 0);
-					idx+=vertexSize;
-				}
-				break;
-			case 3:
-				for(int i = 0; i < numVertices; i++) {
-					bbox.ext(verts.get(idx), verts.get(idx+1), verts.get(idx+2));
-					idx+=vertexSize;
-				}
-				break;
+
+		switch (posAttrib.numComponents) {
+		case 1:
+			for (int i = 0; i < numVertices; i++) {
+				bbox.ext(verts.get(idx), 0, 0);
+				idx += vertexSize;
+			}
+			break;
+		case 2:
+			for (int i = 0; i < numVertices; i++) {
+				bbox.ext(verts.get(idx), verts.get(idx + 1), 0);
+				idx += vertexSize;
+			}
+			break;
+		case 3:
+			for (int i = 0; i < numVertices; i++) {
+				bbox.ext(verts.get(idx), verts.get(idx + 1), verts.get(idx + 2));
+				idx += vertexSize;
+			}
+			break;
 		}
-		
+
 		return bbox;
 	}
 
-	public ShortBuffer getIndicesBuffer () {
+	public ShortBuffer getIndicesBuffer() {
 		return indices.getBuffer();
 	}
 
 	private static void addManagedMesh(Mesh mesh) {
 		meshes.add(mesh);
 	}
-	
-	public static void invalidateAllMeshes () {
-		if(meshes == null) return;
+
+	public static void invalidateAllMeshes() {
+		if (meshes == null)
+			return;
 		for (int i = 0; i < meshes.size(); i++) {
 			if (meshes.get(i).vertices instanceof VertexBufferObject) {
-				((VertexBufferObject)meshes.get(i).vertices).invalidate();
+				((VertexBufferObject) meshes.get(i).vertices).invalidate();
 				meshes.get(i).indices.invalidate();
 			}
 		}
