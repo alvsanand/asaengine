@@ -41,13 +41,13 @@ public abstract class OpenGLRenderer implements Renderer {
 			
 			if(gl!=null){
 				OpenGLRenderer.gl = gl;
-//				if(gl instanceof GL11){
-//					OpenGLRenderer.glType = GL_TYPE.GL11;
-//					OpenGLRenderer.gl11 = (GL11)gl;
-//				}
-//				else{
+				if(gl instanceof GL11){
+					OpenGLRenderer.glType = GL_TYPE.GL11;
+					OpenGLRenderer.gl11 = (GL11)gl;
+				}
+				else{
 					OpenGLRenderer.glType = GL_TYPE.GL10;
-//				}
+				}
 			}
 			
 			if(!loadedWorld)

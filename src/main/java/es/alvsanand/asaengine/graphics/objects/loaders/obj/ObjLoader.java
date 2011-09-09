@@ -143,16 +143,16 @@ public class ObjLoader {
 			verts[vi++] = vertices[vertexIdx + 1];
 			verts[vi++] = vertices[vertexIdx + 2];
 
+			if (numUV > 0) {
+				int uvIdx = facesUV[i] * 2;
+				verts[vi++] = uv[uvIdx];
+				verts[vi++] = 1 - uv[uvIdx + 1];
+			}
 			if (numNormals > 0) {
 				int normalIdx = facesNormals[i] * 3;
 				verts[vi++] = normals[normalIdx];
 				verts[vi++] = normals[normalIdx + 1];
 				verts[vi++] = normals[normalIdx + 2];
-			}
-			if (numUV > 0) {
-				int uvIdx = facesUV[i] * 2;
-				verts[vi++] = uv[uvIdx];
-				verts[vi++] = uv[uvIdx + 1];
 			}
 		}
 
@@ -160,10 +160,10 @@ public class ObjLoader {
 
 		ArrayList<VertexAttribute> attributes = new ArrayList<VertexAttribute>();
 		attributes.add(new VertexAttribute(Usage.Position, 3, "a_Position"));
-		if (numNormals > 0)
-			attributes.add(new VertexAttribute(Usage.Normal, 3, "a_Normal"));
 		if (numUV > 0)
 			attributes.add(new VertexAttribute(Usage.TextureCoordinates, 2, "a_TexCoord"));
+		if (numNormals > 0)
+			attributes.add(new VertexAttribute(Usage.Normal, 3, "a_Normal"));
 
 		mesh = new Mesh(true, numFaces * 3, 0, attributes.toArray(new VertexAttribute[attributes.size()]));
 		mesh.setVertices(verts);

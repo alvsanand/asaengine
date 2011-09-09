@@ -39,7 +39,7 @@ public class VertexArray implements VertexData {
 	public VertexArray(int numVertices, VertexAttributes attributes) {
 		this.attributes = attributes;
 		
-		buffer = BufferUtils.newFloatBuffer(this.attributes.vertexSize * numVertices);
+		buffer = BufferUtils.newFloatBuffer(this.attributes.vertexSize * numVertices / 4);
 		
 		buffer.flip();
 	}
@@ -70,7 +70,6 @@ public class VertexArray implements VertexData {
 
 	@Override
 	public void bind() {
-		int textureUnit = 0;
 		int numAttributes = attributes.size();
 
 		for (int i = 0; i < numAttributes; i++) {
@@ -100,11 +99,9 @@ public class VertexArray implements VertexData {
 				break;
 
 			case Usage.TextureCoordinates:
-//				OpenGLRenderer.gl.glClientActiveTexture(GL10.GL_TEXTURE0 + textureUnit);
 				OpenGLRenderer.gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 				buffer.position(attribute.offset / 4);
 				OpenGLRenderer.gl.glTexCoordPointer(attribute.numComponents, GL10.GL_FLOAT, attributes.vertexSize, buffer);
-				textureUnit++;
 				break;
 
 			default:
@@ -117,7 +114,6 @@ public class VertexArray implements VertexData {
 
 	@Override
 	public void unbind() {
-		int textureUnit = 0;
 		int numAttributes = attributes.size();
 
 		for (int i = 0; i < numAttributes; i++) {
@@ -134,9 +130,7 @@ public class VertexArray implements VertexData {
 				OpenGLRenderer.gl.glDisableClientState(GL11.GL_NORMAL_ARRAY);
 				break;
 			case Usage.TextureCoordinates:
-//				OpenGLRenderer.gl.glClientActiveTexture(GL11.GL_TEXTURE0 + textureUnit);
 				OpenGLRenderer.gl.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-				textureUnit++;
 				break;
 			default:
 				throw new ASARuntimeException("unkown vertex attribute type: " + attribute.usage);

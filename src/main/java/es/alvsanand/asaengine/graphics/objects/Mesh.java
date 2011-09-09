@@ -200,7 +200,7 @@ public class Mesh extends Object3D {
 	}
 
 	public void render(int primitiveType) {
-		render(primitiveType, 0, indices.getNumMaxIndices() > 0 ? getNumIndices() : getNumVertices());
+		render(primitiveType, 0, indices.getNumIndices() > 0 ? getNumIndices() : getNumVertices());
 	}
 
 	public void render(int offset, int count) {

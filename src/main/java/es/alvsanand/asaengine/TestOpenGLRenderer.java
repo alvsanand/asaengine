@@ -26,7 +26,6 @@ import es.alvsanand.asaengine.graphics.lights.PointLight;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
 import es.alvsanand.asaengine.graphics.objects.loaders.obj.ObjLoader;
-import es.alvsanand.asaengine.graphics.objects.primitives.Plane;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
 import es.alvsanand.asaengine.graphics.textures.Texture;

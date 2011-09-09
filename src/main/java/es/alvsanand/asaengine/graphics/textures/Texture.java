@@ -76,7 +76,7 @@ public class Texture {
 			GLUtils.texImage2D(GL10.GL_TEXTURE_2D, level, bitmap, 0);
 			newWidth = newWidth / 2;
 			newHeight = newHeight / 2;
-			if (newWidth <= 0)
+			if (newWidth <= 0 && newHeight <=0)
 				break;
 
 			Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);

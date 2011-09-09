@@ -34,7 +34,7 @@ public class IndexBufferObject implements IndexData {
 	final int usage;
 
 	public IndexBufferObject (boolean isStatic, int maxIndices) {
-		buffer = BufferUtils.newShortBuffer(maxIndices);
+		buffer = BufferUtils.newShortBuffer(maxIndices / 2);
 		buffer.flip();
 		
 		bufferHandle = createBufferObject();
