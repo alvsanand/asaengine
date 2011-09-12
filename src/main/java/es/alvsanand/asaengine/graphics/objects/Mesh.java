@@ -117,6 +117,15 @@ public class Mesh extends Object3D {
 		addManagedMesh(this);
 	}
 
+	protected Mesh(Vector3 position, VertexData vertices, IndexData indices, boolean autoBind, boolean isVertexArray, Texture texture) {
+		super(position);
+		this.vertices = vertices;
+		this.indices = indices;
+		this.autoBind = autoBind;
+		this.isVertexArray = isVertexArray;
+		this.texture = texture;
+	}
+
 	public void setVertices(float[] vertices) {
 		this.vertices.setVertices(vertices, 0, vertices.length);
 	}
@@ -178,6 +187,7 @@ public class Mesh extends Object3D {
 
 	public void bind() {
 		if (texture != null) {
+			OpenGLRenderer.gl.glEnable(GL10.GL_TEXTURE_2D);
 			texture.bind();
 		}
 		
@@ -188,10 +198,15 @@ public class Mesh extends Object3D {
 			indices.bind();
 	}
 
-	public void unbind() {
+	public void unbind() {				
 		vertices.unbind();
+		
 		if (!isVertexArray && indices.getNumIndices() > 0)
 			indices.unbind();
+		
+		if (texture != null) {
+			OpenGLRenderer.gl.glDisable(GL10.GL_TEXTURE_2D);
+		}
 	}
 
 	@Override
@@ -343,5 +358,11 @@ public class Mesh extends Object3D {
 
 	public void setTexture(Texture texture) {
 		this.texture = texture;
+	}
+	
+	public Mesh duplicate(){
+		Mesh newMesh = new Mesh(new Vector3(), vertices, indices, autoBind, isVertexArray, texture);
+		
+		return newMesh;
 	}
 }

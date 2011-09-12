@@ -15,7 +15,6 @@
  ******************************************************************************/
 package es.alvsanand.asaengine;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -24,13 +23,13 @@ import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.lights.PointLight;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
+import es.alvsanand.asaengine.graphics.objects.MeshFactory;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
-import es.alvsanand.asaengine.graphics.objects.loaders.obj.ObjLoader;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
 import es.alvsanand.asaengine.graphics.textures.Texture;
+import es.alvsanand.asaengine.graphics.textures.TextureFactory;
 import es.alvsanand.asaengine.math.Vector3;
-import es.alvsanand.asaengine.util.io.FileIO;
 import es.alvsanand.asaengine.util.io.error.ASAIOException;
 
 public class TestOpenGLRenderer extends OpenGLRenderer {
@@ -39,8 +38,8 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 	Texture INVADERSHIP_TEXTURE;
 	
 	private void loadTextures(){
-		SHIP_TEXTURE = new Texture("ship.png");
-		INVADERSHIP_TEXTURE = new Texture("invader.png", true);
+		SHIP_TEXTURE = TextureFactory.getTextureFromAsset("ship.png");
+		INVADERSHIP_TEXTURE = TextureFactory.getTextureFromAsset("invader.png");
 	}
 	
 	World WORLD;
@@ -84,9 +83,7 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //		
 		{
 			try {
-				InputStream inputStream = FileIO.readAsset("invader.obj");
-
-				Mesh mesh = ObjLoader.loadObj(inputStream);
+				Mesh mesh = MeshFactory.getMeshFromAsset("invader.obj", MeshFactory.MeshType.OBJ);
 				mesh.position = new Vector3(0,0,0);
 				mesh.setTexture(INVADERSHIP_TEXTURE);
 				
@@ -97,12 +94,24 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 				e.printStackTrace();
 			}	
 		}
+		
 		{
 			try {
-				InputStream inputStream = FileIO.readAsset("ship.obj");
-
-				Mesh mesh = ObjLoader.loadObj(inputStream);
+				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
 				mesh.position = new Vector3(0,0,1.5f);
+				mesh.setTexture(SHIP_TEXTURE);
+				
+				mesh.rx = 90f;
+				
+				object3ds.add(mesh);
+			} catch (ASAIOException e) {
+				e.printStackTrace();
+			}	
+		}
+		{
+			try {
+				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
+				mesh.position = new Vector3(0,1.5f, 0);
 				mesh.setTexture(SHIP_TEXTURE);
 				
 				mesh.rx = 90f;

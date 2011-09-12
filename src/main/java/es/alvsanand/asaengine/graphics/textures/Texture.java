@@ -22,11 +22,11 @@ public class Texture {
 	public int height;
 	protected boolean mipmapped;
 
-	public Texture(String fileName) {
+	Texture(String fileName) {
 		this(fileName, false);
 	}
 
-	public Texture(String fileName, boolean mipmapped) {
+	Texture(String fileName, boolean mipmapped) {
 		this.fileName = fileName;
 		this.mipmapped = mipmapped;
 		load();

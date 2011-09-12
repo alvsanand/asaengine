@@ -23,13 +23,14 @@ import java.util.ArrayList;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes.Usage;
+import es.alvsanand.asaengine.graphics.objects.error.MeshNotFound;
 
 public class ObjLoader {
-	public static Mesh loadObj(InputStream in) {
+	public static Mesh loadObj(InputStream in) throws MeshNotFound{
 		return loadObj(in, false);
 	}
 
-	public static Mesh loadObj(InputStream in, boolean flipV) {
+	public static Mesh loadObj(InputStream in, boolean flipV) throws MeshNotFound{
 		String line = "";
 
 		try {
@@ -45,16 +46,16 @@ public class ObjLoader {
 			line = b.toString();
 			reader.close();
 		} catch (Exception ex) {
-			return null;
+			throw new MeshNotFound("The Mesh cannot be loaded", ex);
 		}
 		return loadObjFromString(line, flipV);
 	}
 
-	public static Mesh loadObjFromString(String obj) {
+	public static Mesh loadObjFromString(String obj) throws MeshNotFound{
 		return loadObjFromString(obj, false);
 	}
 
-	public static Mesh loadObjFromString(String obj, boolean flipV) {
+	public static Mesh loadObjFromString(String obj, boolean flipV) throws MeshNotFound{
 		String[] lines = obj.split("\n");
 		float[] vertices = new float[lines.length * 3];
 		float[] normals = new float[lines.length * 3];
