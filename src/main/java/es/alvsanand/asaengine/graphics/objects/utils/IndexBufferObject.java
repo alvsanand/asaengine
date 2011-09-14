@@ -74,7 +74,7 @@ public class IndexBufferObject implements IndexData {
 		
 		BufferUtils.copy(indices, buffer, count, offset);
 
-		if (isBound) {
+		if (isBound && OpenGLRenderer.glType == GL_TYPE.GL11) {
 			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.limit() * 2, buffer, usage);
 			
 			isDirty = false;
@@ -88,7 +88,7 @@ public class IndexBufferObject implements IndexData {
 
 	public void bind () {
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, bufferHandle);
-		if (isDirty) {
+		if (isDirty && OpenGLRenderer.glType == GL_TYPE.GL11) {
 			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.limit() * 2, buffer, usage);
 			isDirty = false;
 		}

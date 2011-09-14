@@ -41,9 +41,18 @@ public class KeyFramedModel extends Object3D{
 	@Override
 	public void render() {
 		if(animation!=null){
-			int keyFrame = animation.getKeyFrame() + animation.getKeyFrameOffset();
+			int keyFrame = animation.getKeyFrame() + animation.getKeyFrameOffset() - 1;
 			
-			if(keyFrame<keyFrames.length){
+			if(keyFrame>-1 && keyFrame<keyFrames.length){
+				keyFrames[keyFrame].getMesh().setPosition(position);
+				
+				keyFrames[keyFrame].getMesh().setRx(rx);
+				keyFrames[keyFrame].getMesh().setRy(ry);
+				keyFrames[keyFrame].getMesh().setRz(rz);
+				keyFrames[keyFrame].getMesh().setSx(sx);
+				keyFrames[keyFrame].getMesh().setSy(sy);
+				keyFrames[keyFrame].getMesh().setSz(sz);
+				
 				keyFrames[keyFrame].render();
 			}
 		}
@@ -72,6 +81,18 @@ public class KeyFramedModel extends Object3D{
 
 	public void resume() {
 		animation.resume();
+	}
+
+	public boolean isPaused() {
+		return animation.isPaused();
+	}
+
+	public boolean isEnded() {
+		return animation.isEnded();
+	}
+
+	public boolean isStarted() {
+		return animation.isStarted();
 	}
 	
 	public void setTexture(Texture texture){

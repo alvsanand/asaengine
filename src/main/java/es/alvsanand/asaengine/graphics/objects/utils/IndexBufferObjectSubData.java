@@ -81,7 +81,7 @@ public class IndexBufferObjectSubData implements IndexData {
 
 		BufferUtils.copy(indices, buffer, count, offset);
 
-		if (isBound) {
+		if (isBound && OpenGLRenderer.glType == GL_TYPE.GL11) {
 			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, buffer.limit() * 2, buffer);
 
 			isDirty = false;
@@ -91,7 +91,7 @@ public class IndexBufferObjectSubData implements IndexData {
 	@Override
 	public void bind() {
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, bufferHandle);
-		if (isDirty) {
+		if (isDirty && OpenGLRenderer.glType == GL_TYPE.GL11) {
 			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, buffer.limit() * 2, buffer);
 
 			isDirty = false;

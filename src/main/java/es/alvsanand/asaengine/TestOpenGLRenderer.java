@@ -113,47 +113,54 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //			}	
 //		}
 //		
-		{
-			try {
-				Mesh mesh = MeshFactory.getMeshFromAsset("luxo_000001.obj", MeshFactory.MeshType.OBJ);
-				mesh.position = new Vector3(0,0,1.5f);
-				
-				mesh.sx = 0.5f;
-				mesh.sy = 0.5f;
-				mesh.sz = 0.5f;
-				
-				object3ds.add(mesh);
-			} catch (ASAIOException e) {
-				e.printStackTrace();
-			}	
-		}
-		
-		{
+//		{
 //			try {
-				String[] assets = {"luxo_000001.obj",
-//						"luxo_000005.obj",
-						"luxo_000010.obj",
-//						"luxo_000015.obj",
-						"luxo_000020.obj",
-//						"luxo_000025.obj",
-						"luxo_000030.obj",
-//						"luxo_000035.obj",
-						"luxo_000040.obj",
-//						"luxo_000045.obj",
-						"luxo_000050.obj",
-//						"luxo_000055.obj",
-						"luxo_000060.obj"};
-				
-//				Animation[] animations = {new Animation(new LinearInterpolator(), assets.length, 0, 0, 3000, 0, Animation.RepeatMode.INFINITE)};
+//				Mesh mesh = MeshFactory.getMeshFromAsset("luxo.obj", MeshFactory.MeshType.OBJ);
+//				mesh.setPosition(new Vector3(0,0,1.5f));
 //				
-//				KeyFramedModel keyFramedModel = KeyFramedModelFactory.getKeyFramedModelFromAsset("keyFramedModel", assets, MeshFactory.MeshType.OBJ, animations);
-//				keyFramedModel.position = new Vector3(0,1.5f, 0);
-//				keyFramedModel.setTexture(SHIP_TEXTURE);
+//				mesh.setSx(0.5f);
+//				mesh.setSy(0.5f);
+//				mesh.setSz(0.5f);
 //				
-//				object3ds.add(keyFramedModel);
+//				object3ds.add(mesh);
 //			} catch (ASAIOException e) {
 //				e.printStackTrace();
 //			}	
+//		}
+		
+		{
+			try {
+				String[] assets = {
+						"luxo_000001.obj",
+						"luxo_000005.obj",
+						"luxo_000010.obj",
+						"luxo_000015.obj",
+						"luxo_000020.obj",
+						"luxo_000025.obj",
+						"luxo_000030.obj",
+						"luxo_000035.obj",
+						"luxo_000040.obj",
+						"luxo_000045.obj",
+						"luxo_000050.obj",
+						"luxo_000055.obj",
+						"luxo_000060.obj"
+						};
+				
+				Animation[] animations = {new Animation(new LinearInterpolator(), assets.length, 0, 0, 3000, 0, Animation.RepeatMode.RESTART)};
+				
+				KeyFramedModel keyFramedModel = KeyFramedModelFactory.getKeyFramedModelFromAsset("keyFramedModel", assets, MeshFactory.MeshType.OBJ, animations);
+				keyFramedModel.setPosition(new Vector3(0,0,1.5f));
+				
+				keyFramedModel.setSx(0.5f);
+				keyFramedModel.setSy(0.5f);
+				keyFramedModel.setSz(0.5f);
+				
+				keyFramedModel.setTexture(SHIP_TEXTURE);
+				
+				object3ds.add(keyFramedModel);
+			} catch (ASAIOException e) {
+				e.printStackTrace();
+			}	
 		}
 		
 		WORLD = new World(lights, object3ds);

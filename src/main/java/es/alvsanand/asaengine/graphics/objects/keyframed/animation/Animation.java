@@ -65,18 +65,26 @@ public class Animation {
 
 	public void start() {
 		startTime = System.currentTimeMillis();
+		
+		if(!started){
+			started = true;
+		}
 	}
 
 	public void pause() {
-		lastTime = System.currentTimeMillis();
-
-		paused = true;
+		if(!paused){
+			lastTime = System.currentTimeMillis();
+	
+			paused = true;
+		}
 	}
 
 	public void resume() {
-		pausedTime += System.currentTimeMillis() - lastTime;
-
-		paused = false;
+		if(paused){
+			pausedTime += System.currentTimeMillis() - lastTime;
+	
+			paused = false;
+		}
 	}
 
 	public int getKeyFrame() {
@@ -115,6 +123,7 @@ public class Animation {
 					nextKeyFrame = keyFrameCount;
 					break;
 				}
+				ended = true;
 			} else {
 				if (paused) {
 					if (duration != 0) {
@@ -123,7 +132,9 @@ public class Animation {
 						normalizedTime = lastTime < startTime ? 0.0f : 1.0f;
 					}
 
-					nextKeyFrame = (int) (keyFrameCount * normalizedTime);
+					float fullNormalizedTime = normalizedTime - (int) normalizedTime;
+
+					nextKeyFrame = (int) (keyFrameCount * fullNormalizedTime);
 
 					if (normalizedTime % keyFrameCount > 0) {
 						nextKeyFrame++;
@@ -190,10 +201,6 @@ public class Animation {
 
 	public boolean isPaused() {
 		return paused;
-	}
-
-	public void setPaused(boolean paused) {
-		this.paused = paused;
 	}
 
 	public boolean isEnded() {
