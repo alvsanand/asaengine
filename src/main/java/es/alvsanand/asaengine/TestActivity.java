@@ -39,7 +39,7 @@ public class TestActivity extends Activity{
 		loadCamera();
 		
 		TestOpenGLRenderer testOpenGLRenderer = new TestOpenGLRenderer();
-		testOpenGLRenderer.setCamera(CAMERA);
+		testOpenGLRenderer.setCamera(camera);
 		
 		//Initializing Renderer
 		glView.setRenderer(testOpenGLRenderer);
@@ -47,19 +47,19 @@ public class TestActivity extends Activity{
 		
 		Input input = new InputImpl(this, glView, 1, 1);
 		
-		InputThread inputThread = new TestInputThread(CAMERA, input);
+		InputThread inputThread = new TestInputThread(camera, testOpenGLRenderer, input);
 		inputThread.start();		
 	}
 	
-	private Camera CAMERA;
+	private Camera camera;
 	
 	private void loadCamera() {		
 		Vector2[] points = new Vector2[] { new Vector2(2.5f, 2.5f), new Vector2(-2.5f, 2.5f), new Vector2(-2.5f, -2.5f), new Vector2(2.5f, -2.5f)};
 
 		XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
 		
-		CAMERA = new DynamicLookAtCamera(new Vector3(2.5f, 2.5f, 2.5f), 67, (float) glView.getWidth() / (float) glView.getHeight(), 0.1f, 100,
+		camera = new DynamicLookAtCamera(new Vector3(8f, 8f, 8f), 67, (float) glView.getWidth() / (float) glView.getHeight(), 0.1f, 100,
 				pointsTrayectory);
-		((DynamicLookAtCamera)CAMERA).lookAt = new Vector3(0, 0, 0);
+		((DynamicLookAtCamera)camera).lookAt = new Vector3(0, 0, 0);
 	}	
 }

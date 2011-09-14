@@ -25,6 +25,10 @@ import es.alvsanand.asaengine.graphics.lights.PointLight;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.MeshFactory;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
+import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModel;
+import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModelFactory;
+import es.alvsanand.asaengine.graphics.objects.keyframed.animation.Animation;
+import es.alvsanand.asaengine.graphics.objects.keyframed.animation.LinearInterpolator;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
 import es.alvsanand.asaengine.graphics.textures.Texture;
@@ -81,13 +85,42 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //			object3ds.add(cube);
 //		}
 //		
+//		{
+//			try {
+//				Mesh mesh = MeshFactory.getMeshFromAsset("invader.obj", MeshFactory.MeshType.OBJ);
+//				mesh.position = new Vector3(0,0,0);
+//				mesh.setTexture(INVADERSHIP_TEXTURE);
+//				
+//				mesh.rx = 90;
+//				
+//				object3ds.add(mesh);
+//			} catch (ASAIOException e) {
+//				e.printStackTrace();
+//			}	
+//		}
+//		
+//		{
+//			try {
+//				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
+//				mesh.position = new Vector3(0,0,1.5f);
+//				mesh.setTexture(SHIP_TEXTURE);
+//				
+//				mesh.rx = 90f;
+//				
+//				object3ds.add(mesh);
+//			} catch (ASAIOException e) {
+//				e.printStackTrace();
+//			}	
+//		}
+//		
 		{
 			try {
-				Mesh mesh = MeshFactory.getMeshFromAsset("invader.obj", MeshFactory.MeshType.OBJ);
-				mesh.position = new Vector3(0,0,0);
-				mesh.setTexture(INVADERSHIP_TEXTURE);
+				Mesh mesh = MeshFactory.getMeshFromAsset("luxo_000001.obj", MeshFactory.MeshType.OBJ);
+				mesh.position = new Vector3(0,0,1.5f);
 				
-				mesh.rx = 90;
+				mesh.sx = 0.5f;
+				mesh.sy = 0.5f;
+				mesh.sz = 0.5f;
 				
 				object3ds.add(mesh);
 			} catch (ASAIOException e) {
@@ -96,30 +129,31 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 		}
 		
 		{
-			try {
-				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
-				mesh.position = new Vector3(0,0,1.5f);
-				mesh.setTexture(SHIP_TEXTURE);
+//			try {
+				String[] assets = {"luxo_000001.obj",
+//						"luxo_000005.obj",
+						"luxo_000010.obj",
+//						"luxo_000015.obj",
+						"luxo_000020.obj",
+//						"luxo_000025.obj",
+						"luxo_000030.obj",
+//						"luxo_000035.obj",
+						"luxo_000040.obj",
+//						"luxo_000045.obj",
+						"luxo_000050.obj",
+//						"luxo_000055.obj",
+						"luxo_000060.obj"};
 				
-				mesh.rx = 90f;
-				
-				object3ds.add(mesh);
-			} catch (ASAIOException e) {
-				e.printStackTrace();
-			}	
-		}
-		{
-			try {
-				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
-				mesh.position = new Vector3(0,1.5f, 0);
-				mesh.setTexture(SHIP_TEXTURE);
-				
-				mesh.rx = 90f;
-				
-				object3ds.add(mesh);
-			} catch (ASAIOException e) {
-				e.printStackTrace();
-			}	
+//				Animation[] animations = {new Animation(new LinearInterpolator(), assets.length, 0, 0, 3000, 0, Animation.RepeatMode.INFINITE)};
+//				
+//				KeyFramedModel keyFramedModel = KeyFramedModelFactory.getKeyFramedModelFromAsset("keyFramedModel", assets, MeshFactory.MeshType.OBJ, animations);
+//				keyFramedModel.position = new Vector3(0,1.5f, 0);
+//				keyFramedModel.setTexture(SHIP_TEXTURE);
+//				
+//				object3ds.add(keyFramedModel);
+//			} catch (ASAIOException e) {
+//				e.printStackTrace();
+//			}	
 		}
 		
 		WORLD = new World(lights, object3ds);

@@ -6,6 +6,7 @@ import android.util.Log;
 import es.alvsanand.asaengine.graphics.Dynamic;
 import es.alvsanand.asaengine.graphics.cameras.Camera;
 import es.alvsanand.asaengine.graphics.cameras.DynamicLookAtCamera;
+import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModel;
 import es.alvsanand.asaengine.input.Input;
 import es.alvsanand.asaengine.input.InputThread;
 import es.alvsanand.asaengine.input.keyboard.KeyEvent;
@@ -14,11 +15,14 @@ public class TestInputThread extends InputThread {
 	private static String TAG = "InputThread";
 	
 	private Camera camera;
+	
+	private TestOpenGLRenderer testOpenGLRenderer;
 
-	public TestInputThread(Camera camera, Input input) {
+	public TestInputThread(Camera camera, TestOpenGLRenderer testOpenGLRenderer, Input input) {
 		super(input);
 		
 		this.camera = camera;
+		this.testOpenGLRenderer = testOpenGLRenderer;
 	}
 
 	@Override
@@ -31,14 +35,18 @@ public class TestInputThread extends InputThread {
 			for(KeyEvent keyevent: keyEvents){
 				if (keyevent.type == KeyEvent.KEY_UP) {
 					switch(keyevent.keyCode){
-//						case android.view.KeyEvent.KEYCODE_DPAD_LEFT:
-//							Log.v(TAG, "KEYCODE_DPAD_LEFT");
-//							dynamicLookAtCamera.position.x -= 2;
-//							break;
-//						case android.view.KeyEvent.KEYCODE_DPAD_RIGHT:
-//							Log.v(TAG, "KEYCODE_DPAD_RIGHT");
-//							dynamicLookAtCamera.position.x += 2;
-//							break;
+						case android.view.KeyEvent.KEYCODE_DPAD_LEFT:
+							Log.v(TAG, "KEYCODE_DPAD_LEFT");
+							
+							((KeyFramedModel)(testOpenGLRenderer.getWorld().getObject3ds().get(0))).pause();
+							
+							break;
+						case android.view.KeyEvent.KEYCODE_DPAD_RIGHT:
+							Log.v(TAG, "KEYCODE_DPAD_RIGHT");
+							
+							((KeyFramedModel)(testOpenGLRenderer.getWorld().getObject3ds().get(0))).start();
+							
+							break;
 						case android.view.KeyEvent.KEYCODE_DPAD_UP:
 							Log.v(TAG, "KEYCODE_DPAD_UP");
 							dynamicLookAtCamera.position.x = dynamicLookAtCamera.position.x / 10;
