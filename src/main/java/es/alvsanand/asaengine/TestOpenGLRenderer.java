@@ -40,10 +40,12 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 	
 	Texture SHIP_TEXTURE;
 	Texture INVADERSHIP_TEXTURE;
+	Texture ZEBRA_TEXTURE;
 	
 	private void loadTextures(){
 		SHIP_TEXTURE = TextureFactory.getTextureFromAsset("ship.png");
 		INVADERSHIP_TEXTURE = TextureFactory.getTextureFromAsset("invader.png");
+		ZEBRA_TEXTURE = TextureFactory.getTextureFromAsset("zebra.jpg");
 	}
 	
 	World WORLD;
@@ -102,10 +104,10 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //		{
 //			try {
 //				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
-//				mesh.position = new Vector3(0,0,1.5f);
+//				mesh.setPosition(new Vector3(0,0,1.5f));
 //				mesh.setTexture(SHIP_TEXTURE);
 //				
-//				mesh.rx = 90f;
+//				mesh.setRx(90f);
 //				
 //				object3ds.add(mesh);
 //			} catch (ASAIOException e) {
@@ -113,55 +115,55 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //			}	
 //		}
 //		
-//		{
-//			try {
-//				Mesh mesh = MeshFactory.getMeshFromAsset("luxo.obj", MeshFactory.MeshType.OBJ);
-//				mesh.setPosition(new Vector3(0,0,1.5f));
-//				
-//				mesh.setSx(0.5f);
-//				mesh.setSy(0.5f);
-//				mesh.setSz(0.5f);
-//				
-//				object3ds.add(mesh);
-//			} catch (ASAIOException e) {
-//				e.printStackTrace();
-//			}	
-//		}
-		
 		{
 			try {
-				String[] assets = {
-						"luxo_000001.obj",
-						"luxo_000005.obj",
-						"luxo_000010.obj",
-						"luxo_000015.obj",
-						"luxo_000020.obj",
-						"luxo_000025.obj",
-						"luxo_000030.obj",
-						"luxo_000035.obj",
-						"luxo_000040.obj",
-						"luxo_000045.obj",
-						"luxo_000050.obj",
-						"luxo_000055.obj",
-						"luxo_000060.obj"
-						};
+				Mesh mesh = MeshFactory.getMeshFromAsset("zebra.obj", MeshFactory.MeshType.OBJ);
+				mesh.setPosition(new Vector3(0,0,1.5f));
 				
-				Animation[] animations = {new Animation(new LinearInterpolator(), assets.length, 0, 0, 3000, 0, Animation.RepeatMode.RESTART)};
+				mesh.setSx(0.65f);
+				mesh.setSy(0.65f);
+				mesh.setSz(0.65f);
 				
-				KeyFramedModel keyFramedModel = KeyFramedModelFactory.getKeyFramedModelFromAsset("keyFramedModel", assets, MeshFactory.MeshType.OBJ, animations);
-				keyFramedModel.setPosition(new Vector3(0,0,1.5f));
+				mesh.setTexture(ZEBRA_TEXTURE);				
 				
-				keyFramedModel.setSx(0.5f);
-				keyFramedModel.setSy(0.5f);
-				keyFramedModel.setSz(0.5f);
-				
-				keyFramedModel.setTexture(SHIP_TEXTURE);
-				
-				object3ds.add(keyFramedModel);
+				object3ds.add(mesh);
 			} catch (ASAIOException e) {
 				e.printStackTrace();
 			}	
 		}
+//		
+//		{
+//			try {
+//				String[] assets = {
+//						"luxo_000001.obj",
+//						"luxo_000005.obj",
+//						"luxo_000010.obj",
+//						"luxo_000015.obj",
+//						"luxo_000020.obj",
+//						"luxo_000025.obj",
+//						"luxo_000030.obj",
+//						"luxo_000035.obj",
+//						"luxo_000040.obj",
+//						"luxo_000045.obj",
+//						"luxo_000050.obj",
+//						"luxo_000055.obj",
+//						"luxo_000060.obj"
+//						};
+//				
+//				Animation[] animations = {new Animation(new LinearInterpolator(), assets.length, 0, 0, 3000, 0, Animation.RepeatMode.RESTART)};
+//				
+//				KeyFramedModel keyFramedModel = KeyFramedModelFactory.getKeyFramedModelFromAsset("keyFramedModel", assets, MeshFactory.MeshType.OBJ, animations);
+//				keyFramedModel.setPosition(new Vector3(0,0,1.5f));
+//				
+//				keyFramedModel.setSx(0.5f);
+//				keyFramedModel.setSy(0.5f);
+//				keyFramedModel.setSz(0.5f);
+//				
+//				object3ds.add(keyFramedModel);
+//			} catch (ASAIOException e) {
+//				e.printStackTrace();
+//			}	
+//		}
 		
 		WORLD = new World(lights, object3ds);
 	}
