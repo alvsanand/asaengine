@@ -44,7 +44,7 @@ public class World {
 
 	void renderObject3ds() {
 		for(Object3D object3d: object3ds){		
-			if(object3d instanceof Dynamic){
+			if(object3d.isRunning()){
 				((Dynamic) object3d).updatePosition();
 			}
 			
@@ -54,7 +54,7 @@ public class World {
 
 	void enableLights() {
 		for(Light light: lights){			
-			if(light instanceof Dynamic){
+			if(light instanceof Dynamic && ((Dynamic) light).isRunning()){
 				((Dynamic) light).updatePosition();
 			}
 			

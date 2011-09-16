@@ -229,6 +229,98 @@ public class Vector3 implements Serializable {
 		return (float) Math.sqrt(dst2(x, y, z));
 	}
 
+	public Vector3 scale(float scalarX, float scalarY, float scalarZ) {
+		x *= scalarX;
+		y *= scalarY;
+		z *= scalarZ;
+		return this;
+	}
+	
+	public float angleBetween(Vector3 other) { 
+		float angle; 
+		
+		float dot = this.dot(other);
+		
+		float len1 = this.len();
+		float len2 = other.len();
+		
+		if(len1==0 && len2==0){
+			return 0;
+		}
+		
+		angle = (float)Math.acos(dot/(len1*len2));
+		
+		return angle; 
+	}
+	
+	public float angleBetween(float x, float y, float z) { 
+		float angle; 
+		
+		float dot = this.dot(x, y, z);
+		
+		float len1 = this.len();
+		float len2 = (float) Math.sqrt(x * x + y * y + z * z);
+		
+		if(len1==0 || len2==0){
+			return 0;
+		}
+		
+		angle = (float)Math.acos(dot/(len1*len2));
+		
+		return angle; 
+	}
+	
+	public float angleBetweenXY(float x, float y) { 
+		float angle; 
+		
+		float dot = this.x * x + this.y * y;
+		
+		float len1 = (float) Math.sqrt(this.x * this.x + this.y * this.y);
+		float len2 = (float) Math.sqrt(x * x + y * y);
+		
+		if(len1==0 || len2==0){
+			return 0;
+		}
+		
+		angle = (float)Math.acos(dot/(len1*len2));
+		
+		return angle; 
+	}
+	
+	public float angleBetweenXZ(float x, float z) { 
+		float angle; 
+		
+		float dot = this.x * x + this.z * z;
+		
+		float len1 = (float) Math.sqrt(this.x * this.x + this.z * this.z);
+		float len2 = (float) Math.sqrt(x * x + z * z);
+		
+		if(len1==0 || len2==0){
+			return 0;
+		}
+		
+		angle = (float)Math.acos(dot/(len1*len2));
+		
+		return angle; 
+	}
+	
+	public float angleBetweenYZ(float y, float z) { 
+		float angle; 
+		
+		float dot = this.y * y + this.z * z;
+		
+		float len1 = (float) Math.sqrt(this.y * this.y + this.z * this.z);
+		float len2 = (float) Math.sqrt(y * y + z * z);
+		
+		if(len1==0 || len2==0){
+			return 0;
+		}
+		
+		angle = (float)Math.acos(dot/(len1*len2));
+		
+		return angle; 
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -255,13 +347,6 @@ public class Vector3 implements Serializable {
 		if (Float.floatToIntBits(z) != Float.floatToIntBits(other.z))
 			return false;
 		return true;
-	}
-
-	public Vector3 scale(float scalarX, float scalarY, float scalarZ) {
-		x *= scalarX;
-		y *= scalarY;
-		z *= scalarZ;
-		return this;
 	}
 
 	@Override

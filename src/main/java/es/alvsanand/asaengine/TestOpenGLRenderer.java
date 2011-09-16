@@ -25,15 +25,13 @@ import es.alvsanand.asaengine.graphics.lights.PointLight;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.MeshFactory;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
-import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModel;
-import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModelFactory;
-import es.alvsanand.asaengine.graphics.objects.keyframed.animation.Animation;
-import es.alvsanand.asaengine.graphics.objects.keyframed.animation.LinearInterpolator;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
 import es.alvsanand.asaengine.graphics.textures.Texture;
 import es.alvsanand.asaengine.graphics.textures.TextureFactory;
+import es.alvsanand.asaengine.math.Vector2;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.trajectory.PointsTrajectory;
 import es.alvsanand.asaengine.util.io.error.ASAIOException;
 
 public class TestOpenGLRenderer extends OpenGLRenderer {
@@ -101,36 +99,51 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //			}	
 //		}
 //		
-//		{
-//			try {
-//				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
-//				mesh.setPosition(new Vector3(0,0,1.5f));
-//				mesh.setTexture(SHIP_TEXTURE);
-//				
-//				mesh.setRx(90f);
-//				
-//				object3ds.add(mesh);
-//			} catch (ASAIOException e) {
-//				e.printStackTrace();
-//			}	
-//		}
-//		
 		{
 			try {
-				Mesh mesh = MeshFactory.getMeshFromAsset("zebra.obj", MeshFactory.MeshType.OBJ);
-				mesh.setPosition(new Vector3(0,0,1.5f));
+				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
+				mesh.setPosition(new Vector3(0,0,0));
+				mesh.setTexture(SHIP_TEXTURE);
 				
-				mesh.setSx(0.65f);
-				mesh.setSy(0.65f);
-				mesh.setSz(0.65f);
+				mesh.setRy(180f);
 				
-				mesh.setTexture(ZEBRA_TEXTURE);				
+				mesh.setSx(1.65f);
+				mesh.setSy(1.65f);
+				mesh.setSz(1.65f);
+				
+				Vector3[] points = new Vector3[] { new Vector3(5f, 0, 5f), new Vector3(-5f, 1, 5f), new Vector3(-5f, 0, -5f), new Vector3(5f, 1, -5f)};
+				
+				PointsTrajectory pointsTrayectory = new PointsTrajectory(0.2f, 0.1f, 3f, points);
+				
+				mesh.setTrajectory(pointsTrayectory);
 				
 				object3ds.add(mesh);
 			} catch (ASAIOException e) {
 				e.printStackTrace();
 			}	
 		}
+//		
+//		{
+//			try {
+//				Mesh mesh = MeshFactory.getMeshFromAsset("zebra.obj", MeshFactory.MeshType.OBJ);
+//				mesh.setPosition(new Vector3(0,0,0));
+//				
+//				mesh.setSx(0.65f);
+//				mesh.setSy(0.65f);
+//				mesh.setSz(0.65f);
+//				
+//				Vector2[] points = new Vector2[] { new Vector2(5f, 5f), new Vector2(-5f, 5f), new Vector2(-5f, -5f), new Vector2(5f, -5f)};
+//				
+//				XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
+//				
+//				mesh.setTexture(ZEBRA_TEXTURE);				
+//				mesh.setTrajectory(pointsTrayectory);
+//				
+//				object3ds.add(mesh);
+//			} catch (ASAIOException e) {
+//				e.printStackTrace();
+//			}	
+//		}
 //		
 //		{
 //			try {

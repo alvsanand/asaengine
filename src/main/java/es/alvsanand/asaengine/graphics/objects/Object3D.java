@@ -1,10 +1,14 @@
 package es.alvsanand.asaengine.graphics.objects;
 
+import es.alvsanand.asaengine.graphics.Dynamic;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.trajectory.Trajectory;
 import es.alvsanand.asaengine.util.Disposable;
 
-public abstract class Object3D implements Disposable{
+public abstract class Object3D implements Disposable, Dynamic{
 	protected Vector3 position;
+	
+	protected Trajectory trajectory;	
 
 	protected float rx = 0;
 
@@ -78,5 +82,38 @@ public abstract class Object3D implements Disposable{
 
 	public void setSz(float sz) {
 		this.sz = sz;
+	}
+
+	public Trajectory getTrajectory() {
+		return trajectory;
+	}
+
+	public void setTrajectory(Trajectory trajectory) {
+		this.trajectory = trajectory;
+	}
+
+	@Override
+	public void updatePosition() {
+		this.position = trajectory.getActualPosition(this.position);
+	}
+
+	@Override
+	public void startOrResume() {
+		trajectory.startOrResume();
+	}
+
+	@Override
+	public void pause() {
+		trajectory.pause();
+	}
+
+	@Override
+	public boolean isRunning() {
+		if(trajectory==null){
+			return false;
+		}
+		else{
+			return trajectory.isRunning();
+		}		
 	}
 }

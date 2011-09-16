@@ -35,7 +35,7 @@ public abstract class Trajectory {
 
 	public abstract Vector3 getActualPosition(Vector3 lastPosition);
 
-	public Vector3 getDirectrion(){
+	public Vector3 getDirection(){
 		return direction;
 	}
 }

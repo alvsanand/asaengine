@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.util.Log;
 import es.alvsanand.asaengine.error.ASARuntimeException;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
@@ -190,7 +191,7 @@ public class Mesh extends Object3D {
 			OpenGLRenderer.gl.glEnable(GL10.GL_TEXTURE_2D);
 			texture.bind();
 		}
-		
+
 		OpenGLRenderer.gl.glFrontFace(GL10.GL_CCW);
 
 		vertices.bind();
@@ -198,12 +199,12 @@ public class Mesh extends Object3D {
 			indices.bind();
 	}
 
-	public void unbind() {				
+	public void unbind() {
 		vertices.unbind();
-		
+
 		if (!isVertexArray && indices.getNumIndices() > 0)
 			indices.unbind();
-		
+
 		if (texture != null) {
 			OpenGLRenderer.gl.glDisable(GL10.GL_TEXTURE_2D);
 		}
@@ -230,20 +231,66 @@ public class Mesh extends Object3D {
 		OpenGLRenderer.gl.glPushMatrix();
 
 		OpenGLRenderer.gl.glTranslatef(position.x, position.y, position.z);
-		
-		if(rx != 0)
+
+		if (rx != 0)
 			OpenGLRenderer.gl.glRotatef(rx, 1, 0, 0);
-		if(ry != 0)
+		if (ry != 0)
 			OpenGLRenderer.gl.glRotatef(ry, 0, 1, 0);
-		if(rz != 0)
+		if (rz != 0)
 			OpenGLRenderer.gl.glRotatef(rz, 0, 0, 1);
-		
-		if(sx > 0 && sy > 0 && sz > 0)
+
+		if (getTrajectory() != null && getTrajectory().getDirection()!=null) {
+			{
+				float angleX = (float) Math.toDegrees(getTrajectory().getDirection().angleBetweenYZ(0, 1));
+
+				Log.i("Mesh", ""+angleX);
+				
+//				//Disabled to always look up
+//				if(angleX > 90){
+//					angleX = angleX - 90;
+//				}
+//				
+//				if (getTrajectory().getDirection().y < 0) {
+//					angleX = -angleX;
+//				}
+//				if (angleX==180) {
+//					angleX = 0;
+//				}
+
+				OpenGLRenderer.gl.glRotatef(angleX, 1, 0, 0);
+			}
+
+			{
+				float angleY = (float) Math.toDegrees(getTrajectory().getDirection().angleBetweenXZ(0, 1));
+
+				if (getTrajectory().getDirection().x < 0) {
+					angleY = 180 + angleY;
+				}
+
+//				OpenGLRenderer.gl.glRotatef(angleY, 0, 1, 0);
+			}
+			
+			{
+				float angleZ = (float) Math.toDegrees(getTrajectory().getDirection().angleBetweenXY(1, 0));
+
+//				//Disabled to always look up
+//				if (getTrajectory().getDirection().x < 0) {
+//					angleZ = 180 + angleZ;
+//				}
+				if (angleZ==180) {
+					angleZ = 0;
+				}
+				
+//				OpenGLRenderer.gl.glRotatef(angleZ, 0, 1, 0);
+			}
+		}
+
+		if (sx > 0 && sy > 0 && sz > 0)
 			OpenGLRenderer.gl.glScalef(sx, sy, sz);
-		
-//		// Set flat fill color
-//		OpenGLRenderer.gl.glColor4f(256f, 256f, 256f, 1.0f);
-		
+
+		// // Set flat fill color
+		// OpenGLRenderer.gl.glColor4f(256f, 256f, 256f, 1.0f);
+
 		if (isVertexArray) {
 			if (indices.getNumIndices() > 0) {
 				ShortBuffer buffer = indices.getBuffer();
@@ -359,10 +406,10 @@ public class Mesh extends Object3D {
 	public void setTexture(Texture texture) {
 		this.texture = texture;
 	}
-	
-	public Mesh duplicate(){
+
+	public Mesh duplicate() {
 		Mesh newMesh = new Mesh(new Vector3(), vertices, indices, autoBind, isVertexArray, texture);
-		
+
 		return newMesh;
 	}
 }

@@ -98,7 +98,7 @@ public abstract class OpenGLRenderer implements Renderer {
 			// Replace the current matrix with the identity matrix
 			gl.glLoadIdentity(); 		
 			
-			if(camera instanceof Dynamic){
+			if(camera instanceof Dynamic && ((Dynamic) camera).isRunning()){
 				((Dynamic) camera).updatePosition();
 			}
 			

@@ -73,12 +73,10 @@ public class TestInputThread extends InputThread {
 					case android.view.KeyEvent.KEYCODE_DPAD_CENTER:
 						Log.v(TAG, "KEYCODE_DPAD_DOWN");
 
-						Dynamic dynamic = ((Dynamic) camera);
-
-						if (!dynamic.isRunning()) {
-							dynamic.startOrResume();
+						if (!testOpenGLRenderer.getWorld().getObject3ds().get(0).isRunning()) {
+							testOpenGLRenderer.getWorld().getObject3ds().get(0).startOrResume();
 						} else {
-							dynamic.pause();
+							testOpenGLRenderer.getWorld().getObject3ds().get(0).pause();
 						}
 						break;
 					}
