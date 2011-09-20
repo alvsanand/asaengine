@@ -5,7 +5,7 @@ import es.alvsanand.asaengine.math.Vector3;
 import es.alvsanand.asaengine.math.trajectory.Trajectory;
 import es.alvsanand.asaengine.util.Disposable;
 
-public abstract class Object3D implements Disposable, Dynamic{
+public abstract class Object3D implements Disposable, Dynamic, Renderable{
 	protected Vector3 position;
 	
 	protected Trajectory trajectory;	
@@ -25,8 +25,6 @@ public abstract class Object3D implements Disposable, Dynamic{
 	public Object3D(Vector3 position) {
 		this.position = position;
 	}
-	
-	public abstract void render();
 
 	public Vector3 getPosition() {
 		return position;
@@ -116,4 +114,6 @@ public abstract class Object3D implements Disposable, Dynamic{
 			return trajectory.isRunning();
 		}		
 	}
+	
+	protected abstract void renderPosition();
 }

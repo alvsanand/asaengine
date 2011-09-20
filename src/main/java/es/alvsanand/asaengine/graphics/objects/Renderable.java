@@ -13,29 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package es.alvsanand.asaengine.graphics.objects.utils;
+package es.alvsanand.asaengine.graphics.objects;
 
-import java.nio.FloatBuffer;
-
-import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
-import es.alvsanand.asaengine.util.Disposable;
-
-public interface VertexData extends Disposable {
-	public enum VertexDataType {
-		VertexArray, VertexBufferObject, VertexBufferObjectSubData,
-	}
-	
-	public int getNumVertices ();
-
-	public int getNumMaxVertices ();
-
-	public VertexAttributes getAttributes ();
-
-	public void setVertices (float[] vertices, int offset, int count);
-
-	public FloatBuffer getBuffer ();
-
-	public void bind ();
-
-	public void unbind ();
+public interface Renderable {
+	public void render();
 }

@@ -21,11 +21,11 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
 import es.alvsanand.asaengine.error.ASARuntimeException;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes.Usage;
+import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFrame;
 import es.alvsanand.asaengine.graphics.objects.utils.IndexBufferObject;
 import es.alvsanand.asaengine.graphics.objects.utils.IndexBufferObjectSubData;
 import es.alvsanand.asaengine.graphics.objects.utils.IndexData;
@@ -33,6 +33,7 @@ import es.alvsanand.asaengine.graphics.objects.utils.VertexArray;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexBufferObject;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexBufferObjectSubData;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexData;
+import es.alvsanand.asaengine.graphics.objects.utils.VertexData.VertexDataType;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer.GL_TYPE;
 import es.alvsanand.asaengine.graphics.textures.Texture;
@@ -40,9 +41,6 @@ import es.alvsanand.asaengine.math.Vector3;
 import es.alvsanand.asaengine.math.collision.BoundingBox;
 
 public class Mesh extends Object3D {
-	public enum VertexDataType {
-		VertexArray, VertexBufferObject, VertexBufferObjectSubData,
-	}
 
 	protected static final ArrayList<Mesh> meshes = new ArrayList<Mesh>();
 
@@ -223,100 +221,57 @@ public class Mesh extends Object3D {
 		render(GL10.GL_TRIANGLES, offset, count);
 	}
 
-	public void render(int primitiveType, int offset, int count) {
-		if (autoBind) {
-			bind();
-		}
-
-		OpenGLRenderer.gl.glPushMatrix();
-
-		OpenGLRenderer.gl.glTranslatef(position.x, position.y, position.z);
-
-		if (rx != 0)
-			OpenGLRenderer.gl.glRotatef(rx, 1, 0, 0);
-		if (ry != 0)
-			OpenGLRenderer.gl.glRotatef(ry, 0, 1, 0);
-		if (rz != 0)
-			OpenGLRenderer.gl.glRotatef(rz, 0, 0, 1);
-
-		if (getTrajectory() != null && getTrajectory().getDirection()!=null) {
-			{
-				float angleX = (float) Math.toDegrees(getTrajectory().getDirection().angleBetweenYZ(0, 1));
-
-				Log.i("Mesh", ""+angleX);
-				
-//				//Disabled to always look up
-//				if(angleX > 90){
-//					angleX = angleX - 90;
-//				}
-//				
-//				if (getTrajectory().getDirection().y < 0) {
-//					angleX = -angleX;
-//				}
-//				if (angleX==180) {
-//					angleX = 0;
-//				}
-
-				OpenGLRenderer.gl.glRotatef(angleX, 1, 0, 0);
+		public void render(int primitiveType, int offset, int count) {
+			if (autoBind) {
+				bind();
 			}
-
-			{
-				float angleY = (float) Math.toDegrees(getTrajectory().getDirection().angleBetweenXZ(0, 1));
-
-				if (getTrajectory().getDirection().x < 0) {
-					angleY = 180 + angleY;
-				}
-
-//				OpenGLRenderer.gl.glRotatef(angleY, 0, 1, 0);
-			}
+	
+			OpenGLRenderer.gl.glPushMatrix();
+	
+			OpenGLRenderer.gl.glTranslatef(position.x, position.y, position.z);
+	
+			if (rx != 0)
+				OpenGLRenderer.gl.glRotatef(rx, 1, 0, 0);
+			if (ry != 0)
+				OpenGLRenderer.gl.glRotatef(ry, 0, 1, 0);
+			if (rz != 0)
+				OpenGLRenderer.gl.glRotatef(rz, 0, 0, 1);
+	
+			if (sx > 0 && sy > 0 && sz > 0)
+				OpenGLRenderer.gl.glScalef(sx, sy, sz);
+	
+			//Render de Position
+			renderPosition();
 			
-			{
-				float angleZ = (float) Math.toDegrees(getTrajectory().getDirection().angleBetweenXY(1, 0));
-
-//				//Disabled to always look up
-//				if (getTrajectory().getDirection().x < 0) {
-//					angleZ = 180 + angleZ;
-//				}
-				if (angleZ==180) {
-					angleZ = 0;
+			// // Set flat fill color
+			// OpenGLRenderer.gl.glColor4f(256f, 256f, 256f, 1.0f);
+	
+			if (isVertexArray) {
+				if (indices.getNumIndices() > 0) {
+					ShortBuffer buffer = indices.getBuffer();
+					int oldPosition = buffer.position();
+					int oldLimit = buffer.limit();
+					buffer.position(offset);
+					buffer.limit(offset + count);
+					OpenGLRenderer.gl.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, buffer);
+					buffer.position(oldPosition);
+					buffer.limit(oldLimit);
+				} else {
+					OpenGLRenderer.gl.glDrawArrays(primitiveType, offset, count);
 				}
-				
-//				OpenGLRenderer.gl.glRotatef(angleZ, 0, 1, 0);
-			}
-		}
-
-		if (sx > 0 && sy > 0 && sz > 0)
-			OpenGLRenderer.gl.glScalef(sx, sy, sz);
-
-		// // Set flat fill color
-		// OpenGLRenderer.gl.glColor4f(256f, 256f, 256f, 1.0f);
-
-		if (isVertexArray) {
-			if (indices.getNumIndices() > 0) {
-				ShortBuffer buffer = indices.getBuffer();
-				int oldPosition = buffer.position();
-				int oldLimit = buffer.limit();
-				buffer.position(offset);
-				buffer.limit(offset + count);
-				OpenGLRenderer.gl.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, buffer);
-				buffer.position(oldPosition);
-				buffer.limit(oldLimit);
 			} else {
-				OpenGLRenderer.gl.glDrawArrays(primitiveType, offset, count);
+				if (indices.getNumIndices() > 0)
+					OpenGLRenderer.gl11.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, offset * 2);
+				else
+					OpenGLRenderer.gl11.glDrawArrays(primitiveType, offset, count);
 			}
-		} else {
-			if (indices.getNumIndices() > 0)
-				OpenGLRenderer.gl11.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, offset * 2);
-			else
-				OpenGLRenderer.gl11.glDrawArrays(primitiveType, offset, count);
+	
+			OpenGLRenderer.gl.glPopMatrix();
+	
+			if (autoBind) {
+				unbind();
+			}
 		}
-
-		OpenGLRenderer.gl.glPopMatrix();
-
-		if (autoBind) {
-			unbind();
-		}
-	}
 
 	@Override
 	public void dispose() {
@@ -411,5 +366,76 @@ public class Mesh extends Object3D {
 		Mesh newMesh = new Mesh(new Vector3(), vertices, indices, autoBind, isVertexArray, texture);
 
 		return newMesh;
+	}
+
+	public KeyFrame getKeyFrame(int frameNumber) {
+		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertices, indices, isVertexArray, texture);
+
+		return newKeyFrame;
+	}
+
+	@Override
+	public void renderPosition() {		
+		if (getTrajectory() != null && getTrajectory().getDirection()!=null) {
+			Vector3 direction = getTrajectory().getDirection().nor();
+			
+			float angleX , angleZ, angleY = 0;
+
+			{
+				angleY = (float) Math.toDegrees(direction.angleBetweenXZ(0, 1));
+
+				if (direction.x < 0) {
+					angleY = 180 + angleY;
+				}				
+			}
+			
+//			Only used Y rotation
+//			{
+//				angleX = (float) Math.toDegrees(direction.angleBetweenYZ(0, 1));
+//				
+//				if (direction.y < 0) {
+//					if (angleX > 90) {
+//						angleX = 180 - angleX;
+//					}
+//					else{
+//						angleX = - angleX;
+//					}
+//				}
+//				else{
+//					if (angleX > 90) {
+//						angleX = 180 - angleX;
+//					}					
+//				}
+//				if (angleX == 90 || angleX == -90 ) {
+//					angleX = 0;
+//				}		
+//			}
+//			
+//			{
+//				angleZ = (float) Math.toDegrees(direction.angleBetweenXY(1, 0));
+//				
+//				if (direction.y < 0) {
+//					if (angleZ > 90) {
+//						angleZ = 180 - angleZ;
+//					}
+//					else{
+//						angleZ = - angleZ;
+//					}
+//				}
+//				else{
+//					if (angleZ > 90) {
+//						angleZ = 180 - angleZ;
+//					}					
+//				}
+//				
+//				if (angleZ == 90 || angleZ == -90 ) {
+//					angleZ = 0;
+//				}	
+//			}			
+//			OpenGLRenderer.gl.glRotatef(angleX, 1, 0, 0);
+//			OpenGLRenderer.gl.glRotatef(angleZ, 0, 0, 1);
+			
+			OpenGLRenderer.gl.glRotatef(angleY, 0, 1, 0);
+		}		
 	}
 }

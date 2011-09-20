@@ -22,14 +22,16 @@ import javax.microedition.khronos.opengles.GL10;
 import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.lights.PointLight;
-import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.MeshFactory;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
+import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModel;
+import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModelFactory;
+import es.alvsanand.asaengine.graphics.objects.keyframed.animation.Animation;
+import es.alvsanand.asaengine.graphics.objects.keyframed.animation.LinearInterpolator;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
 import es.alvsanand.asaengine.graphics.textures.Texture;
 import es.alvsanand.asaengine.graphics.textures.TextureFactory;
-import es.alvsanand.asaengine.math.Vector2;
 import es.alvsanand.asaengine.math.Vector3;
 import es.alvsanand.asaengine.math.trajectory.PointsTrajectory;
 import es.alvsanand.asaengine.util.io.error.ASAIOException;
@@ -99,29 +101,29 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //			}	
 //		}
 //		
-		{
-			try {
-				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
-				mesh.setPosition(new Vector3(0,0,0));
-				mesh.setTexture(SHIP_TEXTURE);
-				
-				mesh.setRy(180f);
-				
-				mesh.setSx(1.65f);
-				mesh.setSy(1.65f);
-				mesh.setSz(1.65f);
-				
-				Vector3[] points = new Vector3[] { new Vector3(5f, 0, 5f), new Vector3(-5f, 1, 5f), new Vector3(-5f, 0, -5f), new Vector3(5f, 1, -5f)};
-				
-				PointsTrajectory pointsTrayectory = new PointsTrajectory(0.2f, 0.1f, 3f, points);
-				
-				mesh.setTrajectory(pointsTrayectory);
-				
-				object3ds.add(mesh);
-			} catch (ASAIOException e) {
-				e.printStackTrace();
-			}	
-		}
+//		{
+//			try {
+//				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
+//				mesh.setPosition(new Vector3(0,0,0));
+//				mesh.setTexture(SHIP_TEXTURE);
+//				
+//				mesh.setRy(180f);
+//				
+//				mesh.setSx(1.65f);
+//				mesh.setSy(1.65f);
+//				mesh.setSz(1.65f);
+//				
+//				Vector3[] points = new Vector3[] { new Vector3(5f, 0, 5f), new Vector3(-5f, 3, 5f), new Vector3(-5f, 0, -5f), new Vector3(5f, 3, -5f)};
+//				
+//				PointsTrajectory pointsTrayectory = new PointsTrajectory(0.2f, 0.1f, 3f, points);
+//				
+//				mesh.setTrajectory(pointsTrayectory);
+//				
+//				object3ds.add(mesh);
+//			} catch (ASAIOException e) {
+//				e.printStackTrace();
+//			}	
+//		}
 //		
 //		{
 //			try {
@@ -145,38 +147,44 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //			}	
 //		}
 //		
-//		{
-//			try {
-//				String[] assets = {
-//						"luxo_000001.obj",
+		{
+			try {
+				String[] assets = {
+						"luxo_000001.obj",
 //						"luxo_000005.obj",
 //						"luxo_000010.obj",
 //						"luxo_000015.obj",
-//						"luxo_000020.obj",
+						"luxo_000020.obj",
 //						"luxo_000025.obj",
 //						"luxo_000030.obj",
 //						"luxo_000035.obj",
-//						"luxo_000040.obj",
+						"luxo_000040.obj",
 //						"luxo_000045.obj",
 //						"luxo_000050.obj",
 //						"luxo_000055.obj",
-//						"luxo_000060.obj"
-//						};
-//				
-//				Animation[] animations = {new Animation(new LinearInterpolator(), assets.length, 0, 0, 3000, 0, Animation.RepeatMode.RESTART)};
-//				
-//				KeyFramedModel keyFramedModel = KeyFramedModelFactory.getKeyFramedModelFromAsset("keyFramedModel", assets, MeshFactory.MeshType.OBJ, animations);
-//				keyFramedModel.setPosition(new Vector3(0,0,1.5f));
-//				
-//				keyFramedModel.setSx(0.5f);
-//				keyFramedModel.setSy(0.5f);
-//				keyFramedModel.setSz(0.5f);
-//				
-//				object3ds.add(keyFramedModel);
-//			} catch (ASAIOException e) {
-//				e.printStackTrace();
-//			}	
-//		}
+						"luxo_000060.obj"
+						};
+				
+				Animation[] animations = {new Animation(new LinearInterpolator(), assets.length, 0, 0, 3000, 0, Animation.RepeatMode.RESTART)};
+				
+				KeyFramedModel keyFramedModel = KeyFramedModelFactory.getKeyFramedModelFromAsset("keyFramedModel", assets, MeshFactory.MeshType.OBJ, animations);
+				keyFramedModel.setPosition(new Vector3(0,0,1.5f));
+				
+				keyFramedModel.setSx(0.5f);
+				keyFramedModel.setSy(0.5f);
+				keyFramedModel.setSz(0.5f);
+				
+				Vector3[] points = new Vector3[] { new Vector3(5f, 0, 5f), new Vector3(-5f, 3, 5f), new Vector3(-5f, 0, -5f), new Vector3(5f, 3, -5f)};
+				
+				PointsTrajectory pointsTrayectory = new PointsTrajectory(0.2f, 0.1f, 3f, points);
+				
+				keyFramedModel.setTrajectory(pointsTrayectory);
+				
+				object3ds.add(keyFramedModel);
+			} catch (ASAIOException e) {
+				e.printStackTrace();
+			}	
+		}
 		
 		WORLD = new World(lights, object3ds);
 	}

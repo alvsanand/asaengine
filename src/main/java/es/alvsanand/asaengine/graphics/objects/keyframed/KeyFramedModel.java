@@ -17,6 +17,7 @@ package es.alvsanand.asaengine.graphics.objects.keyframed;
 
 import es.alvsanand.asaengine.graphics.objects.Object3D;
 import es.alvsanand.asaengine.graphics.objects.keyframed.animation.Animation;
+import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.textures.Texture;
 import es.alvsanand.asaengine.math.Vector3;
 
@@ -44,16 +45,29 @@ public class KeyFramedModel extends Object3D{
 			int keyFrame = animation.getKeyFrame() + animation.getKeyFrameOffset() - 1;
 			
 			if(keyFrame>-1 && keyFrame<keyFrames.length){
-				keyFrames[keyFrame].getMesh().setPosition(position);
+				keyFrames[keyFrame].bind();
 				
-				keyFrames[keyFrame].getMesh().setRx(rx);
-				keyFrames[keyFrame].getMesh().setRy(ry);
-				keyFrames[keyFrame].getMesh().setRz(rz);
-				keyFrames[keyFrame].getMesh().setSx(sx);
-				keyFrames[keyFrame].getMesh().setSy(sy);
-				keyFrames[keyFrame].getMesh().setSz(sz);
+				OpenGLRenderer.gl.glPushMatrix();
+		
+				OpenGLRenderer.gl.glTranslatef(position.x, position.y, position.z);
+		
+				if (rx != 0)
+					OpenGLRenderer.gl.glRotatef(rx, 1, 0, 0);
+				if (ry != 0)
+					OpenGLRenderer.gl.glRotatef(ry, 0, 1, 0);
+				if (rz != 0)
+					OpenGLRenderer.gl.glRotatef(rz, 0, 0, 1);
+		
+				if (sx > 0 && sy > 0 && sz > 0)
+					OpenGLRenderer.gl.glScalef(sx, sy, sz);
+		
+				renderPosition();				
 				
 				keyFrames[keyFrame].render();
+				
+				OpenGLRenderer.gl.glPopMatrix();
+				
+				keyFrames[keyFrame].unbind();
 			}
 		}
 	}
@@ -99,5 +113,24 @@ public class KeyFramedModel extends Object3D{
 		for(int i=0; i<keyFrames.length; i++){
 			keyFrames[i].setTexture(texture);
 		}
+	}
+
+	@Override
+	public void renderPosition() {		
+		if (getTrajectory() != null && getTrajectory().getDirection()!=null) {
+			Vector3 direction = getTrajectory().getDirection().nor();
+			
+			float angleY = 0;
+
+			{
+				angleY = (float) Math.toDegrees(direction.angleBetweenXZ(0, 1));
+
+				if (direction.x < 0) {
+					angleY = 180 + angleY;
+				}				
+			}
+			
+			OpenGLRenderer.gl.glRotatef(angleY, 0, 1, 0);
+		}		
 	}
 }

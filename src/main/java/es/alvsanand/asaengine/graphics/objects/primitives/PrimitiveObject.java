@@ -175,4 +175,8 @@ public abstract class PrimitiveObject extends Object3D {
 		}
 		
 	}
+	
+	@Override
+	protected void renderPosition() {
+	}
 }
