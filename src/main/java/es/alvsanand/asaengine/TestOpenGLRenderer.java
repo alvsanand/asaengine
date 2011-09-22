@@ -22,18 +22,16 @@ import javax.microedition.khronos.opengles.GL10;
 import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.lights.PointLight;
+import es.alvsanand.asaengine.graphics.materials.Texture;
+import es.alvsanand.asaengine.graphics.materials.TextureFactory;
+import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.MeshFactory;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
-import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModel;
-import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModelFactory;
-import es.alvsanand.asaengine.graphics.objects.keyframed.animation.Animation;
-import es.alvsanand.asaengine.graphics.objects.keyframed.animation.LinearInterpolator;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
-import es.alvsanand.asaengine.graphics.textures.Texture;
-import es.alvsanand.asaengine.graphics.textures.TextureFactory;
+import es.alvsanand.asaengine.math.Vector2;
 import es.alvsanand.asaengine.math.Vector3;
-import es.alvsanand.asaengine.math.trajectory.PointsTrajectory;
+import es.alvsanand.asaengine.math.trajectory.XZPointsTrajectory;
 import es.alvsanand.asaengine.util.io.error.ASAIOException;
 
 public class TestOpenGLRenderer extends OpenGLRenderer {
@@ -43,9 +41,9 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 	Texture ZEBRA_TEXTURE;
 	
 	private void loadTextures(){
-		SHIP_TEXTURE = TextureFactory.getTextureFromAsset("ship.png");
-		INVADERSHIP_TEXTURE = TextureFactory.getTextureFromAsset("invader.png");
-		ZEBRA_TEXTURE = TextureFactory.getTextureFromAsset("zebra.jpg");
+//		SHIP_TEXTURE = TextureFactory.getTextureFromAsset("ship.png");
+//		INVADERSHIP_TEXTURE = TextureFactory.getTextureFromAsset("invader.png");
+//		ZEBRA_TEXTURE = TextureFactory.getTextureFromAsset("zebra.jpg");
 	}
 	
 	World WORLD;
@@ -125,66 +123,65 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //			}	
 //		}
 //		
-//		{
-//			try {
-//				Mesh mesh = MeshFactory.getMeshFromAsset("zebra.obj", MeshFactory.MeshType.OBJ);
-//				mesh.setPosition(new Vector3(0,0,0));
-//				
-//				mesh.setSx(0.65f);
-//				mesh.setSy(0.65f);
-//				mesh.setSz(0.65f);
-//				
-//				Vector2[] points = new Vector2[] { new Vector2(5f, 5f), new Vector2(-5f, 5f), new Vector2(-5f, -5f), new Vector2(5f, -5f)};
-//				
-//				XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
-//				
-//				mesh.setTexture(ZEBRA_TEXTURE);				
-//				mesh.setTrajectory(pointsTrayectory);
-//				
-//				object3ds.add(mesh);
-//			} catch (ASAIOException e) {
-//				e.printStackTrace();
-//			}	
-//		}
-//		
 		{
 			try {
-				String[] assets = {
-						"luxo_000001.obj",
-//						"luxo_000005.obj",
-//						"luxo_000010.obj",
-//						"luxo_000015.obj",
-						"luxo_000020.obj",
-//						"luxo_000025.obj",
-//						"luxo_000030.obj",
-//						"luxo_000035.obj",
-						"luxo_000040.obj",
-//						"luxo_000045.obj",
-//						"luxo_000050.obj",
-//						"luxo_000055.obj",
-						"luxo_000060.obj"
-						};
+				Mesh mesh = MeshFactory.getMeshFromAsset("zebra.obj", MeshFactory.MeshType.OBJ);
+				mesh.setPosition(new Vector3(0,0,0));
 				
-				Animation[] animations = {new Animation(new LinearInterpolator(), assets.length, 0, 0, 3000, 0, Animation.RepeatMode.RESTART)};
+				mesh.setSx(0.65f);
+				mesh.setSy(0.65f);
+				mesh.setSz(0.65f);
 				
-				KeyFramedModel keyFramedModel = KeyFramedModelFactory.getKeyFramedModelFromAsset("keyFramedModel", assets, MeshFactory.MeshType.OBJ, animations);
-				keyFramedModel.setPosition(new Vector3(0,0,1.5f));
+				Vector2[] points = new Vector2[] { new Vector2(5f, 5f), new Vector2(-5f, 5f), new Vector2(-5f, -5f), new Vector2(5f, -5f)};
 				
-				keyFramedModel.setSx(0.5f);
-				keyFramedModel.setSy(0.5f);
-				keyFramedModel.setSz(0.5f);
+				XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
 				
-				Vector3[] points = new Vector3[] { new Vector3(5f, 0, 5f), new Vector3(-5f, 3, 5f), new Vector3(-5f, 0, -5f), new Vector3(5f, 3, -5f)};
+				mesh.setTrajectory(pointsTrayectory);
 				
-				PointsTrajectory pointsTrayectory = new PointsTrajectory(0.2f, 0.1f, 3f, points);
-				
-				keyFramedModel.setTrajectory(pointsTrayectory);
-				
-				object3ds.add(keyFramedModel);
+				object3ds.add(mesh);
 			} catch (ASAIOException e) {
 				e.printStackTrace();
 			}	
 		}
+//		
+//		{
+//			try {
+//				String[] assets = {
+//						"luxo_000001.obj",
+//						"luxo_000005.obj",
+//						"luxo_000010.obj",
+//						"luxo_000015.obj",
+//						"luxo_000020.obj",
+//						"luxo_000025.obj",
+//						"luxo_000030.obj",
+//						"luxo_000035.obj",
+//						"luxo_000040.obj",
+//						"luxo_000045.obj",
+//						"luxo_000050.obj",
+//						"luxo_000055.obj",
+//						"luxo_000060.obj"
+//						};
+//				
+//				Animation[] animations = {new Animation(new LinearInterpolator(), assets.length, 0, 0, 3000, 0, Animation.RepeatMode.RESTART)};
+//				
+//				KeyFramedModel keyFramedModel = KeyFramedModelFactory.getKeyFramedModelFromAsset("keyFramedModel", assets, MeshFactory.MeshType.OBJ, animations);
+//				keyFramedModel.setPosition(new Vector3(0,0,1.5f));
+//				
+//				keyFramedModel.setSx(0.5f);
+//				keyFramedModel.setSy(0.5f);
+//				keyFramedModel.setSz(0.5f);
+//				
+//				Vector3[] points = new Vector3[] { new Vector3(5f, 0, 5f), new Vector3(-5f, 3, 5f), new Vector3(-5f, 0, -5f), new Vector3(5f, 3, -5f)};
+//				
+//				PointsTrajectory pointsTrayectory = new PointsTrajectory(0.2f, 0.1f, 3f, points);
+//				
+//				keyFramedModel.setTrajectory(pointsTrayectory);
+//				
+//				object3ds.add(keyFramedModel);
+//			} catch (ASAIOException e) {
+//				e.printStackTrace();
+//			}	
+//		}
 		
 		WORLD = new World(lights, object3ds);
 	}

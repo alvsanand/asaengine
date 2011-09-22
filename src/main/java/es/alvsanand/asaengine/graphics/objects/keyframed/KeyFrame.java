@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import javax.microedition.khronos.opengles.GL10;
 
 import es.alvsanand.asaengine.error.ASARuntimeException;
+import es.alvsanand.asaengine.graphics.materials.Material;
 import es.alvsanand.asaengine.graphics.objects.Renderable;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
@@ -36,7 +37,6 @@ import es.alvsanand.asaengine.graphics.objects.utils.VertexData;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexData.VertexDataType;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer.GL_TYPE;
-import es.alvsanand.asaengine.graphics.textures.Texture;
 import es.alvsanand.asaengine.math.collision.BoundingBox;
 import es.alvsanand.asaengine.util.Disposable;
 
@@ -49,7 +49,7 @@ public class KeyFrame implements Disposable, Renderable {
 	protected final IndexData indices;
 	protected final boolean isVertexArray;
 
-	protected Texture texture;
+	protected Material material;
 
 	public KeyFrame(int frameNumber, boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
 		frameNumber = this.frameNumber;
@@ -102,13 +102,13 @@ public class KeyFrame implements Disposable, Renderable {
 		addManagedKeyFrame(this);
 	}
 
-	public KeyFrame(int frameNumber, VertexData vertices, IndexData indices, boolean isVertexArray, Texture texture) {
+	public KeyFrame(int frameNumber, VertexData vertices, IndexData indices, boolean isVertexArray, Material material) {
 		frameNumber = this.frameNumber;
 
 		this.vertices = vertices;
 		this.indices = indices;
 		this.isVertexArray = isVertexArray;
-		this.texture = texture;
+		this.material = material;
 	}
 
 	public void setVertices(float[] vertices) {
@@ -167,9 +167,9 @@ public class KeyFrame implements Disposable, Renderable {
 	}
 
 	public void bind() {
-		if (texture != null) {
+		if (material != null && material.getTexture() != null) {
 			OpenGLRenderer.gl.glEnable(GL10.GL_TEXTURE_2D);
-			texture.bind();
+			material.getTexture().bind();
 		}
 
 		OpenGLRenderer.gl.glFrontFace(GL10.GL_CCW);
@@ -185,7 +185,7 @@ public class KeyFrame implements Disposable, Renderable {
 		if (!isVertexArray && indices.getNumIndices() > 0)
 			indices.unbind();
 
-		if (texture != null) {
+		if (material != null && material.getTexture() != null) {
 			OpenGLRenderer.gl.glDisable(GL10.GL_TEXTURE_2D);
 		}
 	}
@@ -204,6 +204,17 @@ public class KeyFrame implements Disposable, Renderable {
 	}
 
 	public void render(int primitiveType, int offset, int count) {
+		// // Set flat fill color
+		if (material.getAmbientColor() != null) {
+			OpenGLRenderer.gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, material.getAmbientColor().toArray(), 0);
+		}
+		if (material.getDiffuseColor() != null) {
+			OpenGLRenderer.gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE, material.getDiffuseColor().toArray(), 0);
+		}
+		if (material.getSpecularColor() != null) {
+			OpenGLRenderer.gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, material.getSpecularColor().toArray(), 0);
+		}
+
 		if (isVertexArray) {
 			if (indices.getNumIndices() > 0) {
 				ShortBuffer buffer = indices.getBuffer();
@@ -231,8 +242,8 @@ public class KeyFrame implements Disposable, Renderable {
 		vertices.dispose();
 		indices.dispose();
 
-		if (texture != null) {
-			texture.dispose();
+		if (material != null && material.getTexture() != null) {
+			material.getTexture().dispose();
 		}
 	}
 
@@ -310,12 +321,12 @@ public class KeyFrame implements Disposable, Renderable {
 		}
 	}
 
-	public void setTexture(Texture texture) {
-		this.texture = texture;
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
 	public KeyFrame duplicate() {
-		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertices, indices, isVertexArray, texture);
+		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertices, indices, isVertexArray, material);
 
 		return newKeyFrame;
 	}

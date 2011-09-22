@@ -1,4 +1,4 @@
-package es.alvsanand.asaengine.graphics.textures;
+package es.alvsanand.asaengine.graphics.materials;
 
 import java.util.HashMap;
 

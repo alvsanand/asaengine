@@ -22,12 +22,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.util.Log;
+import es.alvsanand.asaengine.graphics.materials.Material;
+import es.alvsanand.asaengine.graphics.materials.MaterialFactory;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes.Usage;
 import es.alvsanand.asaengine.graphics.objects.error.MeshNotFound;
+import es.alvsanand.asaengine.util.io.error.MaterialLoadingException;
 
 public class ObjLoader {
+    private final static String VERTEX = "v";
+    private final static String FACE = "f";
+    private final static String TEXCOORD = "vt";
+    private final static String NORMAL = "vn";
+    private final static String OBJECT = "o";
+    private final static String MATERIAL_LIB = "mtllib";
+    private final static String USE_MATERIAL = "usemtl";
+    
+    private final static String VERTEX_KEY = VERTEX + " ";
+    private final static String FACE_KEY = FACE + " ";
+    private final static String TEXCOORD_KEY = TEXCOORD + " ";
+    private final static String NORMAL_KEY = NORMAL + " ";
+    private final static String OBJECT_KEY = OBJECT + " ";
+    private final static String MATERIAL_LIB_KEY = MATERIAL_LIB + " ";
+    private final static String USE_MATERIAL_KEY = USE_MATERIAL + " ";
+    
 	private final static String TAG = "ObjLoader";
 
 	public static Mesh loadObj(InputStream in) throws MeshNotFound {
@@ -84,10 +103,36 @@ public class ObjLoader {
 
 		Log.i(TAG, "Parsing Mesh file lines");
 
+		Material material = null;
+		
 		for (int i = 0; i < linesLength; i++) {
 			String line = lines.get(i);
 
-			if (line.startsWith("v ")) {
+			if (line.startsWith(MATERIAL_LIB_KEY)) {
+				int index1 = MATERIAL_LIB.length();
+
+				String token1 = line.substring(index1 + 1);
+				
+				try {
+					ObjMateriaLoader.readMaterialFromLib(token1);
+				} catch (MaterialLoadingException e) {
+					Log.e(TAG, "Error parsing Mesh file lines", e);
+				}
+				
+				continue;
+			}
+
+			if (line.startsWith(USE_MATERIAL_KEY)) {
+				int index1 = MATERIAL_LIB.length();
+
+				String token1 = line.substring(index1 + 1);
+				
+				material = MaterialFactory.getMaterial(token1);
+				
+				continue;
+			}
+
+			if (line.startsWith(VERTEX_KEY)) {
 				int index1 = 1;
 				int index2 = line.indexOf(' ', index1 + 1);
 				int index3 = line.indexOf(' ', index2 + 1);
@@ -105,7 +150,7 @@ public class ObjLoader {
 				continue;
 			}
 
-			if (line.startsWith("vn ")) {
+			if (line.startsWith(NORMAL_KEY)) {
 				int index1 = 2;
 				int index2 = line.indexOf(' ', index1 + 1);
 				int index3 = line.indexOf(' ', index2 + 1);
@@ -123,7 +168,7 @@ public class ObjLoader {
 				continue;
 			}
 
-			if (line.startsWith("vt ")) {
+			if (line.startsWith(TEXCOORD_KEY)) {
 				int index1 = 2;
 				int index2 = line.indexOf(' ', index1 + 1);
 				int index3 = line.length();
@@ -138,7 +183,7 @@ public class ObjLoader {
 				continue;
 			}
 
-			if (line.startsWith("f ")) {
+			if (line.startsWith(FACE_KEY)) {
 				int index1 = -1;
 				int index2 = -1;
 				int index3 = -1;
@@ -410,6 +455,10 @@ public class ObjLoader {
 		mesh = new Mesh(true, numFaces * 3, 0, attributes.toArray(new VertexAttribute[attributes.size()]));
 		mesh.setVertices(verts);
 
+		if(material!=null){
+			mesh.setMaterial(material);
+		}
+		
 		Log.i(TAG, "Created Mesh");
 
 		return mesh;

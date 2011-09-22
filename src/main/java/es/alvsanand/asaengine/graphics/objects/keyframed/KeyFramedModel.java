@@ -15,10 +15,10 @@
  ******************************************************************************/
 package es.alvsanand.asaengine.graphics.objects.keyframed;
 
+import es.alvsanand.asaengine.graphics.materials.Material;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
 import es.alvsanand.asaengine.graphics.objects.keyframed.animation.Animation;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
-import es.alvsanand.asaengine.graphics.textures.Texture;
 import es.alvsanand.asaengine.math.Vector3;
 
 public class KeyFramedModel extends Object3D{
@@ -109,9 +109,9 @@ public class KeyFramedModel extends Object3D{
 		return animation.isStarted();
 	}
 	
-	public void setTexture(Texture texture){
+	public void setMaterial(Material material){
 		for(int i=0; i<keyFrames.length; i++){
-			keyFrames[i].setTexture(texture);
+			keyFrames[i].setMaterial(material);
 		}
 	}
 

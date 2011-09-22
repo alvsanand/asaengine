@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import javax.microedition.khronos.opengles.GL10;
 
 import es.alvsanand.asaengine.error.ASARuntimeException;
+import es.alvsanand.asaengine.graphics.materials.Material;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes.Usage;
@@ -36,7 +37,6 @@ import es.alvsanand.asaengine.graphics.objects.utils.VertexData;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexData.VertexDataType;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer.GL_TYPE;
-import es.alvsanand.asaengine.graphics.textures.Texture;
 import es.alvsanand.asaengine.math.Vector3;
 import es.alvsanand.asaengine.math.collision.BoundingBox;
 
@@ -49,7 +49,7 @@ public class Mesh extends Object3D {
 	protected boolean autoBind = true;
 	protected final boolean isVertexArray;
 
-	protected Texture texture;
+	protected Material material;
 
 	public Mesh(boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
 		super(new Vector3(0, 0, 0));
@@ -116,13 +116,13 @@ public class Mesh extends Object3D {
 		addManagedMesh(this);
 	}
 
-	protected Mesh(Vector3 position, VertexData vertices, IndexData indices, boolean autoBind, boolean isVertexArray, Texture texture) {
+	protected Mesh(Vector3 position, VertexData vertices, IndexData indices, boolean autoBind, boolean isVertexArray, Material material) {
 		super(position);
 		this.vertices = vertices;
 		this.indices = indices;
 		this.autoBind = autoBind;
 		this.isVertexArray = isVertexArray;
-		this.texture = texture;
+		this.material = material;
 	}
 
 	public void setVertices(float[] vertices) {
@@ -185,9 +185,9 @@ public class Mesh extends Object3D {
 	}
 
 	public void bind() {
-		if (texture != null) {
+		if (material != null && material.getTexture()!=null) {
 			OpenGLRenderer.gl.glEnable(GL10.GL_TEXTURE_2D);
-			texture.bind();
+			material.getTexture().bind();
 		}
 
 		OpenGLRenderer.gl.glFrontFace(GL10.GL_CCW);
@@ -203,7 +203,7 @@ public class Mesh extends Object3D {
 		if (!isVertexArray && indices.getNumIndices() > 0)
 			indices.unbind();
 
-		if (texture != null) {
+		if (material != null && material.getTexture()!=null) {
 			OpenGLRenderer.gl.glDisable(GL10.GL_TEXTURE_2D);
 		}
 	}
@@ -243,8 +243,16 @@ public class Mesh extends Object3D {
 			//Render de Position
 			renderPosition();
 			
-			// // Set flat fill color
-			// OpenGLRenderer.gl.glColor4f(256f, 256f, 256f, 1.0f);
+			// // Set flat fill color			
+			if(material!=null && material.getAmbientColor()!=null){
+				OpenGLRenderer.gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, material.getAmbientColor().toArray(), 0);
+			}			
+			if(material!=null && material.getDiffuseColor()!=null){
+				OpenGLRenderer.gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE, material.getDiffuseColor().toArray(), 0);
+			}			
+			if(material!=null && material.getSpecularColor()!=null){
+				OpenGLRenderer.gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, material.getSpecularColor().toArray(), 0);
+			}
 	
 			if (isVertexArray) {
 				if (indices.getNumIndices() > 0) {
@@ -279,8 +287,8 @@ public class Mesh extends Object3D {
 		vertices.dispose();
 		indices.dispose();
 
-		if (texture != null) {
-			texture.dispose();
+		if (material != null && material.getTexture()!=null) {
+			material.getTexture().dispose();
 		}
 	}
 
@@ -358,18 +366,18 @@ public class Mesh extends Object3D {
 		}
 	}
 
-	public void setTexture(Texture texture) {
-		this.texture = texture;
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
 	public Mesh duplicate() {
-		Mesh newMesh = new Mesh(new Vector3(), vertices, indices, autoBind, isVertexArray, texture);
+		Mesh newMesh = new Mesh(new Vector3(), vertices, indices, autoBind, isVertexArray, material);
 
 		return newMesh;
 	}
 
 	public KeyFrame getKeyFrame(int frameNumber) {
-		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertices, indices, isVertexArray, texture);
+		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertices, indices, isVertexArray, material);
 
 		return newKeyFrame;
 	}
@@ -379,7 +387,7 @@ public class Mesh extends Object3D {
 		if (getTrajectory() != null && getTrajectory().getDirection()!=null) {
 			Vector3 direction = getTrajectory().getDirection().nor();
 			
-			float angleX , angleZ, angleY = 0;
+			float angleY = 0;
 
 			{
 				angleY = (float) Math.toDegrees(direction.angleBetweenXZ(0, 1));
@@ -390,6 +398,7 @@ public class Mesh extends Object3D {
 			}
 			
 //			Only used Y rotation
+//			float angleX , angleZ = 0;
 //			{
 //				angleX = (float) Math.toDegrees(direction.angleBetweenYZ(0, 1));
 //				
