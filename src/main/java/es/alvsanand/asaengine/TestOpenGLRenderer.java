@@ -38,9 +38,19 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 	private void loadObjects(){
 		ArrayList<Light> lights = new ArrayList<Light>();
 		
-		PointLight pointLight = new PointLight(new Color(0,0,0,1), new Color(1,1,1,1), new Color(1,1,1,1), new Vector3(10, 10, 10), GL10.GL_LIGHT0);
-		
-		lights.add(pointLight);
+		{
+			PointLight pointLight = new PointLight(new Color(0,0,0,1), new Color(1,1,1,1), new Color(1,1,1,1), new Vector3(0, 10, 0), GL10.GL_LIGHT0);
+			
+			Vector2[] points = new Vector2[] {new Vector2(10f, -10f), new Vector2(-10f, -5f), new Vector2(-10f, 5f), new Vector2(10f, 10f)};
+			
+			XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
+			
+			pointLight.setTrajectory(pointsTrayectory);
+			
+			pointLight.startOrResume();
+			
+			lights.add(pointLight);
+		}
 
 		ArrayList<Object3D> object3ds = new ArrayList<Object3D>();
 		

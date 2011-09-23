@@ -2,16 +2,19 @@ package es.alvsanand.asaengine.graphics.lights;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import es.alvsanand.asaengine.graphics.Dynamic;
 import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.trajectory.Trajectory;
 
-public class PointLight extends Light {
-	public Color ambient = new Color(0.2f, 0.2f, 0.2f, 1.0f);
-	public Color diffuse = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-	public Color specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-	public float[] position = { 0, 0, 0, 1 };
-	public int id = 0;
+public class PointLight extends Light implements Dynamic {
+	protected Color ambient = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+	protected Color diffuse = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+	protected Color specular = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+	protected Vector3 position;
+	protected int id = 0;	
+	protected Trajectory trajectory;
 	
 	public PointLight(){
 	}
@@ -20,14 +23,56 @@ public class PointLight extends Light {
 		this.ambient = ambient;
 		this.diffuse = diffuse;
 		this.specular = specular;
-		setPosition(position);
+		this.position = position;
 		this.id = id;
 	}
 
+	public Color getAmbient() {
+		return ambient;
+	}
+
+	public void setAmbient(Color ambient) {
+		this.ambient = ambient;
+	}
+
+	public Color getDiffuse() {
+		return diffuse;
+	}
+
+	public void setDiffuse(Color diffuse) {
+		this.diffuse = diffuse;
+	}
+
+	public Color getSpecular() {
+		return specular;
+	}
+
+	public void setSpecular(Color specular) {
+		this.specular = specular;
+	}
+
+	public Vector3 getPosition() {
+		return position;
+	}
+
 	public void setPosition(Vector3 position) {
-		this.position[0] = position.x;
-		this.position[1] = position.y;
-		this.position[2] = position.z;
+		this.position = position;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Trajectory getTrajectory() {
+		return trajectory;
+	}
+
+	public void setTrajectory(Trajectory trajectory) {
+		this.trajectory = trajectory;
 	}
 
 	@Override
@@ -35,7 +80,7 @@ public class PointLight extends Light {
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_AMBIENT, ambient.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_DIFFUSE, diffuse.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_SPECULAR, specular.toArray(), 0);
-		OpenGLRenderer.gl.glLightfv(id, GL10.GL_POSITION, position, 0);
+		OpenGLRenderer.gl.glLightfv(id, GL10.GL_POSITION, position.toArray(), 0);
 		OpenGLRenderer.gl.glEnable(id);
 	}
 
@@ -46,5 +91,30 @@ public class PointLight extends Light {
 
 	@Override
 	public void dispose() {
+	}
+
+	@Override
+	public void updatePosition() {
+		this.position = trajectory.getActualPosition(this.position);
+	}
+
+	@Override
+	public void startOrResume() {
+		trajectory.startOrResume();
+	}
+
+	@Override
+	public void pause() {
+		trajectory.pause();
+	}
+
+	@Override
+	public boolean isRunning() {
+		if(trajectory==null){
+			return false;
+		}
+		else{
+			return trajectory.isRunning();
+		}		
 	}
 }

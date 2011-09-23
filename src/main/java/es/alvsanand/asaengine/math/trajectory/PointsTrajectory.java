@@ -80,6 +80,10 @@ public class PointsTrajectory extends Trajectory {
 
 		this.direction = (new Vector3(actualPointVector3)).sub(fromPointVector3);
 
+		if (direction.x + direction.y + direction.z == 0) {
+			return new Vector3(lastPosition);
+		}
+
 		float t = distance / (this.direction.x + this.direction.y + this.direction.z);
 
 		Vector3 a1 = new Vector3(fromPointVector3.x + this.direction.x * t, fromPointVector3.y + this.direction.y * t, fromPointVector3.z + this.direction.z * t);

@@ -83,7 +83,7 @@ public class XZPointsTrajectory extends Trajectory {
 		Vector2 n = (new Vector2(actualPointVector2)).sub(fromPointVector2);
 
 		if (n.x + n.y == 0) {
-			return null;
+			return new Vector3(lastPosition);
 		}
 
 		float t = distance / (n.x + n.y);

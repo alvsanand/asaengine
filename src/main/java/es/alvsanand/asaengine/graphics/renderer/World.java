@@ -49,7 +49,7 @@ public class World {
 	void renderObject3ds() {
 		for(Object3D object3d: object3ds){		
 			if(object3d.isRunning()){
-				((Dynamic) object3d).updatePosition();
+				object3d.updatePosition();
 			}
 			
 			object3d.render();

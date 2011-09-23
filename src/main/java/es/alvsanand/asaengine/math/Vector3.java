@@ -320,6 +320,10 @@ public class Vector3 implements Serializable {
 		
 		return angle; 
 	}
+	
+	public float[] toArray(){
+		return new float[]{x, y, z};
+	}
 
 	@Override
 	public int hashCode() {
