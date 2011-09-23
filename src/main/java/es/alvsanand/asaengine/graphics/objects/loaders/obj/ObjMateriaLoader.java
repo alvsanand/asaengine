@@ -72,8 +72,8 @@ public class ObjMateriaLoader {
 				} else {
 					if (MaterialFactory.getMaterial(currentMaterialId) == null && currentMaterialId != null) {
 						if (type.equals(AMBIENT_COLOR)) {
-							Color ambientColor = new Color(Float.parseFloat(parts[1]) * 255.0f, Float.parseFloat(parts[2]) * 255.0f,
-									Float.parseFloat(parts[3]) * 255.0f, 255.0f);
+							Color ambientColor = new Color(Float.parseFloat(parts[1]), Float.parseFloat(parts[2]),
+									Float.parseFloat(parts[3]), 1f);
 
 							if (material == null) {
 								material = new Material(currentMaterialId);
@@ -82,8 +82,8 @@ public class ObjMateriaLoader {
 							material.setAmbientColor(ambientColor);
 						} else {
 							if (type.equals(DIFFUSE_COLOR)) {
-								Color diffuseColor = new Color(Float.parseFloat(parts[1]) * 255.0f, Float.parseFloat(parts[2]) * 255.0f,
-										Float.parseFloat(parts[3]) * 255.0f, 255.0f);
+								Color diffuseColor = new Color(Float.parseFloat(parts[1]), Float.parseFloat(parts[2]),
+										Float.parseFloat(parts[3]), 1f);
 
 								if (material == null) {
 									material = new Material(currentMaterialId);
@@ -92,8 +92,8 @@ public class ObjMateriaLoader {
 								material.setDiffuseColor(diffuseColor);
 							} else {
 								if (type.equals(SPECULAR_COLOR)) {
-									Color specularColor = new Color(Float.parseFloat(parts[1]) * 255.0f, Float.parseFloat(parts[2]) * 255.0f,
-											Float.parseFloat(parts[3]) * 255.0f, 255.0f);
+									Color specularColor = new Color(Float.parseFloat(parts[1]), Float.parseFloat(parts[2]),
+											Float.parseFloat(parts[3]), 1f);
 
 									if (material == null) {
 										material = new Material(currentMaterialId);

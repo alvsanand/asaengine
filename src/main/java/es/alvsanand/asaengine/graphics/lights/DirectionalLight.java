@@ -24,11 +24,11 @@ public class DirectionalLight extends Light {
 
 	@Override
 	public void enable() {
-		OpenGLRenderer.gl.glEnable(id);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_AMBIENT, ambient.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_DIFFUSE, diffuse.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_SPECULAR, specular.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_POSITION, direction, 0);
+		OpenGLRenderer.gl.glEnable(id);
 	}
 
 	@Override

@@ -204,15 +204,9 @@ public class KeyFrame implements Disposable, Renderable {
 	}
 
 	public void render(int primitiveType, int offset, int count) {
-		// // Set flat fill color
-		if (material.getAmbientColor() != null) {
-			OpenGLRenderer.gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, material.getAmbientColor().toArray(), 0);
-		}
-		if (material.getDiffuseColor() != null) {
-			OpenGLRenderer.gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE, material.getDiffuseColor().toArray(), 0);
-		}
-		if (material.getSpecularColor() != null) {
-			OpenGLRenderer.gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, material.getSpecularColor().toArray(), 0);
+		//Only diffuse color
+		if(material!=null && material.getDiffuseColor()!=null){
+			OpenGLRenderer.gl.glColor4f(material.getDiffuseColor().r, material.getDiffuseColor().g, material.getDiffuseColor().b, material.getDiffuseColor().a);
 		}
 
 		if (isVertexArray) {

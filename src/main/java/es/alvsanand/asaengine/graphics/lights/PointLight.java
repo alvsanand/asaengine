@@ -32,11 +32,11 @@ public class PointLight extends Light {
 
 	@Override
 	public void enable() {
-		OpenGLRenderer.gl.glEnable(id);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_AMBIENT, ambient.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_DIFFUSE, diffuse.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_SPECULAR, specular.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_POSITION, position, 0);
+		OpenGLRenderer.gl.glEnable(id);
 	}
 
 	@Override

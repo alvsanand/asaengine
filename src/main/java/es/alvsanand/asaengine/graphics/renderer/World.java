@@ -33,10 +33,14 @@ public class World {
 		OpenGLRenderer.gl.glEnable(GL10.GL_LIGHTING);					
 		OpenGLRenderer.gl.glEnable(GL10.GL_COLOR_MATERIAL);
 
+		OpenGLRenderer.gl.glEnable(GL10.GL_BLEND); 
+		OpenGLRenderer.gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA); 
+		
 		enableLights();
 		
 		renderObject3ds();
 
+		OpenGLRenderer.gl.glDisable(GL10.GL_BLEND); 
 		OpenGLRenderer.gl.glDisable(GL10.GL_COLOR_MATERIAL);
 		OpenGLRenderer.gl.glDisable(GL10.GL_LIGHTING);
 		OpenGLRenderer.gl.glDisable(GL10.GL_DEPTH_TEST);		

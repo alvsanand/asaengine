@@ -22,8 +22,6 @@ import javax.microedition.khronos.opengles.GL10;
 import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.lights.PointLight;
-import es.alvsanand.asaengine.graphics.materials.Texture;
-import es.alvsanand.asaengine.graphics.materials.TextureFactory;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.MeshFactory;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
@@ -34,54 +32,43 @@ import es.alvsanand.asaengine.math.Vector3;
 import es.alvsanand.asaengine.math.trajectory.XZPointsTrajectory;
 import es.alvsanand.asaengine.util.io.error.ASAIOException;
 
-public class TestOpenGLRenderer extends OpenGLRenderer {
-	
-	Texture SHIP_TEXTURE;
-	Texture INVADERSHIP_TEXTURE;
-	Texture ZEBRA_TEXTURE;
-	
-	private void loadTextures(){
-//		SHIP_TEXTURE = TextureFactory.getTextureFromAsset("ship.png");
-//		INVADERSHIP_TEXTURE = TextureFactory.getTextureFromAsset("invader.png");
-//		ZEBRA_TEXTURE = TextureFactory.getTextureFromAsset("zebra.jpg");
-	}
-	
+public class TestOpenGLRenderer extends OpenGLRenderer {	
 	World WORLD;
 	
 	private void loadObjects(){
 		ArrayList<Light> lights = new ArrayList<Light>();
 		
-		PointLight pointLight = new PointLight(new Color(256, 256, 256, 1), new Color(256, 256, 256, 1), new Color(256, 256, 256, 1), new Vector3(30, 30, 30), GL10.GL_LIGHT0);
+		PointLight pointLight = new PointLight(new Color(0,0,0,1), new Color(1,1,1,1), new Color(1,1,1,1), new Vector3(10, 10, 10), GL10.GL_LIGHT0);
 		
 		lights.add(pointLight);
 
 		ArrayList<Object3D> object3ds = new ArrayList<Object3D>();
 		
-//		Plane plane = new Plane(new Vector3(0,-1f,0), new Color(0f, 256f, 0f, 1.0f), 10, 10);
+//		Plane plane = new Plane(new Vector3(0,-1f,0), new Color(0f, 1f, 0f, 1.0f), 10, 10);
 //		object3ds.add(plane);
 //		
 //		for(int i=0; i<5; i++){
-//			Cube cube = new Cube(new Vector3(i-2,0,-2), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			Cube cube = new Cube(new Vector3(i-2,0,-2), (i%2==0)?(new Color(0f, 1f, 0f, 1.0f)):(new Color(1f, 0f, 0f, 1.0f)), new Color(1f, 1f, 1f, 1.0f), 0.5f, 0.5f, 0.5f);
 //			object3ds.add(cube);
 //		}
 //		
 //		for(int i=0; i<5; i++){
-//			Cube cube = new Cube(new Vector3(i-2,0,-1), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			Cube cube = new Cube(new Vector3(i-2,0,-1), (i%2==0)?(new Color(0f, 1f, 0f, 1.0f)):(new Color(1f, 0f, 0f, 1.0f)), new Color(1f, 1f, 1f, 1.0f), 0.5f, 0.5f, 0.5f);
 //			object3ds.add(cube);
 //		}
 //		
 //		for(int i=0; i<5; i++){
-//			Cube cube = new Cube(new Vector3(i-2,0,0), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			Cube cube = new Cube(new Vector3(i-2,0,0), (i%2==0)?(new Color(0f, 1f, 0f, 1.0f)):(new Color(1f, 0f, 0f, 1.0f)), new Color(1f, 1f, 1f, 1.0f), 0.5f, 0.5f, 0.5f);
 //			object3ds.add(cube);
 //		}
 //		
 //		for(int i=0; i<5; i++){
-//			Cube cube = new Cube(new Vector3(i-2,0,1), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			Cube cube = new Cube(new Vector3(i-2,0,1), (i%2==0)?(new Color(0f, 1f, 0f, 1.0f)):(new Color(1f, 0f, 0f, 1.0f)), new Color(1f, 1f, 1f, 1.0f), 0.5f, 0.5f, 0.5f);
 //			object3ds.add(cube);
 //		}
 //		
 //		for(int i=0; i<5; i++){
-//			Cube cube = new Cube(new Vector3(i-2,0,2), (i%2==0)?(new Color(0f, 256f, 0f, 1.0f)):(new Color(256f, 0f, 0f, 1.0f)), new Color(256f, 256f, 256f, 1.0f), 0.5f, 0.5f, 0.5f);
+//			Cube cube = new Cube(new Vector3(i-2,0,2), (i%2==0)?(new Color(0f, 1f, 0f, 1.0f)):(new Color(1f, 0f, 0f, 1.0f)), new Color(1f, 1f, 1f, 1.0f), 0.5f, 0.5f, 0.5f);
 //			object3ds.add(cube);
 //		}
 //		
@@ -92,30 +79,6 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //				mesh.setTexture(INVADERSHIP_TEXTURE);
 //				
 //				mesh.rx = 90;
-//				
-//				object3ds.add(mesh);
-//			} catch (ASAIOException e) {
-//				e.printStackTrace();
-//			}	
-//		}
-//		
-//		{
-//			try {
-//				Mesh mesh = MeshFactory.getMeshFromAsset("ship.obj", MeshFactory.MeshType.OBJ);
-//				mesh.setPosition(new Vector3(0,0,0));
-//				mesh.setTexture(SHIP_TEXTURE);
-//				
-//				mesh.setRy(180f);
-//				
-//				mesh.setSx(1.65f);
-//				mesh.setSy(1.65f);
-//				mesh.setSz(1.65f);
-//				
-//				Vector3[] points = new Vector3[] { new Vector3(5f, 0, 5f), new Vector3(-5f, 3, 5f), new Vector3(-5f, 0, -5f), new Vector3(5f, 3, -5f)};
-//				
-//				PointsTrajectory pointsTrayectory = new PointsTrajectory(0.2f, 0.1f, 3f, points);
-//				
-//				mesh.setTrajectory(pointsTrayectory);
 //				
 //				object3ds.add(mesh);
 //			} catch (ASAIOException e) {
@@ -188,8 +151,6 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 
 	@Override
 	protected void loadWorld() {
-		loadTextures();
-		
 		loadObjects();
 		
 		setWorld(WORLD);
