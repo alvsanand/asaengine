@@ -3,13 +3,13 @@ package es.alvsanand.asaengine;
 import java.util.List;
 
 import android.util.Log;
-import es.alvsanand.asaengine.graphics.Dynamic;
 import es.alvsanand.asaengine.graphics.cameras.Camera;
 import es.alvsanand.asaengine.graphics.cameras.DynamicLookAtCamera;
 import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModel;
 import es.alvsanand.asaengine.input.Input;
 import es.alvsanand.asaengine.input.InputThread;
 import es.alvsanand.asaengine.input.keyboard.KeyEvent;
+import es.alvsanand.asaengine.input.touch.TouchEvent;
 
 public class TestInputThread extends InputThread {
 	private static String TAG = "InputThread";
@@ -51,8 +51,7 @@ public class TestInputThread extends InputThread {
 
 						if (framedModel.isStarted()) {
 							framedModel.resume();
-						}
-						else{
+						} else {
 							framedModel.start();
 						}
 
@@ -80,6 +79,22 @@ public class TestInputThread extends InputThread {
 						}
 						break;
 					}
+				}
+			}
+		}
+
+		List<TouchEvent> touchEvents = input.getTouchEvents();
+		if (touchEvents != null && touchEvents.size() > 0) {
+			for (TouchEvent touchEvent : touchEvents) {
+				if (touchEvent.type == TouchEvent.TOUCH_UP) {
+					Log.v(TAG, "TOUCH_UP");
+
+					if (!testOpenGLRenderer.getWorld().getObject3ds().get(0).isRunning()) {
+						testOpenGLRenderer.getWorld().getObject3ds().get(0).startOrResume();
+					} else {
+						testOpenGLRenderer.getWorld().getObject3ds().get(0).pause();
+					}
+					break;
 				}
 			}
 		}
