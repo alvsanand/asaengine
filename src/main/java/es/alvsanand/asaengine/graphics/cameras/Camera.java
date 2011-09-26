@@ -40,18 +40,19 @@ public abstract class Camera implements Dynamic {
 
 	@Override
 	public void updatePosition() {
-		this.position = trajectory.getActualPosition(this.position);
+		if (trajectory != null)
+			this.position = trajectory.getActualPosition(this.position);
 	}
 
 	@Override
 	public void startOrResume() {
-		if (trajectory == null)
+		if (trajectory != null)
 			trajectory.startOrResume();
 	}
 
 	@Override
 	public void pause() {
-		if (trajectory == null)
+		if (trajectory != null)
 			trajectory.pause();
 	}
 

@@ -129,17 +129,20 @@ public class DirectionalLight extends Light implements Dynamic {
 
 	@Override
 	public void updatePosition() {
-		this.position = trajectory.getActualPosition(this.position);
+		if (trajectory != null)
+			this.position = trajectory.getActualPosition(this.position);
 	}
 
 	@Override
 	public void startOrResume() {
-		trajectory.startOrResume();
+		if (trajectory != null)
+			trajectory.startOrResume();
 	}
 
 	@Override
 	public void pause() {
-		trajectory.pause();
+		if (trajectory != null)
+			trajectory.pause();
 	}
 
 	@Override
