@@ -3,8 +3,7 @@ package es.alvsanand.asaengine;
 import java.util.List;
 
 import android.util.Log;
-import es.alvsanand.asaengine.graphics.cameras.Camera;
-import es.alvsanand.asaengine.graphics.cameras.DynamicLookAtCamera;
+import es.alvsanand.asaengine.graphics.cameras.LookAtCamera;
 import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModel;
 import es.alvsanand.asaengine.input.Input;
 import es.alvsanand.asaengine.input.InputThread;
@@ -14,11 +13,11 @@ import es.alvsanand.asaengine.input.touch.TouchEvent;
 public class TestInputThread extends InputThread {
 	private static String TAG = "InputThread";
 
-	private Camera camera;
+	private LookAtCamera camera;
 
 	private TestOpenGLRenderer testOpenGLRenderer;
 
-	public TestInputThread(Camera camera, TestOpenGLRenderer testOpenGLRenderer, Input input) {
+	public TestInputThread(LookAtCamera camera, TestOpenGLRenderer testOpenGLRenderer, Input input) {
 		super(input);
 
 		this.camera = camera;
@@ -29,7 +28,7 @@ public class TestInputThread extends InputThread {
 	protected void proccessInput() {
 		List<KeyEvent> keyEvents = input.getKeyEvents();
 
-		DynamicLookAtCamera dynamicLookAtCamera = (DynamicLookAtCamera) camera;
+		LookAtCamera lookAtCamera = (LookAtCamera) camera;
 
 		if (keyEvents != null && keyEvents.size() > 0) {
 			for (KeyEvent keyevent : keyEvents) {
@@ -59,15 +58,15 @@ public class TestInputThread extends InputThread {
 					}
 					case android.view.KeyEvent.KEYCODE_DPAD_UP:
 						Log.v(TAG, "KEYCODE_DPAD_UP");
-						dynamicLookAtCamera.position.x = dynamicLookAtCamera.position.x / 10;
-						dynamicLookAtCamera.position.y = dynamicLookAtCamera.position.y / 10;
-						dynamicLookAtCamera.position.z = dynamicLookAtCamera.position.z / 10;
+						lookAtCamera.getPosition().x = lookAtCamera.getPosition().x / 10;
+						lookAtCamera.getPosition().y = lookAtCamera.getPosition().y / 10;
+						lookAtCamera.getPosition().z = lookAtCamera.getPosition().z / 10;
 						break;
 					case android.view.KeyEvent.KEYCODE_DPAD_DOWN:
 						Log.v(TAG, "KEYCODE_DPAD_DOWN");
-						dynamicLookAtCamera.position.x = dynamicLookAtCamera.position.x * 10;
-						dynamicLookAtCamera.position.y = dynamicLookAtCamera.position.y * 10;
-						dynamicLookAtCamera.position.z = dynamicLookAtCamera.position.z * 10;
+						lookAtCamera.getPosition().x = lookAtCamera.getPosition().x * 10;
+						lookAtCamera.getPosition().y = lookAtCamera.getPosition().y * 10;
+						lookAtCamera.getPosition().z = lookAtCamera.getPosition().z * 10;
 						break;
 					case android.view.KeyEvent.KEYCODE_DPAD_CENTER:
 						Log.v(TAG, "KEYCODE_DPAD_DOWN");
@@ -77,6 +76,20 @@ public class TestInputThread extends InputThread {
 						} else {
 							testOpenGLRenderer.getWorld().getObject3ds().get(0).pause();
 						}
+						break;
+					case android.view.KeyEvent.KEYCODE_1:
+						Log.v(TAG, "KEYCODE_1");
+
+						if(camera.getFar()>5)
+							camera.setFar(camera.getFar()-5);
+						
+						break;
+					case android.view.KeyEvent.KEYCODE_2:
+						Log.v(TAG, "KEYCODE_2");
+
+						if(camera.getFar()<100)
+							camera.setFar(camera.getFar()+5);
+						
 						break;
 					}
 				}

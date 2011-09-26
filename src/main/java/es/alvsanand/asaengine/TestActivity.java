@@ -6,8 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import es.alvsanand.asaengine.graphics.cameras.Camera;
-import es.alvsanand.asaengine.graphics.cameras.DynamicLookAtCamera;
+import es.alvsanand.asaengine.graphics.cameras.LookAtCamera;
 import es.alvsanand.asaengine.input.Input;
 import es.alvsanand.asaengine.input.InputImpl;
 import es.alvsanand.asaengine.input.InputThread;
@@ -51,15 +50,15 @@ public class TestActivity extends Activity{
 		inputThread.start();		
 	}
 	
-	private Camera camera;
+	private LookAtCamera camera;
 	
 	private void loadCamera() {		
 		Vector2[] points = new Vector2[] {};
 
 		XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
 		
-		camera = new DynamicLookAtCamera(new Vector3(8f, 1.5f, 8f), 67, (float) glView.getWidth() / (float) glView.getHeight(), 0.1f, 100,
+		camera = new LookAtCamera(new Vector3(8f, 5f, 8f), 67, (float) glView.getWidth() / (float) glView.getHeight(), 0.1f, 100,
 				pointsTrayectory);
-		((DynamicLookAtCamera)camera).lookAt = new Vector3(0, 0, 0);
+		((LookAtCamera)camera).setLookAt(new Vector3(0, 0, 0));
 	}	
 }

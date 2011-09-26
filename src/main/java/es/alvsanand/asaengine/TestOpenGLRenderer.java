@@ -25,6 +25,7 @@ import es.alvsanand.asaengine.graphics.lights.PointLight;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.MeshFactory;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
+import es.alvsanand.asaengine.graphics.objects.primitives.Plane;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
 import es.alvsanand.asaengine.math.Vector2;
@@ -54,8 +55,8 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 
 		ArrayList<Object3D> object3ds = new ArrayList<Object3D>();
 		
-//		Plane plane = new Plane(new Vector3(0,-1f,0), new Color(0f, 1f, 0f, 1.0f), 10, 10);
-//		object3ds.add(plane);
+		Plane plane = new Plane(new Vector3(-50,-1f,-50), new Color(0f, 1f, 0f, 1.0f), 100, 100);
+		object3ds.add(plane);
 //		
 //		for(int i=0; i<5; i++){
 //			Cube cube = new Cube(new Vector3(i-2,0,-2), (i%2==0)?(new Color(0f, 1f, 0f, 1.0f)):(new Color(1f, 0f, 0f, 1.0f)), new Color(1f, 1f, 1f, 1.0f), 0.5f, 0.5f, 0.5f);

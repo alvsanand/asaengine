@@ -78,7 +78,7 @@ public abstract class OpenGLRenderer implements Renderer {
 			// Sets the current view port to the new size.
 			gl.glViewport(0, 0, width, height);
 
-			camera.aspectRatio = (float) width / (float)height;			
+			camera.setAspectRatio((float) width / (float)height);			
 			
 			if(camera instanceof Dynamic){
 				((Dynamic) camera).updatePosition();
