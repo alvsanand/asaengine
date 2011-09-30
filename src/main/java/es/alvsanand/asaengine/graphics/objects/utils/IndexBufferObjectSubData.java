@@ -33,8 +33,8 @@ public class IndexBufferObjectSubData implements IndexData {
 	boolean isBound = false;
 	final int usage;
 
-	public IndexBufferObjectSubData(boolean isStatic, int maxIndices) {
-		buffer = BufferUtils.newShortBuffer(maxIndices / 2);
+	public IndexBufferObjectSubData(boolean isStatic, int maxindexes) {
+		buffer = BufferUtils.newShortBuffer(maxindexes / Short.SIZE);
 		buffer.flip();
 
 		bufferHandle = createBufferObject();
@@ -42,8 +42,8 @@ public class IndexBufferObjectSubData implements IndexData {
 		usage = isStatic ? GL11.GL_STATIC_DRAW : GL11.GL_DYNAMIC_DRAW;
 	}
 
-	public IndexBufferObjectSubData(int maxIndices) {
-		buffer = BufferUtils.newShortBuffer(maxIndices);
+	public IndexBufferObjectSubData(int maxindexes) {
+		buffer = BufferUtils.newShortBuffer(maxindexes);
 		buffer.flip();
 
 		bufferHandle = createBufferObject();
@@ -55,7 +55,7 @@ public class IndexBufferObjectSubData implements IndexData {
 		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
 			OpenGLRenderer.gl11.glGenBuffers(1, tmpHandle);
 			OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, tmpHandle.get(0));
-			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.capacity() * 2, null, usage);
+			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.capacity() * Short.SIZE, null, usage);
 			OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, 0);
 			return tmpHandle.get(0);
 		}
@@ -63,12 +63,12 @@ public class IndexBufferObjectSubData implements IndexData {
 		return 0;
 	}
 
-	public int getNumIndices() {
-		return buffer.limit() * 2;
+	public int getNumindexes() {
+		return buffer.limit() * Short.SIZE;
 	}
 
-	public int getNumMaxIndices() {
-		return buffer.capacity() * 2;
+	public int getNumMaxindexes() {
+		return buffer.capacity() * Short.SIZE;
 	}
 
 	public ShortBuffer getBuffer() {
@@ -76,13 +76,13 @@ public class IndexBufferObjectSubData implements IndexData {
 		return buffer;
 	}
 
-	public void setIndices(short[] indices, int offset, int count) {
+	public void setindexes(short[] indexes, int offset, int count) {
 		isDirty = true;
 
-		BufferUtils.copy(indices, buffer, count, offset);
+		BufferUtils.copy(indexes, buffer, count, offset);
 
 		if (isBound && OpenGLRenderer.glType == GL_TYPE.GL11) {
-			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, buffer.limit() * 2, buffer);
+			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, buffer.limit() * Short.SIZE, buffer);
 
 			isDirty = false;
 		}
@@ -92,7 +92,7 @@ public class IndexBufferObjectSubData implements IndexData {
 	public void bind() {
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, bufferHandle);
 		if (isDirty && OpenGLRenderer.glType == GL_TYPE.GL11) {
-			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, buffer.limit() * 2, buffer);
+			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ELEMENT_ARRAY_BUFFER, 0, buffer.limit() * Short.SIZE, buffer);
 
 			isDirty = false;
 		}
@@ -122,5 +122,10 @@ public class IndexBufferObjectSubData implements IndexData {
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, 0);
 		OpenGLRenderer.gl11.glDeleteBuffers(1, tmpHandle);
 		bufferHandle = 0;
+	}
+
+	@Override
+	public short getVertexIndex(int index) {
+		return buffer.get(index);
 	}
 }

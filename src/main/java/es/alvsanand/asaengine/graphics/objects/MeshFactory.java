@@ -82,4 +82,36 @@ public class MeshFactory {
 			return mesh.getKeyFrame(frameNumber);
 		}
 	}
+	
+	public static Terrain getTerrainFromAsset(String asset, MeshType type) throws MeshNotFound{
+		if(meshs.containsKey(asset)){
+			Log.i(TAG, "Loaded Terrain[" + asset + "] from cache");	
+			
+			return meshs.get(asset).getTerrain();
+		}
+		else{
+			Log.i(TAG, "Loading Mesh[" + asset + "]");
+			
+			InputStream inputStream = null;
+			try {
+				inputStream = FileIO.readAsset(asset);
+			} catch (ASAIOException e) {
+				throw new MeshNotFound("The file " + asset + " cannot be readed", e);
+			}
+			
+			Mesh mesh = null;
+			
+			switch (type) {
+			case OBJ:
+				mesh = ObjLoader.loadObj(inputStream);
+				break;
+			default:
+				return null;
+			}
+			
+			meshs.put(asset, mesh);
+			
+			return mesh.getTerrain();
+		}
+	}
 }

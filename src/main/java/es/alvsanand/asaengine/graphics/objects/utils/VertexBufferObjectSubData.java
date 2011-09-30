@@ -39,11 +39,11 @@ public class VertexBufferObjectSubData implements VertexData {
 	boolean isDirty = false;
 	boolean isBound = false;
 
-	public VertexBufferObjectSubData(boolean isStatic, int numVertices, VertexAttribute... attributes) {
+	public VertexBufferObjectSubData(boolean isStatic, int numVertexes, VertexAttribute... attributes) {
 		this.isStatic = isStatic;
 		this.attributes = new VertexAttributes(attributes);
 
-		buffer = BufferUtils.newFloatBuffer(this.attributes.vertexSize * numVertices / 4);
+		buffer = BufferUtils.newFloatBuffer(this.attributes.vertexSize * numVertexes / 4);
 		buffer.flip();
 		
 		bufferHandle = createBufferObject();
@@ -65,11 +65,11 @@ public class VertexBufferObjectSubData implements VertexData {
 	}
 
 	@Override
-	public int getNumVertices() {
+	public int getNumVertexes() {
 		return buffer.limit() * 4 / attributes.vertexSize;
 	}
 
-	public int getNumMaxVertices() {
+	public int getNumMaxVertexes() {
 		return buffer.capacity() * 4 / attributes.vertexSize;
 	}
 
@@ -80,10 +80,10 @@ public class VertexBufferObjectSubData implements VertexData {
 	}
 
 	@Override
-	public void setVertices(float[] vertices, int offset, int count) {
+	public void setVertexes(float[] Vertexes, int offset, int count) {
 		isDirty = true;
 
-		BufferUtils.copy(vertices, buffer, count, offset);
+		BufferUtils.copy(Vertexes, buffer, count, offset);
 
 		if (isBound) {
 			OpenGLRenderer.gl11.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, buffer.limit() * 4, buffer);
@@ -185,5 +185,30 @@ public class VertexBufferObjectSubData implements VertexData {
 
 	public int getBufferHandle() {
 		return bufferHandle;
+	}
+
+	private int positionAttributeOffset = -1;
+	
+	@Override
+	public float[] getvertex(int index) {
+		if(positionAttributeOffset==-1){		
+			int numAttributes = attributes.size();
+			
+			for (int i = 0; i < numAttributes; i++) {
+				VertexAttribute attribute = attributes.get(i);
+	
+				switch (attribute.usage) {
+				case Usage.Position:
+					positionAttributeOffset = attribute.offset;
+					break;
+				}
+				
+				if(positionAttributeOffset!=-1){
+					break;
+				}
+			}
+		}
+		
+		return new float[]{buffer.get(index), buffer.get(index+1), buffer.get(index+2)};
 	}
 }

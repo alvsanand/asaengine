@@ -13,31 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package es.alvsanand.asaengine.graphics.objects.utils;
+package es.alvsanand.asaengine.math.collision;
 
-import java.nio.FloatBuffer;
+import es.alvsanand.asaengine.math.SVector3;
 
-import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
-import es.alvsanand.asaengine.util.Disposable;
-
-public interface VertexData extends Disposable {
-	public enum VertexDataType {
-		VertexArray, VertexBufferObject, VertexBufferObjectSubData,
+public class TriangleAprox {
+	public SVector3 max = new SVector3();
+	public SVector3 min = new SVector3();
+	public int triangleIndex; // index of triangle
+	
+	public TriangleAprox(){		
+		min.x = 100000;
+		min.y = 100000;
+		min.z = 100000;
+		
+		max.x = -100000;
+		max.y = -100000;
+		max.z = -100000;
 	}
-	
-	public int getNumVertexes ();
-
-	public int getNumMaxVertexes ();
-
-	public VertexAttributes getAttributes ();
-
-	public void setVertexes (float[] Vertexes, int offset, int count);
-
-	public FloatBuffer getBuffer ();
-
-	public void bind ();
-
-	public void unbind ();
-	
-	public float[] getvertex(int index);
 }

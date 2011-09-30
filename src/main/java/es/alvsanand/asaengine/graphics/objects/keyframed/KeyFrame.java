@@ -45,125 +45,125 @@ public class KeyFrame implements Disposable, Renderable {
 
 	protected static final ArrayList<KeyFrame> keyframes = new ArrayList<KeyFrame>();
 
-	protected final VertexData vertices;
-	protected final IndexData indices;
+	protected final VertexData Vertexes;
+	protected final IndexData indexes;
 	protected final boolean isVertexArray;
 
 	protected Material material;
 
-	public KeyFrame(int frameNumber, boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
+	public KeyFrame(int frameNumber, boolean isStatic, int maxVertexes, int maxindexes, VertexAttribute... attributes) {
 		frameNumber = this.frameNumber;
 
 		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
-			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObject(isStatic, maxIndices);
+			Vertexes = new VertexBufferObject(isStatic, maxVertexes, attributes);
+			indexes = new IndexBufferObject(isStatic, maxindexes);
 			isVertexArray = false;
 		} else {
-			vertices = new VertexArray(maxVertices, attributes);
-			indices = new IndexBufferObject(maxIndices);
+			Vertexes = new VertexArray(maxVertexes, attributes);
+			indexes = new IndexBufferObject(maxindexes);
 			isVertexArray = true;
 		}
 
 		addManagedKeyFrame(this);
 	}
 
-	public KeyFrame(int frameNumber, boolean isStatic, int maxVertices, int maxIndices, VertexAttributes attributes) {
+	public KeyFrame(int frameNumber, boolean isStatic, int maxVertexes, int maxindexes, VertexAttributes attributes) {
 		frameNumber = this.frameNumber;
 
 		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
-			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObject(isStatic, maxIndices);
+			Vertexes = new VertexBufferObject(isStatic, maxVertexes, attributes);
+			indexes = new IndexBufferObject(isStatic, maxindexes);
 			isVertexArray = false;
 		} else {
-			vertices = new VertexArray(maxVertices, attributes);
-			indices = new IndexBufferObject(maxIndices);
+			Vertexes = new VertexArray(maxVertexes, attributes);
+			indexes = new IndexBufferObject(maxindexes);
 			isVertexArray = true;
 		}
 
 		addManagedKeyFrame(this);
 	}
 
-	public KeyFrame(int frameNumber, VertexDataType type, boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
+	public KeyFrame(int frameNumber, VertexDataType type, boolean isStatic, int maxVertexes, int maxindexes, VertexAttribute... attributes) {
 		frameNumber = this.frameNumber;
 
 		if (type == VertexDataType.VertexBufferObject) {
-			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObject(isStatic, maxIndices);
+			Vertexes = new VertexBufferObject(isStatic, maxVertexes, attributes);
+			indexes = new IndexBufferObject(isStatic, maxindexes);
 			isVertexArray = false;
 		} else if (type == VertexDataType.VertexBufferObjectSubData) {
-			vertices = new VertexBufferObjectSubData(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObjectSubData(isStatic, maxIndices);
+			Vertexes = new VertexBufferObjectSubData(isStatic, maxVertexes, attributes);
+			indexes = new IndexBufferObjectSubData(isStatic, maxindexes);
 			isVertexArray = false;
 		} else {
-			vertices = new VertexArray(maxVertices, attributes);
-			indices = new IndexBufferObject(maxIndices);
+			Vertexes = new VertexArray(maxVertexes, attributes);
+			indexes = new IndexBufferObject(maxindexes);
 			isVertexArray = true;
 		}
 		addManagedKeyFrame(this);
 	}
 
-	public KeyFrame(int frameNumber, VertexData vertices, IndexData indices, boolean isVertexArray, Material material) {
+	public KeyFrame(int frameNumber, VertexData Vertexes, IndexData indexes, boolean isVertexArray, Material material) {
 		frameNumber = this.frameNumber;
 
-		this.vertices = vertices;
-		this.indices = indices;
+		this.Vertexes = Vertexes;
+		this.indexes = indexes;
 		this.isVertexArray = isVertexArray;
 		this.material = material;
 	}
 
-	public void setVertices(float[] vertices) {
-		this.vertices.setVertices(vertices, 0, vertices.length);
+	public void setVertexes(float[] Vertexes) {
+		this.Vertexes.setVertexes(Vertexes, 0, Vertexes.length);
 	}
 
-	public void setVertices(float[] vertices, int offset, int count) {
-		this.vertices.setVertices(vertices, offset, count);
+	public void setVertexes(float[] Vertexes, int offset, int count) {
+		this.Vertexes.setVertexes(Vertexes, offset, count);
 	}
 
-	public void getVertices(float[] vertices) {
-		if (vertices.length < getNumVertices() * getVertexSize() / 4)
-			throw new IllegalArgumentException("not enough room in vertices array, has " + vertices.length + " floats, needs " + getNumVertices()
+	public void getVertexes(float[] Vertexes) {
+		if (Vertexes.length < getNumVertexes() * getVertexSize() / 4)
+			throw new IllegalArgumentException("not enough room in Vertexes array, has " + Vertexes.length + " floats, needs " + getNumVertexes()
 					* getVertexSize() / 4);
-		int pos = getVerticesBuffer().position();
-		getVerticesBuffer().position(0);
-		getVerticesBuffer().get(vertices, 0, getNumVertices() * getVertexSize() / 4);
-		getVerticesBuffer().position(pos);
+		int pos = getVertexesBuffer().position();
+		getVertexesBuffer().position(0);
+		getVertexesBuffer().get(Vertexes, 0, getNumVertexes() * getVertexSize() / 4);
+		getVertexesBuffer().position(pos);
 	}
 
-	public void setIndices(short[] indices) {
-		this.indices.setIndices(indices, 0, indices.length);
+	public void setindexes(short[] indexes) {
+		this.indexes.setindexes(indexes, 0, indexes.length);
 	}
 
-	public void setIndices(short[] indices, int offset, int count) {
-		this.indices.setIndices(indices, offset, count);
+	public void setindexes(short[] indexes, int offset, int count) {
+		this.indexes.setindexes(indexes, offset, count);
 	}
 
-	public void getIndices(short[] indices) {
-		if (indices.length < getNumIndices())
-			throw new IllegalArgumentException("not enough room in indices array, has " + indices.length + " floats, needs " + getNumIndices());
-		int pos = getIndicesBuffer().position();
-		getIndicesBuffer().position(0);
-		getIndicesBuffer().get(indices, 0, getNumIndices());
-		getIndicesBuffer().position(pos);
+	public void getindexes(short[] indexes) {
+		if (indexes.length < getNumindexes())
+			throw new IllegalArgumentException("not enough room in indexes array, has " + indexes.length + " floats, needs " + getNumindexes());
+		int pos = getindexesBuffer().position();
+		getindexesBuffer().position(0);
+		getindexesBuffer().get(indexes, 0, getNumindexes());
+		getindexesBuffer().position(pos);
 	}
 
-	public int getNumIndices() {
-		return indices.getNumIndices();
+	public int getNumindexes() {
+		return indexes.getNumindexes();
 	}
 
-	public int getNumVertices() {
-		return vertices.getNumVertices();
+	public int getNumVertexes() {
+		return Vertexes.getNumVertexes();
 	}
 
-	public int getMaxVertices() {
-		return vertices.getNumMaxVertices();
+	public int getMaxVertexes() {
+		return Vertexes.getNumMaxVertexes();
 	}
 
-	public int getMaxIndices() {
-		return indices.getNumMaxIndices();
+	public int getMaxindexes() {
+		return indexes.getNumMaxindexes();
 	}
 
 	public int getVertexSize() {
-		return vertices.getAttributes().vertexSize;
+		return Vertexes.getAttributes().vertexSize;
 	}
 
 	public void bind() {
@@ -174,16 +174,16 @@ public class KeyFrame implements Disposable, Renderable {
 
 		OpenGLRenderer.gl.glFrontFace(GL10.GL_CCW);
 
-		vertices.bind();
-		if (!isVertexArray && indices.getNumIndices() > 0)
-			indices.bind();
+		Vertexes.bind();
+		if (!isVertexArray && indexes.getNumindexes() > 0)
+			indexes.bind();
 	}
 
 	public void unbind() {
-		vertices.unbind();
+		Vertexes.unbind();
 
-		if (!isVertexArray && indices.getNumIndices() > 0)
-			indices.unbind();
+		if (!isVertexArray && indexes.getNumindexes() > 0)
+			indexes.unbind();
 
 		if (material != null && material.getTexture() != null) {
 			OpenGLRenderer.gl.glDisable(GL10.GL_TEXTURE_2D);
@@ -196,7 +196,7 @@ public class KeyFrame implements Disposable, Renderable {
 	}
 
 	public void render(int primitiveType) {
-		render(primitiveType, 0, indices.getNumIndices() > 0 ? getNumIndices() : getNumVertices());
+		render(primitiveType, 0, indexes.getNumindexes() > 0 ? getNumindexes() : getNumVertexes());
 	}
 
 	public void render(int offset, int count) {
@@ -210,8 +210,8 @@ public class KeyFrame implements Disposable, Renderable {
 		}
 
 		if (isVertexArray) {
-			if (indices.getNumIndices() > 0) {
-				ShortBuffer buffer = indices.getBuffer();
+			if (indexes.getNumindexes() > 0) {
+				ShortBuffer buffer = indexes.getBuffer();
 				int oldPosition = buffer.position();
 				int oldLimit = buffer.limit();
 				buffer.position(offset);
@@ -223,7 +223,7 @@ public class KeyFrame implements Disposable, Renderable {
 				OpenGLRenderer.gl.glDrawArrays(primitiveType, offset, count);
 			}
 		} else {
-			if (indices.getNumIndices() > 0)
+			if (indexes.getNumindexes() > 0)
 				OpenGLRenderer.gl11.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, offset * 2);
 			else
 				OpenGLRenderer.gl11.glDrawArrays(primitiveType, offset, count);
@@ -233,8 +233,8 @@ public class KeyFrame implements Disposable, Renderable {
 	@Override
 	public void dispose() {
 		keyframes.remove(this);
-		vertices.dispose();
-		indices.dispose();
+		Vertexes.dispose();
+		indexes.dispose();
 
 		if (material != null && material.getTexture() != null) {
 			material.getTexture().dispose();
@@ -242,7 +242,7 @@ public class KeyFrame implements Disposable, Renderable {
 	}
 
 	public VertexAttribute getVertexAttribute(int usage) {
-		VertexAttributes attributes = vertices.getAttributes();
+		VertexAttributes attributes = Vertexes.getAttributes();
 		int len = attributes.size();
 		for (int i = 0; i < len; i++)
 			if (attributes.get(i).usage == usage)
@@ -252,41 +252,41 @@ public class KeyFrame implements Disposable, Renderable {
 	}
 
 	public VertexAttributes getVertexAttributes() {
-		return vertices.getAttributes();
+		return Vertexes.getAttributes();
 	}
 
-	public FloatBuffer getVerticesBuffer() {
-		return vertices.getBuffer();
+	public FloatBuffer getVertexesBuffer() {
+		return Vertexes.getBuffer();
 	}
 
 	public BoundingBox calculateBoundingBox() {
-		final int numVertices = getNumVertices();
-		if (numVertices == 0)
-			throw new ASARuntimeException("No vertices defined");
+		final int numVertexes = getNumVertexes();
+		if (numVertexes == 0)
+			throw new ASARuntimeException("No Vertexes defined");
 
 		final BoundingBox bbox = new BoundingBox();
-		final FloatBuffer verts = vertices.getBuffer();
+		final FloatBuffer verts = Vertexes.getBuffer();
 		bbox.inf();
 		final VertexAttribute posAttrib = getVertexAttribute(Usage.Position);
 		final int offset = posAttrib.offset / 4;
-		final int vertexSize = vertices.getAttributes().vertexSize / 4;
+		final int vertexSize = Vertexes.getAttributes().vertexSize / 4;
 		int idx = offset;
 
 		switch (posAttrib.numComponents) {
 		case 1:
-			for (int i = 0; i < numVertices; i++) {
+			for (int i = 0; i < numVertexes; i++) {
 				bbox.ext(verts.get(idx), 0, 0);
 				idx += vertexSize;
 			}
 			break;
 		case 2:
-			for (int i = 0; i < numVertices; i++) {
+			for (int i = 0; i < numVertexes; i++) {
 				bbox.ext(verts.get(idx), verts.get(idx + 1), 0);
 				idx += vertexSize;
 			}
 			break;
 		case 3:
-			for (int i = 0; i < numVertices; i++) {
+			for (int i = 0; i < numVertexes; i++) {
 				bbox.ext(verts.get(idx), verts.get(idx + 1), verts.get(idx + 2));
 				idx += vertexSize;
 			}
@@ -296,8 +296,8 @@ public class KeyFrame implements Disposable, Renderable {
 		return bbox;
 	}
 
-	public ShortBuffer getIndicesBuffer() {
-		return indices.getBuffer();
+	public ShortBuffer getindexesBuffer() {
+		return indexes.getBuffer();
 	}
 
 	private static void addManagedKeyFrame(KeyFrame mesh) {
@@ -308,9 +308,9 @@ public class KeyFrame implements Disposable, Renderable {
 		if (keyframes == null)
 			return;
 		for (int i = 0; i < keyframes.size(); i++) {
-			if (keyframes.get(i).vertices instanceof VertexBufferObject) {
-				((VertexBufferObject) keyframes.get(i).vertices).invalidate();
-				keyframes.get(i).indices.invalidate();
+			if (keyframes.get(i).Vertexes instanceof VertexBufferObject) {
+				((VertexBufferObject) keyframes.get(i).Vertexes).invalidate();
+				keyframes.get(i).indexes.invalidate();
 			}
 		}
 	}
@@ -320,7 +320,7 @@ public class KeyFrame implements Disposable, Renderable {
 	}
 
 	public KeyFrame duplicate() {
-		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertices, indices, isVertexArray, material);
+		KeyFrame newKeyFrame = new KeyFrame(frameNumber, Vertexes, indexes, isVertexArray, material);
 
 		return newKeyFrame;
 	}

@@ -13,31 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package es.alvsanand.asaengine.graphics.objects.utils;
+package es.alvsanand.asaengine.math;
 
-import java.nio.FloatBuffer;
+import java.io.Serializable;
 
-import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
-import es.alvsanand.asaengine.util.Disposable;
 
-public interface VertexData extends Disposable {
-	public enum VertexDataType {
-		VertexArray, VertexBufferObject, VertexBufferObjectSubData,
+public class SVector3 implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4267646046944070854L;
+	
+	/** the x-component of this vector **/
+	public float x;
+	/** the x-component of this vector **/
+	public float y;
+	/** the x-component of this vector **/
+	public float z;
+
+	public SVector3() {
 	}
-	
-	public int getNumVertexes ();
-
-	public int getNumMaxVertexes ();
-
-	public VertexAttributes getAttributes ();
-
-	public void setVertexes (float[] Vertexes, int offset, int count);
-
-	public FloatBuffer getBuffer ();
-
-	public void bind ();
-
-	public void unbind ();
-	
-	public float[] getvertex(int index);
 }

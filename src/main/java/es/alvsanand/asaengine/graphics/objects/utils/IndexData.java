@@ -20,11 +20,11 @@ import java.nio.ShortBuffer;
 import es.alvsanand.asaengine.util.Disposable;
 
 public interface IndexData extends Disposable {
-	public int getNumIndices ();
+	public int getNumindexes ();
 
-	public int getNumMaxIndices ();
+	public int getNumMaxindexes ();
 
-	public void setIndices (short[] indices, int offset, int count);
+	public void setindexes (short[] indexes, int offset, int count);
 
 	public ShortBuffer getBuffer ();
 
@@ -33,4 +33,6 @@ public interface IndexData extends Disposable {
 	public void unbind ();
 
 	public void invalidate ();
+	
+	public short getVertexIndex(int index);
 }

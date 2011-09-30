@@ -84,11 +84,11 @@ public class ObjLoader {
 	public static Mesh loadObjFromStrings(List<String> lines, boolean flipV) throws MeshNotFound {
 		int linesLength = lines.size();
 
-		float[] vertices = new float[linesLength * 3];
+		float[] Vertexes = new float[linesLength * 3];
 		float[] normals = new float[linesLength * 3];
 		float[] uv = new float[linesLength * 3];
 
-		int numVertices = 0;
+		int numVertexes = 0;
 		int numNormals = 0;
 		int numUV = 0;
 		int numFaces = 0;
@@ -142,11 +142,11 @@ public class ObjLoader {
 				String token2 = line.substring(index2 + 1, index3);
 				String token3 = line.substring(index3 + 1, index4);
 
-				vertices[vertexIndex] = Float.parseFloat(token1);
-				vertices[vertexIndex + 1] = Float.parseFloat(token2);
-				vertices[vertexIndex + 2] = Float.parseFloat(token3);
+				Vertexes[vertexIndex] = Float.parseFloat(token1);
+				Vertexes[vertexIndex + 1] = Float.parseFloat(token2);
+				Vertexes[vertexIndex + 2] = Float.parseFloat(token3);
 				vertexIndex += 3;
-				numVertices++;
+				numVertexes++;
 				continue;
 			}
 
@@ -266,7 +266,7 @@ public class ObjLoader {
 						}
 					}
 	
-					facesVerts[faceIndex] = getIndex(part1, numVertices);
+					facesVerts[faceIndex] = getIndex(part1, numVertexes);
 					if (part3 != null)
 						facesNormals[faceIndex] = getIndex(part3, numNormals);
 					if (part2 != null)
@@ -311,7 +311,7 @@ public class ObjLoader {
 						}
 					}
 	
-					facesVerts[faceIndex] = getIndex(part1, numVertices);
+					facesVerts[faceIndex] = getIndex(part1, numVertexes);
 					if (part3 != null)
 						facesNormals[faceIndex] = getIndex(part3, numNormals);
 					if (part2 != null)
@@ -357,7 +357,7 @@ public class ObjLoader {
 						}
 					}
 	
-					facesVerts[faceIndex] = getIndex(part1, numVertices);
+					facesVerts[faceIndex] = getIndex(part1, numVertexes);
 					if (part3 != null)
 						facesNormals[faceIndex] = getIndex(part3, numNormals);
 					if (part2 != null)
@@ -400,7 +400,7 @@ public class ObjLoader {
 						}
 					}
 	
-					facesVerts[faceIndex] = getIndex(part1, numVertices);
+					facesVerts[faceIndex] = getIndex(part1, numVertexes);
 					if (part3 != null)
 						facesNormals[faceIndex] = getIndex(part3, numNormals);
 					if (part2 != null)
@@ -416,15 +416,15 @@ public class ObjLoader {
 
 		Log.i(TAG, "Parsed Mesh file lines");
 
-		Log.i(TAG, "Creating Mesh vertices array");
+		Log.i(TAG, "Creating Mesh Vertexes array");
 
 		float[] verts = new float[(numFaces * 3) * (3 + (numNormals > 0 ? 3 : 0) + (numUV > 0 ? 2 : 0))];
 
 		for (int i = 0, vi = 0; i < numFaces * 3; i++) {
 			int vertexIdx = facesVerts[i] * 3;
-			verts[vi++] = vertices[vertexIdx];
-			verts[vi++] = vertices[vertexIdx + 1];
-			verts[vi++] = vertices[vertexIdx + 2];
+			verts[vi++] = Vertexes[vertexIdx];
+			verts[vi++] = Vertexes[vertexIdx + 1];
+			verts[vi++] = Vertexes[vertexIdx + 2];
 
 			if (numUV > 0) {
 				int uvIdx = facesUV[i] * 2;
@@ -439,7 +439,7 @@ public class ObjLoader {
 			}
 		}
 
-		Log.i(TAG, "Created Mesh vertices array");
+		Log.i(TAG, "Created Mesh Vertexes array");
 
 		Mesh mesh = null;
 
@@ -453,7 +453,7 @@ public class ObjLoader {
 		Log.i(TAG, "Creating Mesh");
 
 		mesh = new Mesh(true, numFaces * 3, 0, attributes.toArray(new VertexAttribute[attributes.size()]));
-		mesh.setVertices(verts);
+		mesh.setVertexes(verts);
 
 		if(material!=null){
 			mesh.setMaterial(material);

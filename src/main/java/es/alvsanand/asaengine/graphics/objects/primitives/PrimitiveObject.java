@@ -25,11 +25,11 @@ public abstract class PrimitiveObject extends Object3D {
 	// Our index buffer.
 	private ShortBuffer borderIndexesBuffer = null;
 
-	// The number of indices.
-	private int numOfIndices = -1;
+	// The number of indexes.
+	private int numOfindexes = -1;
 
-	// The number of indices.
-	private int numOfBorderIndices = -1;
+	// The number of indexes.
+	private int numOfBorderindexes = -1;
 
 	// Smooth Colors
 	private FloatBuffer colorBuffer = null;
@@ -59,7 +59,7 @@ public abstract class PrimitiveObject extends Object3D {
 //		OpenGLRenderer.gl.glEnable(GL10.GL_CULL_FACE);
 //		// What faces to remove with the face culling.
 //		OpenGLRenderer.gl.glCullFace(GL10.GL_BACK);
-		// Enabled the vertices buffer for writing and to be used during
+		// Enabled the Vertexes buffer for writing and to be used during
 		// rendering.
 		OpenGLRenderer.gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		// Specifies the location and data format of an array of vertex
@@ -83,7 +83,7 @@ public abstract class PrimitiveObject extends Object3D {
 		}
 
 		// Point out the where the color buffer is.
-		OpenGLRenderer.gl.glDrawElements(GL10.GL_TRIANGLES, numOfIndices, GL10.GL_UNSIGNED_SHORT, indexesBuffer);	
+		OpenGLRenderer.gl.glDrawElements(GL10.GL_TRIANGLES, numOfindexes, GL10.GL_UNSIGNED_SHORT, indexesBuffer);	
 
 		//Draw border
 		if(printBorder){
@@ -91,12 +91,12 @@ public abstract class PrimitiveObject extends Object3D {
 			// Set flat border color
 			OpenGLRenderer.gl.glColor4f(borderColor.r, borderColor.g, borderColor.b, borderColor.a);
 		
-			OpenGLRenderer.gl.glDrawElements(GL10.GL_LINES, numOfBorderIndices, GL10.GL_UNSIGNED_SHORT, borderIndexesBuffer);
+			OpenGLRenderer.gl.glDrawElements(GL10.GL_LINES, numOfBorderindexes, GL10.GL_UNSIGNED_SHORT, borderIndexesBuffer);
 		}
 		
 		OpenGLRenderer.gl.glPopMatrix();
 		
-		// Disable the vertices buffer.
+		// Disable the Vertexes buffer.
 		OpenGLRenderer.gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		// Disable face culling.
 		OpenGLRenderer.gl.glDisable(GL10.GL_CULL_FACE);
@@ -104,7 +104,7 @@ public abstract class PrimitiveObject extends Object3D {
 
 	protected void setVertexes(float[] vertexes) {
 		// a float is 4 bytes, therefore we multiply the number if
-		// vertices with 4.
+		// Vertexes with 4.
 		ByteBuffer vbb = ByteBuffer.allocateDirect(vertexes.length * 4);
 		vbb.order(ByteOrder.nativeOrder());
 		vertexesBuffer = vbb.asFloatBuffer();
@@ -114,18 +114,18 @@ public abstract class PrimitiveObject extends Object3D {
 
 	protected void setIndexes(short[] indexes) {
 		// short is 2 bytes, therefore we multiply the number if
-		// vertices with 2.
+		// Vertexes with 2.
 		ByteBuffer ibb = ByteBuffer.allocateDirect(indexes.length * 2);
 		ibb.order(ByteOrder.nativeOrder());
 		indexesBuffer = ibb.asShortBuffer();
 		indexesBuffer.put(indexes);
 		indexesBuffer.position(0);
-		numOfIndices = indexes.length;
+		numOfindexes = indexes.length;
 	}
 
 	protected void setBorderVertexes(float[] borderVertexes) {
 		// a float is 4 bytes, therefore we multiply the number if
-		// vertices with 4.
+		// Vertexes with 4.
 		ByteBuffer vbb = ByteBuffer.allocateDirect(borderVertexes.length * 4);
 		vbb.order(ByteOrder.nativeOrder());
 		borderVertexsBuffer = vbb.asFloatBuffer();
@@ -135,13 +135,13 @@ public abstract class PrimitiveObject extends Object3D {
 
 	protected void setBorderIndexes(short[] borderIndexes) {
 		// short is 2 bytes, therefore we multiply the number if
-		// vertices with 2.
+		// Vertexes with 2.
 		ByteBuffer ibb = ByteBuffer.allocateDirect(borderIndexes.length * 2);
 		ibb.order(ByteOrder.nativeOrder());
 		borderIndexesBuffer = ibb.asShortBuffer();
 		borderIndexesBuffer.put(borderIndexes);
 		borderIndexesBuffer.position(0);
-		numOfBorderIndices = borderIndexes.length;
+		numOfBorderindexes = borderIndexes.length;
 	}
 
 	protected void setColors(float[] colors) {

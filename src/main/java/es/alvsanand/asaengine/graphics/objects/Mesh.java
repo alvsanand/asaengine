@@ -44,140 +44,140 @@ public class Mesh extends Object3D {
 
 	protected static final ArrayList<Mesh> meshes = new ArrayList<Mesh>();
 
-	protected final VertexData vertices;
-	protected final IndexData indices;
+	protected final VertexData vertexes;
+	protected final IndexData indexes;
 	protected boolean autoBind = true;
 	protected final boolean isVertexArray;
 
 	protected Material material;
 
-	public Mesh(boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
+	public Mesh(boolean isStatic, int maxVertexes, int maxindexes, VertexAttribute... attributes) {
 		super(new Vector3(0, 0, 0));
 
 		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
-			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObject(isStatic, maxIndices);
+			vertexes= new VertexBufferObject(isStatic, maxVertexes, attributes);
+			indexes = new IndexBufferObject(isStatic, maxindexes);
 			isVertexArray = false;
 		} else {
-			vertices = new VertexArray(maxVertices, attributes);
-			indices = new IndexBufferObject(maxIndices);
+			vertexes = new VertexArray(maxVertexes, attributes);
+			indexes = new IndexBufferObject(maxindexes);
 			isVertexArray = true;
 		}
 
 		addManagedMesh(this);
 	}
 
-	public Mesh(Vector3 position, boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
+	public Mesh(Vector3 position, boolean isStatic, int maxVertexes, int maxindexes, VertexAttribute... attributes) {
 		super(position);
 		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
-			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObject(isStatic, maxIndices);
+			vertexes = new VertexBufferObject(isStatic, maxVertexes, attributes);
+			indexes = new IndexBufferObject(isStatic, maxindexes);
 			isVertexArray = false;
 		} else {
-			vertices = new VertexArray(maxVertices, attributes);
-			indices = new IndexBufferObject(maxIndices);
+			vertexes = new VertexArray(maxVertexes, attributes);
+			indexes = new IndexBufferObject(maxindexes);
 			isVertexArray = true;
 		}
 
 		addManagedMesh(this);
 	}
 
-	public Mesh(Vector3 position, boolean isStatic, int maxVertices, int maxIndices, VertexAttributes attributes) {
+	public Mesh(Vector3 position, boolean isStatic, int maxVertexes, int maxindexes, VertexAttributes attributes) {
 		super(position);
 		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
-			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObject(isStatic, maxIndices);
+			vertexes = new VertexBufferObject(isStatic, maxVertexes, attributes);
+			indexes = new IndexBufferObject(isStatic, maxindexes);
 			isVertexArray = false;
 		} else {
-			vertices = new VertexArray(maxVertices, attributes);
-			indices = new IndexBufferObject(maxIndices);
+			vertexes = new VertexArray(maxVertexes, attributes);
+			indexes = new IndexBufferObject(maxindexes);
 			isVertexArray = true;
 		}
 
 		addManagedMesh(this);
 	}
 
-	public Mesh(Vector3 position, VertexDataType type, boolean isStatic, int maxVertices, int maxIndices, VertexAttribute... attributes) {
+	public Mesh(Vector3 position, VertexDataType type, boolean isStatic, int maxVertexes, int maxindexes, VertexAttribute... attributes) {
 		super(position);
 
 		if (type == VertexDataType.VertexBufferObject) {
-			vertices = new VertexBufferObject(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObject(isStatic, maxIndices);
+			vertexes = new VertexBufferObject(isStatic, maxVertexes, attributes);
+			indexes = new IndexBufferObject(isStatic, maxindexes);
 			isVertexArray = false;
 		} else if (type == VertexDataType.VertexBufferObjectSubData) {
-			vertices = new VertexBufferObjectSubData(isStatic, maxVertices, attributes);
-			indices = new IndexBufferObjectSubData(isStatic, maxIndices);
+			vertexes = new VertexBufferObjectSubData(isStatic, maxVertexes, attributes);
+			indexes = new IndexBufferObjectSubData(isStatic, maxindexes);
 			isVertexArray = false;
 		} else {
-			vertices = new VertexArray(maxVertices, attributes);
-			indices = new IndexBufferObject(maxIndices);
+			vertexes = new VertexArray(maxVertexes, attributes);
+			indexes = new IndexBufferObject(maxindexes);
 			isVertexArray = true;
 		}
 		addManagedMesh(this);
 	}
 
-	protected Mesh(Vector3 position, VertexData vertices, IndexData indices, boolean autoBind, boolean isVertexArray, Material material) {
+	protected Mesh(Vector3 position, VertexData Vertexes, IndexData indexes, boolean autoBind, boolean isVertexArray, Material material) {
 		super(position);
-		this.vertices = vertices;
-		this.indices = indices;
+		this.vertexes = Vertexes;
+		this.indexes = indexes;
 		this.autoBind = autoBind;
 		this.isVertexArray = isVertexArray;
 		this.material = material;
 	}
 
-	public void setVertices(float[] vertices) {
-		this.vertices.setVertices(vertices, 0, vertices.length);
+	public void setVertexes(float[] Vertexes) {
+		this.vertexes.setVertexes(Vertexes, 0, Vertexes.length);
 	}
 
-	public void setVertices(float[] vertices, int offset, int count) {
-		this.vertices.setVertices(vertices, offset, count);
+	public void setVertexes(float[] Vertexes, int offset, int count) {
+		this.vertexes.setVertexes(Vertexes, offset, count);
 	}
 
-	public void getVertices(float[] vertices) {
-		if (vertices.length < getNumVertices() * getVertexSize() / 4)
-			throw new IllegalArgumentException("not enough room in vertices array, has " + vertices.length + " floats, needs " + getNumVertices()
+	public void getVertexes(float[] Vertexes) {
+		if (Vertexes.length < getNumVertexes() * getVertexSize() / 4)
+			throw new IllegalArgumentException("not enough room in Vertexes array, has " + Vertexes.length + " floats, needs " + getNumVertexes()
 					* getVertexSize() / 4);
-		int pos = getVerticesBuffer().position();
-		getVerticesBuffer().position(0);
-		getVerticesBuffer().get(vertices, 0, getNumVertices() * getVertexSize() / 4);
-		getVerticesBuffer().position(pos);
+		int pos = getVertexesBuffer().position();
+		getVertexesBuffer().position(0);
+		getVertexesBuffer().get(Vertexes, 0, getNumVertexes() * getVertexSize() / 4);
+		getVertexesBuffer().position(pos);
 	}
 
-	public void setIndices(short[] indices) {
-		this.indices.setIndices(indices, 0, indices.length);
+	public void setindexes(short[] indexes) {
+		this.indexes.setindexes(indexes, 0, indexes.length);
 	}
 
-	public void setIndices(short[] indices, int offset, int count) {
-		this.indices.setIndices(indices, offset, count);
+	public void setindexes(short[] indexes, int offset, int count) {
+		this.indexes.setindexes(indexes, offset, count);
 	}
 
-	public void getIndices(short[] indices) {
-		if (indices.length < getNumIndices())
-			throw new IllegalArgumentException("not enough room in indices array, has " + indices.length + " floats, needs " + getNumIndices());
-		int pos = getIndicesBuffer().position();
-		getIndicesBuffer().position(0);
-		getIndicesBuffer().get(indices, 0, getNumIndices());
-		getIndicesBuffer().position(pos);
+	public void getindexes(short[] indexes) {
+		if (indexes.length < getNumindexes())
+			throw new IllegalArgumentException("not enough room in indexes array, has " + indexes.length + " floats, needs " + getNumindexes());
+		int pos = getindexesBuffer().position();
+		getindexesBuffer().position(0);
+		getindexesBuffer().get(indexes, 0, getNumindexes());
+		getindexesBuffer().position(pos);
 	}
 
-	public int getNumIndices() {
-		return indices.getNumIndices();
+	public int getNumindexes() {
+		return indexes.getNumindexes();
 	}
 
-	public int getNumVertices() {
-		return vertices.getNumVertices();
+	public int getNumVertexes() {
+		return vertexes.getNumVertexes();
 	}
 
-	public int getMaxVertices() {
-		return vertices.getNumMaxVertices();
+	public int getMaxVertexes() {
+		return vertexes.getNumMaxVertexes();
 	}
 
-	public int getMaxIndices() {
-		return indices.getNumMaxIndices();
+	public int getMaxindexes() {
+		return indexes.getNumMaxindexes();
 	}
 
 	public int getVertexSize() {
-		return vertices.getAttributes().vertexSize;
+		return vertexes.getAttributes().vertexSize;
 	}
 
 	public void setAutoBind(boolean autoBind) {
@@ -185,25 +185,25 @@ public class Mesh extends Object3D {
 	}
 
 	public void bind() {
-		if (material != null && material.getTexture()!=null) {
+		if (material != null && material.getTexture() != null) {
 			OpenGLRenderer.gl.glEnable(GL10.GL_TEXTURE_2D);
 			material.getTexture().bind();
 		}
 
 		OpenGLRenderer.gl.glFrontFace(GL10.GL_CCW);
 
-		vertices.bind();
-		if (!isVertexArray && indices.getNumIndices() > 0)
-			indices.bind();
+		vertexes.bind();
+		if (!isVertexArray && indexes.getNumindexes() > 0)
+			indexes.bind();
 	}
 
 	public void unbind() {
-		vertices.unbind();
+		vertexes.unbind();
 
-		if (!isVertexArray && indices.getNumIndices() > 0)
-			indices.unbind();
+		if (!isVertexArray && indexes.getNumindexes() > 0)
+			indexes.unbind();
 
-		if (material != null && material.getTexture()!=null) {
+		if (material != null && material.getTexture() != null) {
 			OpenGLRenderer.gl.glDisable(GL10.GL_TEXTURE_2D);
 		}
 	}
@@ -214,80 +214,81 @@ public class Mesh extends Object3D {
 	}
 
 	public void render(int primitiveType) {
-		render(primitiveType, 0, indices.getNumIndices() > 0 ? getNumIndices() : getNumVertices());
+		render(primitiveType, 0, indexes.getNumindexes() > 0 ? getNumindexes() : getNumVertexes());
 	}
 
 	public void render(int offset, int count) {
 		render(GL10.GL_TRIANGLES, offset, count);
 	}
 
-		public void render(int primitiveType, int offset, int count) {
-			if (autoBind) {
-				bind();
-			}
-	
-			OpenGLRenderer.gl.glPushMatrix();
-	
-			OpenGLRenderer.gl.glTranslatef(position.x, position.y, position.z);
-	
-			if (rx != 0)
-				OpenGLRenderer.gl.glRotatef(rx, 1, 0, 0);
-			if (ry != 0)
-				OpenGLRenderer.gl.glRotatef(ry, 0, 1, 0);
-			if (rz != 0)
-				OpenGLRenderer.gl.glRotatef(rz, 0, 0, 1);
-	
-			if (sx > 0 && sy > 0 && sz > 0)
-				OpenGLRenderer.gl.glScalef(sx, sy, sz);
-	
-			//Render de Position
-			renderPosition();
-			
-			//Only diffuse color
-			if(material!=null && material.getDiffuseColor()!=null){
-				OpenGLRenderer.gl.glColor4f(material.getDiffuseColor().r, material.getDiffuseColor().g, material.getDiffuseColor().b, material.getDiffuseColor().a);
-			}
-	
-			if (isVertexArray) {
-				if (indices.getNumIndices() > 0) {
-					ShortBuffer buffer = indices.getBuffer();
-					int oldPosition = buffer.position();
-					int oldLimit = buffer.limit();
-					buffer.position(offset);
-					buffer.limit(offset + count);
-					OpenGLRenderer.gl.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, buffer);
-					buffer.position(oldPosition);
-					buffer.limit(oldLimit);
-				} else {
-					OpenGLRenderer.gl.glDrawArrays(primitiveType, offset, count);
-				}
-			} else {
-				if (indices.getNumIndices() > 0)
-					OpenGLRenderer.gl11.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, offset * 2);
-				else
-					OpenGLRenderer.gl11.glDrawArrays(primitiveType, offset, count);
-			}
-	
-			OpenGLRenderer.gl.glPopMatrix();
-	
-			if (autoBind) {
-				unbind();
-			}
+	public void render(int primitiveType, int offset, int count) {
+		if (autoBind) {
+			bind();
 		}
+
+		OpenGLRenderer.gl.glPushMatrix();
+
+		OpenGLRenderer.gl.glTranslatef(position.x, position.y, position.z);
+
+		if (rx != 0)
+			OpenGLRenderer.gl.glRotatef(rx, 1, 0, 0);
+		if (ry != 0)
+			OpenGLRenderer.gl.glRotatef(ry, 0, 1, 0);
+		if (rz != 0)
+			OpenGLRenderer.gl.glRotatef(rz, 0, 0, 1);
+
+		if (sx > 0 && sy > 0 && sz > 0)
+			OpenGLRenderer.gl.glScalef(sx, sy, sz);
+
+		// Render de Position
+		renderPosition();
+
+		// Only diffuse color
+		if (material != null && material.getDiffuseColor() != null) {
+			OpenGLRenderer.gl.glColor4f(material.getDiffuseColor().r, material.getDiffuseColor().g, material.getDiffuseColor().b,
+					material.getDiffuseColor().a);
+		}
+
+		if (isVertexArray) {
+			if (indexes.getNumindexes() > 0) {
+				ShortBuffer buffer = indexes.getBuffer();
+				int oldPosition = buffer.position();
+				int oldLimit = buffer.limit();
+				buffer.position(offset);
+				buffer.limit(offset + count);
+				OpenGLRenderer.gl.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, buffer);
+				buffer.position(oldPosition);
+				buffer.limit(oldLimit);
+			} else {
+				OpenGLRenderer.gl.glDrawArrays(primitiveType, offset, count);
+			}
+		} else {
+			if (indexes.getNumindexes() > 0)
+				OpenGLRenderer.gl11.glDrawElements(primitiveType, count, GL10.GL_UNSIGNED_SHORT, offset * 2);
+			else
+				OpenGLRenderer.gl11.glDrawArrays(primitiveType, offset, count);
+		}
+
+		OpenGLRenderer.gl.glPopMatrix();
+
+		if (autoBind) {
+			unbind();
+		}
+	}
 
 	@Override
 	public void dispose() {
 		meshes.remove(this);
-		vertices.dispose();
-		indices.dispose();
+		vertexes.dispose();
+		indexes.dispose();
 
-		if (material != null && material.getTexture()!=null) {
+		if (material != null && material.getTexture() != null) {
 			material.getTexture().dispose();
 		}
 	}
 
 	public VertexAttribute getVertexAttribute(int usage) {
-		VertexAttributes attributes = vertices.getAttributes();
+		VertexAttributes attributes = vertexes.getAttributes();
 		int len = attributes.size();
 		for (int i = 0; i < len; i++)
 			if (attributes.get(i).usage == usage)
@@ -297,41 +298,41 @@ public class Mesh extends Object3D {
 	}
 
 	public VertexAttributes getVertexAttributes() {
-		return vertices.getAttributes();
+		return vertexes.getAttributes();
 	}
 
-	public FloatBuffer getVerticesBuffer() {
-		return vertices.getBuffer();
+	public FloatBuffer getVertexesBuffer() {
+		return vertexes.getBuffer();
 	}
 
 	public BoundingBox calculateBoundingBox() {
-		final int numVertices = getNumVertices();
-		if (numVertices == 0)
-			throw new ASARuntimeException("No vertices defined");
+		final int numVertexes = getNumVertexes();
+		if (numVertexes == 0)
+			throw new ASARuntimeException("No Vertexes defined");
 
 		final BoundingBox bbox = new BoundingBox();
-		final FloatBuffer verts = vertices.getBuffer();
+		final FloatBuffer verts = vertexes.getBuffer();
 		bbox.inf();
 		final VertexAttribute posAttrib = getVertexAttribute(Usage.Position);
 		final int offset = posAttrib.offset / 4;
-		final int vertexSize = vertices.getAttributes().vertexSize / 4;
+		final int vertexSize = vertexes.getAttributes().vertexSize / 4;
 		int idx = offset;
 
 		switch (posAttrib.numComponents) {
 		case 1:
-			for (int i = 0; i < numVertices; i++) {
+			for (int i = 0; i < numVertexes; i++) {
 				bbox.ext(verts.get(idx), 0, 0);
 				idx += vertexSize;
 			}
 			break;
 		case 2:
-			for (int i = 0; i < numVertices; i++) {
+			for (int i = 0; i < numVertexes; i++) {
 				bbox.ext(verts.get(idx), verts.get(idx + 1), 0);
 				idx += vertexSize;
 			}
 			break;
 		case 3:
-			for (int i = 0; i < numVertices; i++) {
+			for (int i = 0; i < numVertexes; i++) {
 				bbox.ext(verts.get(idx), verts.get(idx + 1), verts.get(idx + 2));
 				idx += vertexSize;
 			}
@@ -341,8 +342,8 @@ public class Mesh extends Object3D {
 		return bbox;
 	}
 
-	public ShortBuffer getIndicesBuffer() {
-		return indices.getBuffer();
+	public ShortBuffer getindexesBuffer() {
+		return indexes.getBuffer();
 	}
 
 	private static void addManagedMesh(Mesh mesh) {
@@ -353,9 +354,9 @@ public class Mesh extends Object3D {
 		if (meshes == null)
 			return;
 		for (int i = 0; i < meshes.size(); i++) {
-			if (meshes.get(i).vertices instanceof VertexBufferObject) {
-				((VertexBufferObject) meshes.get(i).vertices).invalidate();
-				meshes.get(i).indices.invalidate();
+			if (meshes.get(i).vertexes instanceof VertexBufferObject) {
+				((VertexBufferObject) meshes.get(i).vertexes).invalidate();
+				meshes.get(i).indexes.invalidate();
 			}
 		}
 	}
@@ -365,22 +366,28 @@ public class Mesh extends Object3D {
 	}
 
 	public Mesh duplicate() {
-		Mesh newMesh = new Mesh(new Vector3(), vertices, indices, autoBind, isVertexArray, material);
+		Mesh newMesh = new Mesh(new Vector3(), vertexes, indexes, autoBind, isVertexArray, material);
 
 		return newMesh;
 	}
 
 	public KeyFrame getKeyFrame(int frameNumber) {
-		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertices, indices, isVertexArray, material);
+		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertexes, indexes, isVertexArray, material);
 
 		return newKeyFrame;
 	}
 
+	public Terrain getTerrain() {
+		Terrain terrain = new Terrain(new Vector3(), vertexes, indexes, autoBind, isVertexArray, material);
+
+		return terrain;
+	}
+
 	@Override
-	public void renderPosition() {		
-		if (getTrajectory() != null && getTrajectory().getDirection()!=null) {
+	public void renderPosition() {
+		if (getTrajectory() != null && getTrajectory().getDirection() != null) {
 			Vector3 direction = getTrajectory().getDirection().nor();
-			
+
 			float angleY = 0;
 
 			{
@@ -388,57 +395,57 @@ public class Mesh extends Object3D {
 
 				if (direction.x < 0) {
 					angleY = 180 + angleY;
-				}				
+				}
 			}
-			
-//			Only used Y rotation
-//			float angleX , angleZ = 0;
-//			{
-//				angleX = (float) Math.toDegrees(direction.angleBetweenYZ(0, 1));
-//				
-//				if (direction.y < 0) {
-//					if (angleX > 90) {
-//						angleX = 180 - angleX;
-//					}
-//					else{
-//						angleX = - angleX;
-//					}
-//				}
-//				else{
-//					if (angleX > 90) {
-//						angleX = 180 - angleX;
-//					}					
-//				}
-//				if (angleX == 90 || angleX == -90 ) {
-//					angleX = 0;
-//				}		
-//			}
-//			
-//			{
-//				angleZ = (float) Math.toDegrees(direction.angleBetweenXY(1, 0));
-//				
-//				if (direction.y < 0) {
-//					if (angleZ > 90) {
-//						angleZ = 180 - angleZ;
-//					}
-//					else{
-//						angleZ = - angleZ;
-//					}
-//				}
-//				else{
-//					if (angleZ > 90) {
-//						angleZ = 180 - angleZ;
-//					}					
-//				}
-//				
-//				if (angleZ == 90 || angleZ == -90 ) {
-//					angleZ = 0;
-//				}	
-//			}			
-//			OpenGLRenderer.gl.glRotatef(angleX, 1, 0, 0);
-//			OpenGLRenderer.gl.glRotatef(angleZ, 0, 0, 1);
-			
+
+			// Only used Y rotation
+			// float angleX , angleZ = 0;
+			// {
+			// angleX = (float) Math.toDegrees(direction.angleBetweenYZ(0, 1));
+			//
+			// if (direction.y < 0) {
+			// if (angleX > 90) {
+			// angleX = 180 - angleX;
+			// }
+			// else{
+			// angleX = - angleX;
+			// }
+			// }
+			// else{
+			// if (angleX > 90) {
+			// angleX = 180 - angleX;
+			// }
+			// }
+			// if (angleX == 90 || angleX == -90 ) {
+			// angleX = 0;
+			// }
+			// }
+			//
+			// {
+			// angleZ = (float) Math.toDegrees(direction.angleBetweenXY(1, 0));
+			//
+			// if (direction.y < 0) {
+			// if (angleZ > 90) {
+			// angleZ = 180 - angleZ;
+			// }
+			// else{
+			// angleZ = - angleZ;
+			// }
+			// }
+			// else{
+			// if (angleZ > 90) {
+			// angleZ = 180 - angleZ;
+			// }
+			// }
+			//
+			// if (angleZ == 90 || angleZ == -90 ) {
+			// angleZ = 0;
+			// }
+			// }
+			// OpenGLRenderer.gl.glRotatef(angleX, 1, 0, 0);
+			// OpenGLRenderer.gl.glRotatef(angleZ, 0, 0, 1);
+
 			OpenGLRenderer.gl.glRotatef(angleY, 0, 1, 0);
-		}		
+		}
 	}
 }

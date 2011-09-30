@@ -2,19 +2,12 @@ package es.alvsanand.asaengine.math;
 
 import java.io.Serializable;
 
-public class Vector3 implements Serializable {
+public class Vector3 extends SVector3 implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1893122555619789092L;
 	
-	/** the x-component of this vector **/
-	public float x;
-	/** the x-component of this vector **/
-	public float y;
-	/** the x-component of this vector **/
-	public float z;
-
 	private static Vector3 tmp = new Vector3();
 	private static Vector3 tmp2 = new Vector3();
 	private static Vector3 tmp3 = new Vector3();

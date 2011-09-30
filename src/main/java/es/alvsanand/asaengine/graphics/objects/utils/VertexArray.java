@@ -32,14 +32,14 @@ public class VertexArray implements VertexData {
 	final FloatBuffer buffer;
 	boolean isBound = false;
 
-	public VertexArray(int numVertices, VertexAttribute... attributes) {
-		this(numVertices, new VertexAttributes(attributes));
+	public VertexArray(int numVertexes, VertexAttribute... attributes) {
+		this(numVertexes, new VertexAttributes(attributes));
 	}
 
-	public VertexArray(int numVertices, VertexAttributes attributes) {
+	public VertexArray(int numVertexes, VertexAttributes attributes) {
 		this.attributes = attributes;
 		
-		buffer = BufferUtils.newFloatBuffer(this.attributes.vertexSize * numVertices / 4);
+		buffer = BufferUtils.newFloatBuffer(this.attributes.vertexSize * numVertexes / 4);
 		
 		buffer.flip();
 	}
@@ -55,17 +55,17 @@ public class VertexArray implements VertexData {
 	}
 
 	@Override
-	public int getNumVertices() {
+	public int getNumVertexes() {
 		return buffer.limit() * 4 / attributes.vertexSize;
 	}
 
-	public int getNumMaxVertices() {
+	public int getNumMaxVertexes() {
 		return buffer.capacity() * 4 / attributes.vertexSize;
 	}
 
 	@Override
-	public void setVertices(float[] vertices, int offset, int count) {
-		BufferUtils.copy(vertices, buffer, count, offset);
+	public void setVertexes(float[] Vertexes, int offset, int count) {
+		BufferUtils.copy(Vertexes, buffer, count, offset);
 	}
 
 	@Override
@@ -143,5 +143,30 @@ public class VertexArray implements VertexData {
 	@Override
 	public VertexAttributes getAttributes() {
 		return attributes;
+	}
+
+	private int positionAttributeOffset = -1;
+	
+	@Override
+	public float[] getvertex(int index) {
+		if(positionAttributeOffset==-1){		
+			int numAttributes = attributes.size();
+			
+			for (int i = 0; i < numAttributes; i++) {
+				VertexAttribute attribute = attributes.get(i);
+	
+				switch (attribute.usage) {
+				case Usage.Position:
+					positionAttributeOffset = attribute.offset;
+					break;
+				}
+				
+				if(positionAttributeOffset!=-1){
+					break;
+				}
+			}
+		}
+		
+		return new float[]{buffer.get(index), buffer.get(index+1), buffer.get(index+2)};
 	}
 }

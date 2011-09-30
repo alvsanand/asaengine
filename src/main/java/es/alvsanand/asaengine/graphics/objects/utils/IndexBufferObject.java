@@ -33,8 +33,8 @@ public class IndexBufferObject implements IndexData {
 	boolean isBound = false;
 	final int usage;
 
-	public IndexBufferObject (boolean isStatic, int maxIndices) {
-		buffer = BufferUtils.newShortBuffer(maxIndices / 2);
+	public IndexBufferObject (boolean isStatic, int maxindexes) {
+		buffer = BufferUtils.newShortBuffer(maxindexes / Short.SIZE);
 		buffer.flip();
 		
 		bufferHandle = createBufferObject();
@@ -42,8 +42,8 @@ public class IndexBufferObject implements IndexData {
 		usage = isStatic ? GL11.GL_STATIC_DRAW : GL11.GL_DYNAMIC_DRAW;
 	}
 
-	public IndexBufferObject (int maxIndices) {
-		buffer = BufferUtils.newShortBuffer(maxIndices);
+	public IndexBufferObject (int maxindexes) {
+		buffer = BufferUtils.newShortBuffer(maxindexes);
 		buffer.flip();
 		
 		bufferHandle = createBufferObject();
@@ -61,21 +61,21 @@ public class IndexBufferObject implements IndexData {
 		return 0;
 	}
 
-	public int getNumIndices () {
-		return buffer.limit() * 2;
+	public int getNumindexes () {
+		return buffer.limit() * Short.SIZE;
 	}
 
-	public int getNumMaxIndices () {
-		return buffer.capacity() * 2;
+	public int getNumMaxindexes () {
+		return buffer.capacity() * Short.SIZE;
 	}
 
-	public void setIndices (short[] indices, int offset, int count) {
+	public void setindexes (short[] indexes, int offset, int count) {
 		isDirty = true;
 		
-		BufferUtils.copy(indices, buffer, count, offset);
+		BufferUtils.copy(indexes, buffer, count, offset);
 
 		if (isBound && OpenGLRenderer.glType == GL_TYPE.GL11) {
-			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.limit() * 2, buffer, usage);
+			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.limit() * Short.SIZE, buffer, usage);
 			
 			isDirty = false;
 		}
@@ -89,7 +89,7 @@ public class IndexBufferObject implements IndexData {
 	public void bind () {
 		OpenGLRenderer.gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, bufferHandle);
 		if (isDirty && OpenGLRenderer.glType == GL_TYPE.GL11) {
-			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.limit() * 2, buffer, usage);
+			OpenGLRenderer.gl11.glBufferData(GL11.GL_ELEMENT_ARRAY_BUFFER, buffer.limit() * Short.SIZE, buffer, usage);
 			isDirty = false;
 		}
 
@@ -117,5 +117,10 @@ public class IndexBufferObject implements IndexData {
 			OpenGLRenderer.gl11.glDeleteBuffers(1, tmpHandle);
 			bufferHandle = 0;
 		}
+	}
+
+	@Override
+	public short getVertexIndex(int index) {
+		return buffer.get(index);
 	}
 }

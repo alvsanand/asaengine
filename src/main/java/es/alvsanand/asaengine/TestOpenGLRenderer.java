@@ -25,6 +25,7 @@ import es.alvsanand.asaengine.graphics.lights.PointLight;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.MeshFactory;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
+import es.alvsanand.asaengine.graphics.objects.Terrain;
 import es.alvsanand.asaengine.graphics.objects.primitives.Plane;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.World;
@@ -55,8 +56,8 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 
 		ArrayList<Object3D> object3ds = new ArrayList<Object3D>();
 		
-		Plane plane = new Plane(new Vector3(-50,-1f,-50), new Color(0f, 1f, 0f, 1.0f), 100, 100);
-		object3ds.add(plane);
+//		Plane plane = new Plane(new Vector3(-50,-1f,-50), new Color(0f, 1f, 0f, 1.0f), 100, 100);
+//		object3ds.add(plane);
 //		
 //		for(int i=0; i<5; i++){
 //			Cube cube = new Cube(new Vector3(i-2,0,-2), (i%2==0)?(new Color(0f, 1f, 0f, 1.0f)):(new Color(1f, 0f, 0f, 1.0f)), new Color(1f, 1f, 1f, 1.0f), 0.5f, 0.5f, 0.5f);
@@ -102,17 +103,30 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 				Mesh mesh = MeshFactory.getMeshFromAsset("zebra.obj", MeshFactory.MeshType.OBJ);
 				mesh.setPosition(new Vector3(0,0,0));
 				
-				mesh.setSx(0.65f);
-				mesh.setSy(0.65f);
-				mesh.setSz(0.65f);
+				mesh.setSx(0.45f);
+				mesh.setSy(0.45f);
+				mesh.setSz(0.45f);
 				
-				Vector2[] points = new Vector2[] { new Vector2(5f, 5f), new Vector2(-5f, 5f), new Vector2(-5f, -5f), new Vector2(5f, -5f)};
+				Vector2[] points = new Vector2[] { new Vector2(3f, 3f), new Vector2(-3f, 3f), new Vector2(-3f, -3f), new Vector2(3f, -3f)};
 				
 				XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
 				
 				mesh.setTrajectory(pointsTrayectory);
 				
 				object3ds.add(mesh);
+			} catch (ASAIOException e) {
+				e.printStackTrace();
+			}	
+		}
+		
+		{
+			try {
+				Terrain terrain = MeshFactory.getTerrainFromAsset("terrain.obj", MeshFactory.MeshType.OBJ);
+				terrain.setPosition(new Vector3(0,0,0));
+				
+				terrain.calulateTerrainTriangleAprox();
+				
+				object3ds.add(terrain);
 			} catch (ASAIOException e) {
 				e.printStackTrace();
 			}	
