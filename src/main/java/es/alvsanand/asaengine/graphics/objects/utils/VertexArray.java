@@ -64,8 +64,8 @@ public class VertexArray implements VertexData {
 	}
 
 	@Override
-	public void setVertexes(float[] Vertexes, int offset, int count) {
-		BufferUtils.copy(Vertexes, buffer, count, offset);
+	public void setVertexes(float[] vertexes, int offset, int count) {
+		BufferUtils.copy(vertexes, buffer, count, offset);
 	}
 
 	@Override
@@ -146,27 +146,34 @@ public class VertexArray implements VertexData {
 	}
 
 	private int positionAttributeOffset = -1;
-	
+
+	private int vertexFloatSize = -1;
+
 	@Override
 	public float[] getvertex(int index) {
-		if(positionAttributeOffset==-1){		
+		if (positionAttributeOffset == -1) {
 			int numAttributes = attributes.size();
-			
+
 			for (int i = 0; i < numAttributes; i++) {
 				VertexAttribute attribute = attributes.get(i);
-	
+
 				switch (attribute.usage) {
 				case Usage.Position:
 					positionAttributeOffset = attribute.offset;
 					break;
 				}
-				
-				if(positionAttributeOffset!=-1){
+
+				if (positionAttributeOffset != -1) {
 					break;
 				}
 			}
+
+			vertexFloatSize = attributes.vertexSize / 4;
 		}
-		
-		return new float[]{buffer.get(index), buffer.get(index+1), buffer.get(index+2)};
+
+		int indexOffset = index * vertexFloatSize;
+
+		return new float[] { buffer.get(indexOffset + positionAttributeOffset), buffer.get(indexOffset + positionAttributeOffset + 1),
+				buffer.get(indexOffset + positionAttributeOffset + 2) };
 	}
 }

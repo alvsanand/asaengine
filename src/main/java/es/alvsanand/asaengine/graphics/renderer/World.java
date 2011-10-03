@@ -7,11 +7,19 @@ import javax.microedition.khronos.opengles.GL10;
 import es.alvsanand.asaengine.graphics.Dynamic;
 import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
+import es.alvsanand.asaengine.graphics.objects.Terrain;
 
 public class World {
 	protected ArrayList<Light> lights;
 	protected ArrayList<Object3D> object3ds;
+	protected Terrain terrain;
 	
+	public World(ArrayList<Light> lights, ArrayList<Object3D> object3ds, Terrain terrain) {
+		this.lights = lights;
+		this.object3ds = object3ds;
+		this.terrain = terrain;
+	}
+
 	public World(ArrayList<Light> lights, ArrayList<Object3D> object3ds) {
 		this.lights = lights;
 		this.object3ds = object3ds;
@@ -47,6 +55,10 @@ public class World {
 	}
 
 	void renderObject3ds() {
+		if(terrain!=null){
+			terrain.render();
+		}
+		
 		for(Object3D object3d: object3ds){		
 			if(object3d.isRunning()){
 				object3d.updatePosition();
@@ -80,5 +92,13 @@ public class World {
 
 	public void setObject3ds(ArrayList<Object3D> object3ds) {
 		this.object3ds = object3ds;
+	}
+
+	public Terrain getTerrain() {
+		return terrain;
+	}
+
+	public void setTerrain(Terrain terrain) {
+		this.terrain = terrain;
 	}
 }

@@ -4,13 +4,15 @@ import java.util.List;
 
 import android.util.Log;
 import es.alvsanand.asaengine.graphics.cameras.LookAtCamera;
-import es.alvsanand.asaengine.graphics.objects.Mesh;
+import es.alvsanand.asaengine.graphics.objects.Object3D;
 import es.alvsanand.asaengine.graphics.objects.Terrain;
+import es.alvsanand.asaengine.graphics.objects.error.OutOfTerrainException;
 import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFramedModel;
 import es.alvsanand.asaengine.input.Input;
 import es.alvsanand.asaengine.input.InputThread;
 import es.alvsanand.asaengine.input.keyboard.KeyEvent;
 import es.alvsanand.asaengine.input.touch.TouchEvent;
+import es.alvsanand.asaengine.math.collision.BoundingBox;
 
 public class TestInputThread extends InputThread {
 	private static String TAG = "InputThread";
@@ -60,23 +62,29 @@ public class TestInputThread extends InputThread {
 					}
 					case android.view.KeyEvent.KEYCODE_DPAD_UP:
 						Log.v(TAG, "KEYCODE_DPAD_UP");
-						lookAtCamera.getPosition().x = lookAtCamera.getPosition().x / 10;
-						lookAtCamera.getPosition().y = lookAtCamera.getPosition().y / 10;
-						lookAtCamera.getPosition().z = lookAtCamera.getPosition().z / 10;
+						lookAtCamera.getPosition().x = lookAtCamera.getPosition().x / 2.5f;
+						lookAtCamera.getPosition().y = lookAtCamera.getPosition().y / 2.5f;
+						lookAtCamera.getPosition().z = lookAtCamera.getPosition().z / 2.5f;
 						break;
 					case android.view.KeyEvent.KEYCODE_DPAD_DOWN:
 						Log.v(TAG, "KEYCODE_DPAD_DOWN");
-						lookAtCamera.getPosition().x = lookAtCamera.getPosition().x * 10;
-						lookAtCamera.getPosition().y = lookAtCamera.getPosition().y * 10;
-						lookAtCamera.getPosition().z = lookAtCamera.getPosition().z * 10;
+						lookAtCamera.getPosition().x = lookAtCamera.getPosition().x * 2.5f;
+						lookAtCamera.getPosition().y = lookAtCamera.getPosition().y * 2.5f;
+						lookAtCamera.getPosition().z = lookAtCamera.getPosition().z * 2.5f;
 						break;
 					case android.view.KeyEvent.KEYCODE_DPAD_CENTER:
 						Log.v(TAG, "KEYCODE_DPAD_DOWN");
+						
+						int len = testOpenGLRenderer.getWorld().getObject3ds().size();
+						
+						for(int i=0; i<len; i++){
+							Object3D object3d = ((Object3D) (testOpenGLRenderer.getWorld().getObject3ds().get(i)));
 
-						if (!testOpenGLRenderer.getWorld().getObject3ds().get(0).isRunning()) {
-							testOpenGLRenderer.getWorld().getObject3ds().get(0).startOrResume();
-						} else {
-							testOpenGLRenderer.getWorld().getObject3ds().get(0).pause();
+							if (!object3d.isRunning()) {
+								object3d.startOrResume();
+							} else {
+								object3d.pause();
+							}
 						}
 						break;
 					case android.view.KeyEvent.KEYCODE_1:
@@ -96,18 +104,36 @@ public class TestInputThread extends InputThread {
 					case android.view.KeyEvent.KEYCODE_3:
 						Log.v(TAG, "KEYCODE_3");
 
-						Mesh mesh = ((Mesh) (testOpenGLRenderer.getWorld().getObject3ds().get(0)));
-
-						Terrain terrain = ((Terrain) (testOpenGLRenderer.getWorld().getObject3ds().get(1)));
-
-						float y = terrain.calculateTerrainHeight(mesh.getPosition());
-
-						mesh.getPosition().y = y;
-
 						break;
 					}
 				}
 			}
+		}
+		
+		if(testOpenGLRenderer!=null && testOpenGLRenderer.getWorld()!=null)
+		{
+			Log.v(TAG, "Terrain Begin");
+			
+			Terrain terrain = testOpenGLRenderer.getWorld().getTerrain();
+			
+			int len = testOpenGLRenderer.getWorld().getObject3ds().size();
+			
+			for(int i=0; i<len; i++){
+				Object3D object3d = ((Object3D) (testOpenGLRenderer.getWorld().getObject3ds().get(i)));
+				
+				try {
+					float width = 1f;
+					float height = 1f;
+					float length = 1f;
+					
+					float y = 2 + terrain.calculateTerrainHeight(object3d.getPosition().x + (width/2), object3d.getPosition().y, object3d.getPosition().z + (length/2) );
+	
+					object3d.getPosition().y = y;
+				} catch (OutOfTerrainException e) {
+					Log.v(TAG, "OutOfTerrain");
+				}
+			}
+			Log.v(TAG, "Terrain End");
 		}
 
 		List<TouchEvent> touchEvents = input.getTouchEvents();

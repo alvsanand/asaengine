@@ -11,7 +11,7 @@ public class Plane extends PrimitiveObject {
 	public Plane(Vector3 position, Color color, float width, float height, int widthSegments, int heightSegments) {
 		super(position, color);
 
-		float[] Vertexes = new float[(widthSegments + 1) * (heightSegments + 1) * 3];
+		float[] vertexes = new float[(widthSegments + 1) * (heightSegments + 1) * 3];
 		short[] indexes = new short[(widthSegments + 1) * (heightSegments + 1) * 6];
 
 		float xOffset = width / -2;
@@ -23,9 +23,9 @@ public class Plane extends PrimitiveObject {
 		short w = (short) (widthSegments + 1);
 		for (int z = 0; z < heightSegments + 1; z++) {
 			for (int x = 0; x < widthSegments + 1; x++) {
-				Vertexes[currentVertex] = xOffset + x * xWidth;
-				Vertexes[currentVertex + 1] = 0;
-				Vertexes[currentVertex + 2] = zOffset + z * zHeight;
+				vertexes[currentVertex] = xOffset + x * xWidth;
+				vertexes[currentVertex + 1] = 0;
+				vertexes[currentVertex + 2] = zOffset + z * zHeight;
 				currentVertex += 3;
 
 				int n = z * (widthSegments + 1) + x;
@@ -46,7 +46,7 @@ public class Plane extends PrimitiveObject {
 		}
 
 		setIndexes(indexes);
-		setVertexes(Vertexes);
+		setVertexes(vertexes);
 	}
 
 	public Plane(Vector3 position, Color fillColor, Color borderColor, float width, float height) {
@@ -56,7 +56,7 @@ public class Plane extends PrimitiveObject {
 	public Plane(Vector3 position, Color fillColor, Color borderColor, float width, float height, int widthSegments, int heightSegments) {
 		super(position, fillColor, borderColor);
 
-		float[] Vertexes = new float[(widthSegments + 1) * (heightSegments + 1) * 3];
+		float[] vertexes = new float[(widthSegments + 1) * (heightSegments + 1) * 3];
 		short[] indexes = new short[(widthSegments + 1) * (heightSegments + 1) * 6];
 
 		float xOffset = width / -2;
@@ -68,9 +68,9 @@ public class Plane extends PrimitiveObject {
 		short w = (short) (widthSegments + 1);
 		for (int z = 0; z < heightSegments + 1; z++) {
 			for (int x = 0; x < widthSegments + 1; x++) {
-				Vertexes[currentVertex] = xOffset + x * xWidth;
-				Vertexes[currentVertex + 1] = 0;
-				Vertexes[currentVertex + 2] = zOffset + z * zHeight;
+				vertexes[currentVertex] = xOffset + x * xWidth;
+				vertexes[currentVertex + 1] = 0;
+				vertexes[currentVertex + 2] = zOffset + z * zHeight;
 				currentVertex += 3;
 
 				int n = z * (widthSegments + 1) + x;
@@ -91,6 +91,6 @@ public class Plane extends PrimitiveObject {
 		}
 
 		setIndexes(indexes);
-		setVertexes(Vertexes);
+		setVertexes(vertexes);
 	}
 }

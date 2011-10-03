@@ -57,7 +57,7 @@ public class TestActivity extends Activity{
 
 		XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
 		
-		camera = new LookAtCamera(new Vector3(8f, 5f, 8f), 67, (float) glView.getWidth() / (float) glView.getHeight(), 0.1f, 100,
+		camera = new LookAtCamera(new Vector3(8f, 8f, 8f), 67, (float) glView.getWidth() / (float) glView.getHeight(), 0.1f, 100,
 				pointsTrayectory);
 		((LookAtCamera)camera).setLookAt(new Vector3(0, 0, 0));
 	}	

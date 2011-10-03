@@ -94,7 +94,33 @@ public abstract class PrimitiveObject extends Object3D {
 			OpenGLRenderer.gl.glDrawElements(GL10.GL_LINES, numOfBorderindexes, GL10.GL_UNSIGNED_SHORT, borderIndexesBuffer);
 		}
 		
-		OpenGLRenderer.gl.glPopMatrix();
+		OpenGLRenderer.gl.glPopMatrix();		
+
+		{
+			float heightLineVertexes[] = { position.x, -10, position.z, position.x, position.y, position.z };
+
+			ByteBuffer vbb = ByteBuffer.allocateDirect(heightLineVertexes.length * 4);
+			vbb.order(ByteOrder.nativeOrder());
+			FloatBuffer heightLineBuffer = vbb.asFloatBuffer();
+			heightLineBuffer.put(heightLineVertexes);
+			heightLineBuffer.position(0);
+
+			short indexes[] = { 0, 1 };
+
+			ByteBuffer ibb = ByteBuffer.allocateDirect(indexes.length * 2);
+			ibb.order(ByteOrder.nativeOrder());
+			ShortBuffer heightLineIndexesBuffer = ibb.asShortBuffer();
+			heightLineIndexesBuffer.put(indexes);
+			heightLineIndexesBuffer.position(0);
+
+			OpenGLRenderer.gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heightLineBuffer);
+
+			OpenGLRenderer.gl.glPolygonOffset(1.0f, 1.0f);
+			// Set flat border color
+			OpenGLRenderer.gl.glColor4f(borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+
+			OpenGLRenderer.gl.glDrawElements(GL10.GL_LINES, 2, GL10.GL_UNSIGNED_SHORT, heightLineIndexesBuffer);
+		}
 		
 		// Disable the Vertexes buffer.
 		OpenGLRenderer.gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);

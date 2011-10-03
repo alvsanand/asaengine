@@ -178,4 +178,10 @@ public class Vector2 implements Serializable {
 		r.add(target.tmp().mul(alpha));
 		return r;
 	}
+
+	public static float dst2(float x1, float y1, float x2, float y2) {
+		final float x_d = x2 - x1;
+		final float y_d = y2 - y1;
+		return x_d * x_d + y_d * y_d;
+	}
 }

@@ -125,21 +125,21 @@ public class Mesh extends Object3D {
 		this.material = material;
 	}
 
-	public void setVertexes(float[] Vertexes) {
-		this.vertexes.setVertexes(Vertexes, 0, Vertexes.length);
+	public void setVertexes(float[] vertexes) {
+		this.vertexes.setVertexes(vertexes, 0, vertexes.length);
 	}
 
-	public void setVertexes(float[] Vertexes, int offset, int count) {
-		this.vertexes.setVertexes(Vertexes, offset, count);
+	public void setVertexes(float[] vertexes, int offset, int count) {
+		this.vertexes.setVertexes(vertexes, offset, count);
 	}
 
-	public void getVertexes(float[] Vertexes) {
-		if (Vertexes.length < getNumVertexes() * getVertexSize() / 4)
-			throw new IllegalArgumentException("not enough room in Vertexes array, has " + Vertexes.length + " floats, needs " + getNumVertexes()
+	public void getVertexes(float[] vertexes) {
+		if (vertexes.length < getNumVertexes() * getVertexSize() / 4)
+			throw new IllegalArgumentException("not enough room in Vertexes array, has " + vertexes.length + " floats, needs " + getNumVertexes()
 					* getVertexSize() / 4);
 		int pos = getVertexesBuffer().position();
 		getVertexesBuffer().position(0);
-		getVertexesBuffer().get(Vertexes, 0, getNumVertexes() * getVertexSize() / 4);
+		getVertexesBuffer().get(vertexes, 0, getNumVertexes() * getVertexSize() / 4);
 		getVertexesBuffer().position(pos);
 	}
 
@@ -394,7 +394,7 @@ public class Mesh extends Object3D {
 				angleY = (float) Math.toDegrees(direction.angleBetweenXZ(0, 1));
 
 				if (direction.x < 0) {
-					angleY = 180 + angleY;
+					angleY = 360 - angleY;
 				}
 			}
 

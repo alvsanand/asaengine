@@ -15,20 +15,19 @@
  ******************************************************************************/
 package es.alvsanand.asaengine.graphics.objects;
 
-import android.util.Log;
 import es.alvsanand.asaengine.graphics.materials.Material;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes;
+import es.alvsanand.asaengine.graphics.objects.error.OutOfTerrainException;
 import es.alvsanand.asaengine.graphics.objects.utils.IndexData;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexData;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexData.VertexDataType;
 import es.alvsanand.asaengine.math.SVector3;
+import es.alvsanand.asaengine.math.Vector2;
 import es.alvsanand.asaengine.math.Vector3;
 import es.alvsanand.asaengine.math.collision.TriangleAprox;
 
 public class Terrain extends Mesh {
-	private static String TAG = "Terrain";
-	
 	private TriangleAprox[] triangleAproxs;
 
 	public Terrain(boolean isStatic, int maxVertexes, int maxindexes, VertexAttribute[] attributes) {
@@ -54,16 +53,16 @@ public class Terrain extends Mesh {
 	public void calulateTerrainTriangleAprox() {
 		boolean useindexes = indexes != null && indexes.getNumindexes() > 0;
 
-		int numVertexes = vertexes.getNumVertexes();
+		int numTriangles = (int)(vertexes.getNumVertexes() / 3);
 
-		triangleAproxs = new TriangleAprox[numVertexes];
+		triangleAproxs = new TriangleAprox[numTriangles];
 
-		for (int i = 0; i < numVertexes; i++) {
+		for (int i = 0; i < numTriangles; i++) {
 			TriangleAprox box = new TriangleAprox();
 
 			for (int j = 0; j < 3; j++) {
 				if (useindexes) {
-					int vertexIndex = indexes.getVertexIndex(i);
+					int vertexIndex = indexes.getVertexIndex(i*3+j);
 
 					float[] xyz = vertexes.getvertex(vertexIndex);
 
@@ -84,12 +83,8 @@ public class Terrain extends Mesh {
 						box.max.y = y;
 					if (box.max.z < z)
 						box.max.z = z;
-
-					box.triangleIndex = i;
-
-					triangleAproxs[i] = box;
 				} else {
-					float[] xyz = vertexes.getvertex(i);
+					float[] xyz = vertexes.getvertex(i*3+j);
 
 					float x = xyz[0];
 					float y = xyz[1];
@@ -108,59 +103,110 @@ public class Terrain extends Mesh {
 						box.max.y = y;
 					if (box.max.z < z)
 						box.max.z = z;
-
-					box.triangleIndex = i;
-
-					triangleAproxs[i] = box;
 				}
 			}
+
+			box.triangleIndex = i;
+
+			triangleAproxs[i] = box;
 		}
 	}
 
 	private boolean isOver(TriangleAprox triangleAprox, float x, float y, float z) {	
-		Log.v(TAG, triangleAprox.min.x + "\t\t-" + triangleAprox.max.x + "\t\t<->" + "\t\t-" + triangleAprox.min.z + "\t\t-" + triangleAprox.max.z);
-		
 		return x <= triangleAprox.max.x && x >= triangleAprox.min.x &&
 		// y <= b->max.y && y >= b->min.y &&
 				z <= triangleAprox.max.z && z >= triangleAprox.min.z;
 	}
 
-	private TriangleAprox findTerrainBox(float x, float y, float z) {
-		Log.v(TAG, "**********************************");
-		Log.v(TAG, "findTerrainBox: " + x + "\t\t" + y + "\t\t" + z);
-		Log.v(TAG, "**********************************");
+	private TriangleAprox findTerrainBox(float x, float y, float z, boolean useindexes, boolean fast) {
+		TriangleAprox candidate = null;
 		
+		float minDistance = 0;
 		for (int i = 0; i < triangleAproxs.length; i++) {
-			if (isOver(triangleAproxs[i], x, y, z))
-				return triangleAproxs[i];
+			if (isOver(triangleAproxs[i], x, y, z)){
+				
+				if(fast){
+				float[] xyz = null;
+				
+				int vertexOffset = triangleAproxs[i].triangleIndex*3;
+				int vertexIndex = -1;
+				
+				if (useindexes) {
+					vertexIndex = indexes.getVertexIndex(vertexOffset);
+					
+					xyz = vertexes.getvertex(vertexIndex);
+				} else {
+					xyz = vertexes.getvertex(vertexOffset);
+				}
+				
+				float dst = Vector2.dst2(xyz[0], xyz[2], x, z);
+				
+				if (useindexes) {
+					vertexIndex = indexes.getVertexIndex(vertexOffset+1);
+					
+					xyz = vertexes.getvertex(vertexIndex);
+				} else {
+					xyz = vertexes.getvertex(vertexOffset+1);
+				}
+				
+				dst += Vector2.dst2(xyz[0], xyz[2], x, z);
+				
+				if (useindexes) {
+					vertexIndex = indexes.getVertexIndex(vertexOffset+2);
+					
+					xyz = vertexes.getvertex(vertexIndex);
+				} else {
+					xyz = vertexes.getvertex(vertexOffset+2);
+				}
+				
+				dst += Vector2.dst2(xyz[0], xyz[2], x, z);
+				
+				if(candidate==null || dst<minDistance){
+					candidate = triangleAproxs[i];
+					minDistance = dst;
+				}
+				}
+				else{
+					return triangleAproxs[i];
+				}
+			}
+		}
+		
+		return candidate;
+	}
+
+	public float calculateTerrainHeight(SVector3 position, boolean fast) throws OutOfTerrainException{
+		return calculateTerrainHeight(position.x, position.y, position.z, fast);
+	}
+
+	public float calculateTerrainHeight(SVector3 position) throws OutOfTerrainException{
+		return calculateTerrainHeight(position.x, position.y, position.z, false);
+	}
+
+	public float calculateTerrainHeight(float px, float py, float pz) throws OutOfTerrainException{
+		return calculateTerrainHeight(px, py, pz, false);
+	}
+	
+	public float calculateTerrainHeight(float px, float py, float pz, boolean fast) throws OutOfTerrainException{
+		boolean useindexes = indexes != null && indexes.getNumindexes() > 0;
+		
+		TriangleAprox triangleAprox = findTerrainBox(px, py, pz, useindexes, fast);
+
+		if (triangleAprox == null){
+			throw new OutOfTerrainException("Position is not over/behind terrain"); // broken map? no triangle under the character???
 		}
 
-		return null;
-	}
-
-	public float calculateTerrainHeight(SVector3 position) {
-		return calculateTerrainHeight(position.x, position.y, position.z);
-	}
-
-	public float calculateTerrainHeight(float px, float py, float pz) {
-		int y = 10000;
-
-		TriangleAprox triangleAprox = findTerrainBox(px, y, pz);
-
-		if (triangleAprox == null)
-			return -100000; // broken map? no triangle under the character???
-
-		boolean useindexes = indexes != null && indexes.getNumindexes() > 0;
-
 		float[] xyz = null;
-
+		
+		int vertexOffset = triangleAprox.triangleIndex*3;
+		
 		int vertexIndex = -1;
 		if (useindexes) {
-			vertexIndex = indexes.getVertexIndex(triangleAprox.triangleIndex);
+			vertexIndex = indexes.getVertexIndex(vertexOffset);
 
 			xyz = vertexes.getvertex(vertexIndex);
 		} else {
-			xyz = vertexes.getvertex(triangleAprox.triangleIndex);
+			xyz = vertexes.getvertex(vertexOffset);
 		}
 
 		float x1 = xyz[0];
@@ -168,9 +214,11 @@ public class Terrain extends Mesh {
 		float z1 = xyz[2];
 
 		if (useindexes) {
-			xyz = vertexes.getvertex(vertexIndex + 1);
+			vertexIndex = indexes.getVertexIndex(vertexOffset + 1);
+			
+			xyz = vertexes.getvertex(vertexIndex);
 		} else {
-			xyz = vertexes.getvertex(triangleAprox.triangleIndex + 1);
+			xyz = vertexes.getvertex(vertexOffset + 1);
 		}
 
 		float x2 = xyz[0];
@@ -178,16 +226,16 @@ public class Terrain extends Mesh {
 		float z2 = xyz[2];
 
 		if (useindexes) {
-			xyz = vertexes.getvertex(vertexIndex + 2);
+			vertexIndex = indexes.getVertexIndex(vertexOffset + 2);
+			
+			xyz = vertexes.getvertex(vertexIndex);
 		} else {
-			xyz = vertexes.getvertex(triangleAprox.triangleIndex + 2);
+			xyz = vertexes.getvertex(vertexOffset + 2);
 		}
 
 		float x3 = xyz[0];
 		float y3 = xyz[1];
-		float z3 = xyz[2];
-
-		float a = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
+		float z3 = xyz[2];float a = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
 		float b = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
 		float c = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
 		float d = -(x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1));
@@ -195,6 +243,6 @@ public class Terrain extends Mesh {
 		if (b == 0)
 			b = 0.1f;
 
-		return (d + a * px + c * pz) / b;
+		return -((d + a * px + c * pz) / b);
 	}
 }

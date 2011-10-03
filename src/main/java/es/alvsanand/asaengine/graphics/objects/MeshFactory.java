@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import android.util.Log;
-import es.alvsanand.asaengine.graphics.objects.error.MeshNotFound;
+import es.alvsanand.asaengine.graphics.objects.error.MeshNotFoundException;
 import es.alvsanand.asaengine.graphics.objects.keyframed.KeyFrame;
 import es.alvsanand.asaengine.graphics.objects.loaders.obj.ObjLoader;
 import es.alvsanand.asaengine.util.io.FileIO;
@@ -19,7 +19,7 @@ public class MeshFactory {
 	
 	private static HashMap<String, Mesh> meshs = new HashMap<String, Mesh>();
 	
-	public static Mesh getMeshFromAsset(String asset, MeshType type) throws MeshNotFound{
+	public static Mesh getMeshFromAsset(String asset, MeshType type) throws MeshNotFoundException{
 		if(meshs.containsKey(asset)){
 			Log.i(TAG, "Loaded Mesh[" + asset + "] from cache");	
 			
@@ -32,7 +32,7 @@ public class MeshFactory {
 			try {
 				inputStream = FileIO.readAsset(asset);
 			} catch (ASAIOException e) {
-				throw new MeshNotFound("The file " + asset + " cannot be readed", e);
+				throw new MeshNotFoundException("The file " + asset + " cannot be readed", e);
 			}
 			
 			Mesh mesh = null;
@@ -51,7 +51,7 @@ public class MeshFactory {
 		}
 	}
 	
-	public static KeyFrame getKeyFrameFromAsset(String asset, MeshType type, int frameNumber) throws MeshNotFound{
+	public static KeyFrame getKeyFrameFromAsset(String asset, MeshType type, int frameNumber) throws MeshNotFoundException{
 		if(meshs.containsKey(asset)){
 			Log.i(TAG, "Loaded Mesh[" + asset + "] from cache");	
 			
@@ -64,7 +64,7 @@ public class MeshFactory {
 			try {
 				inputStream = FileIO.readAsset(asset);
 			} catch (ASAIOException e) {
-				throw new MeshNotFound("The file " + asset + " cannot be readed", e);
+				throw new MeshNotFoundException("The file " + asset + " cannot be readed", e);
 			}
 			
 			Mesh mesh = null;
@@ -83,7 +83,7 @@ public class MeshFactory {
 		}
 	}
 	
-	public static Terrain getTerrainFromAsset(String asset, MeshType type) throws MeshNotFound{
+	public static Terrain getTerrainFromAsset(String asset, MeshType type) throws MeshNotFoundException{
 		if(meshs.containsKey(asset)){
 			Log.i(TAG, "Loaded Terrain[" + asset + "] from cache");	
 			
@@ -96,7 +96,7 @@ public class MeshFactory {
 			try {
 				inputStream = FileIO.readAsset(asset);
 			} catch (ASAIOException e) {
-				throw new MeshNotFound("The file " + asset + " cannot be readed", e);
+				throw new MeshNotFoundException("The file " + asset + " cannot be readed", e);
 			}
 			
 			Mesh mesh = null;

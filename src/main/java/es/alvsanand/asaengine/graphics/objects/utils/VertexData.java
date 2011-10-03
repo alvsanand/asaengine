@@ -31,7 +31,7 @@ public interface VertexData extends Disposable {
 
 	public VertexAttributes getAttributes ();
 
-	public void setVertexes (float[] Vertexes, int offset, int count);
+	public void setVertexes (float[] vertexes, int offset, int count);
 
 	public FloatBuffer getBuffer ();
 

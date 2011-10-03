@@ -27,7 +27,7 @@ import es.alvsanand.asaengine.graphics.materials.MaterialFactory;
 import es.alvsanand.asaengine.graphics.objects.Mesh;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttribute;
 import es.alvsanand.asaengine.graphics.objects.attributes.VertexAttributes.Usage;
-import es.alvsanand.asaengine.graphics.objects.error.MeshNotFound;
+import es.alvsanand.asaengine.graphics.objects.error.MeshNotFoundException;
 import es.alvsanand.asaengine.util.io.error.MaterialLoadingException;
 
 public class ObjLoader {
@@ -49,11 +49,11 @@ public class ObjLoader {
     
 	private final static String TAG = "ObjLoader";
 
-	public static Mesh loadObj(InputStream in) throws MeshNotFound {
+	public static Mesh loadObj(InputStream in) throws MeshNotFoundException {
 		return loadObj(in, true);
 	}
 
-	public static Mesh loadObj(InputStream in, boolean flipV) throws MeshNotFound {
+	public static Mesh loadObj(InputStream in, boolean flipV) throws MeshNotFoundException {
 		List<String> lines = new ArrayList<String>();
 
 		Log.i(TAG, "Reading Mesh file");
@@ -69,7 +69,7 @@ public class ObjLoader {
 
 			reader.close();
 		} catch (Exception ex) {
-			throw new MeshNotFound("The Mesh cannot be loaded", ex);
+			throw new MeshNotFoundException("The Mesh cannot be loaded", ex);
 		}
 
 		Log.i(TAG, "Readed Mesh file");
@@ -77,14 +77,14 @@ public class ObjLoader {
 		return loadObjFromStrings(lines, flipV);
 	}
 
-	public static Mesh loadObjFromStrings(List<String> lines) throws MeshNotFound {
+	public static Mesh loadObjFromStrings(List<String> lines) throws MeshNotFoundException {
 		return loadObjFromStrings(lines, true);
 	}
 
-	public static Mesh loadObjFromStrings(List<String> lines, boolean flipV) throws MeshNotFound {
+	public static Mesh loadObjFromStrings(List<String> lines, boolean flipV) throws MeshNotFoundException {
 		int linesLength = lines.size();
 
-		float[] Vertexes = new float[linesLength * 3];
+		float[] vertexes = new float[linesLength * 3];
 		float[] normals = new float[linesLength * 3];
 		float[] uv = new float[linesLength * 3];
 
@@ -142,9 +142,9 @@ public class ObjLoader {
 				String token2 = line.substring(index2 + 1, index3);
 				String token3 = line.substring(index3 + 1, index4);
 
-				Vertexes[vertexIndex] = Float.parseFloat(token1);
-				Vertexes[vertexIndex + 1] = Float.parseFloat(token2);
-				Vertexes[vertexIndex + 2] = Float.parseFloat(token3);
+				vertexes[vertexIndex] = Float.parseFloat(token1);
+				vertexes[vertexIndex + 1] = Float.parseFloat(token2);
+				vertexes[vertexIndex + 2] = Float.parseFloat(token3);
 				vertexIndex += 3;
 				numVertexes++;
 				continue;
@@ -422,9 +422,9 @@ public class ObjLoader {
 
 		for (int i = 0, vi = 0; i < numFaces * 3; i++) {
 			int vertexIdx = facesVerts[i] * 3;
-			verts[vi++] = Vertexes[vertexIdx];
-			verts[vi++] = Vertexes[vertexIdx + 1];
-			verts[vi++] = Vertexes[vertexIdx + 2];
+			verts[vi++] = vertexes[vertexIdx];
+			verts[vi++] = vertexes[vertexIdx + 1];
+			verts[vi++] = vertexes[vertexIdx + 2];
 
 			if (numUV > 0) {
 				int uvIdx = facesUV[i] * 2;

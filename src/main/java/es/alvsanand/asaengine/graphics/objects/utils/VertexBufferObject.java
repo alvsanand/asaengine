@@ -82,10 +82,10 @@ public class VertexBufferObject implements VertexData {
 	}
 
 	@Override
-	public void setVertexes(float[] Vertexes, int offset, int count) {
+	public void setVertexes(float[] vertexes, int offset, int count) {
 		isDirty = true;
 
-		BufferUtils.copy(Vertexes, buffer, count, offset);
+		BufferUtils.copy(vertexes, buffer, count, offset);
 
 		if (isBound) {
 			OpenGLRenderer.gl11.glBufferData(GL11.GL_ARRAY_BUFFER, count * 4, buffer, usage);
@@ -191,6 +191,8 @@ public class VertexBufferObject implements VertexData {
 
 	private int positionAttributeOffset = -1;
 	
+	private int vertexFloatSize = -1;
+	
 	@Override
 	public float[] getvertex(int index) {
 		if(positionAttributeOffset==-1){		
@@ -209,8 +211,12 @@ public class VertexBufferObject implements VertexData {
 					break;
 				}
 			}
+			
+			vertexFloatSize = attributes.vertexSize / 4;
 		}
 		
-		return new float[]{buffer.get(index), buffer.get(index+1), buffer.get(index+2)};
+		int indexOffset = index*vertexFloatSize;
+		
+		return new float[]{buffer.get(indexOffset+positionAttributeOffset), buffer.get(indexOffset+positionAttributeOffset+1), buffer.get(indexOffset+positionAttributeOffset+2)};
 	}
 }
