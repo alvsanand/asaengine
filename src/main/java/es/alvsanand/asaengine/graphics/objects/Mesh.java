@@ -48,6 +48,8 @@ public class Mesh extends Object3D {
 	protected final IndexData indexes;
 	protected boolean autoBind = true;
 	protected final boolean isVertexArray;
+	protected boolean useindexes = false;
+	protected int numVertexes;
 
 	protected Material material;
 
@@ -116,21 +118,26 @@ public class Mesh extends Object3D {
 		addManagedMesh(this);
 	}
 
-	protected Mesh(Vector3 position, VertexData Vertexes, IndexData indexes, boolean autoBind, boolean isVertexArray, Material material) {
+	protected Mesh(Vector3 position, VertexData Vertexes, IndexData indexes, boolean autoBind, boolean isVertexArray, Material material, int numVertexes) {
 		super(position);
 		this.vertexes = Vertexes;
 		this.indexes = indexes;
 		this.autoBind = autoBind;
 		this.isVertexArray = isVertexArray;
 		this.material = material;
+		this.numVertexes = numVertexes;
 	}
 
-	public void setVertexes(float[] vertexes) {
+	public void setVertexes(float[] vertexes) {		
 		this.vertexes.setVertexes(vertexes, 0, vertexes.length);
+		
+		this.numVertexes = this.vertexes.getNumVertexes();
 	}
 
 	public void setVertexes(float[] vertexes, int offset, int count) {
 		this.vertexes.setVertexes(vertexes, offset, count);
+		
+		this.numVertexes = this.vertexes.getNumVertexes();
 	}
 
 	public void getVertexes(float[] vertexes) {
@@ -144,10 +151,14 @@ public class Mesh extends Object3D {
 	}
 
 	public void setindexes(short[] indexes) {
+		this.useindexes = indexes != null && indexes.length > 0;
+				
 		this.indexes.setindexes(indexes, 0, indexes.length);
 	}
 
 	public void setindexes(short[] indexes, int offset, int count) {
+		this.useindexes = indexes != null && count > 0;
+		
 		this.indexes.setindexes(indexes, offset, count);
 	}
 
@@ -366,27 +377,27 @@ public class Mesh extends Object3D {
 	}
 
 	public Mesh duplicate() {
-		Mesh newMesh = new Mesh(new Vector3(), vertexes, indexes, autoBind, isVertexArray, material);
+		Mesh newMesh = new Mesh(new Vector3(), vertexes, indexes, autoBind, isVertexArray, material, numVertexes);
 
 		return newMesh;
 	}
 
 	public KeyFrame getKeyFrame(int frameNumber) {
-		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertexes, indexes, isVertexArray, material);
+		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertexes, indexes, isVertexArray, material, numVertexes);
 
 		return newKeyFrame;
 	}
 
 	public Terrain getTerrain() {
-		Terrain terrain = new Terrain(new Vector3(), vertexes, indexes, autoBind, isVertexArray, material);
+		Terrain terrain = new Terrain(new Vector3(), vertexes, indexes, autoBind, isVertexArray, material, numVertexes);
 
 		return terrain;
 	}
 
 	@Override
 	public void renderPosition() {
-		if (getTrajectory() != null && getTrajectory().getDirection() != null) {
-			Vector3 direction = getTrajectory().getDirection().nor();
+		if (trajectory != null && trajectory.direction != null) {
+			Vector3 direction = trajectory.direction.nor();
 
 			float angleY = 0;
 

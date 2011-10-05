@@ -13,11 +13,11 @@ import es.alvsanand.asaengine.graphics.objects.Mesh;
 public abstract class OpenGLRenderer implements Renderer {
 	private static String TAG = "OpenGLRenderer";
 	
-	protected World world;
+	public World world;
 
-	protected Camera camera;
+	public Camera camera;
 	
-	protected boolean loadedWorld;
+	public boolean loadedWorld;
 	
 	public static GL10 gl;
 	
@@ -109,22 +109,6 @@ public abstract class OpenGLRenderer implements Renderer {
 		} catch (Throwable throwable) {
 			Log.e(TAG, "Error in onSurfaceCreated", throwable);
 		}
-	}
-
-	public World getWorld() {
-		return world;
-	}
-
-	public void setWorld(World world) {
-		this.world = world;
-	}
-
-	public Camera getCamera() {
-		return camera;
-	}
-
-	public void setCamera(Camera camera) {
-		this.camera = camera;
 	}
 	
 	protected abstract void loadWorld();

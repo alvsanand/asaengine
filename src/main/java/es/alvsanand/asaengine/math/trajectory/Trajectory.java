@@ -11,7 +11,7 @@ public abstract class Trajectory {
 	protected float speed;
 	
 	protected boolean running = false;
-	protected Vector3 direction;
+	public Vector3 direction;
 
 	public Trajectory(float acceleration, float initialSpeed, float maxSpeed) {
 		this.acceleration = acceleration;
@@ -34,8 +34,4 @@ public abstract class Trajectory {
 	}
 
 	public abstract Vector3 getActualPosition(Vector3 lastPosition);
-
-	public Vector3 getDirection(){
-		return direction;
-	}
 }

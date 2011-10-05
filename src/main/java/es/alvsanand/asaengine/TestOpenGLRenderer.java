@@ -67,7 +67,7 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 			
 			XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
 			
-			cube.setTrajectory(pointsTrayectory);
+			cube.trajectory = pointsTrayectory;
 			
 			object3ds.add(cube);
 		}
@@ -164,7 +164,7 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 	protected void loadWorld() {
 		loadObjects();
 		
-		setWorld(WORLD);
+		world  = WORLD;
 		
 		loadedWorld = true;
 	}

@@ -117,8 +117,8 @@ public class KeyFramedModel extends Object3D{
 
 	@Override
 	public void renderPosition() {		
-		if (getTrajectory() != null && getTrajectory().getDirection()!=null) {
-			Vector3 direction = getTrajectory().getDirection().nor();
+		if (trajectory != null && trajectory.direction!=null) {
+			Vector3 direction = trajectory.direction.nor();
 			
 			float angleY = 0;
 

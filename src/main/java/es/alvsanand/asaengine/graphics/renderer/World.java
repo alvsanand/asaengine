@@ -4,15 +4,14 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import es.alvsanand.asaengine.graphics.Dynamic;
 import es.alvsanand.asaengine.graphics.lights.Light;
 import es.alvsanand.asaengine.graphics.objects.Object3D;
 import es.alvsanand.asaengine.graphics.objects.Terrain;
 
 public class World {
-	protected ArrayList<Light> lights;
-	protected ArrayList<Object3D> object3ds;
-	protected Terrain terrain;
+	public ArrayList<Light> lights;
+	public ArrayList<Object3D> object3ds;
+	public Terrain terrain;
 	
 	public World(ArrayList<Light> lights, ArrayList<Object3D> object3ds, Terrain terrain) {
 		this.lights = lights;
@@ -59,46 +58,22 @@ public class World {
 			terrain.render();
 		}
 		
-		for(Object3D object3d: object3ds){		
-			if(object3d.isRunning()){
-				object3d.updatePosition();
-			}
+		int objectSize = object3ds.size();
+		
+		for(int i=0; i<objectSize; i++){
+			Object3D object3d = object3ds.get(i);
 			
 			object3d.render();
 		}
 	}
 
-	void enableLights() {
-		for(Light light: lights){			
-			if(light instanceof Dynamic && ((Dynamic) light).isRunning()){
-				((Dynamic) light).updatePosition();
-			}
+	void enableLights() {		
+		int lightSize = lights.size();
+		
+		for(int i=0; i<lightSize; i++){
+			Light light = lights.get(i);
 			
 			light.enable();
 		}
-	}
-
-	public ArrayList<Light> getLights() {
-		return lights;
-	}
-
-	public void setLights(ArrayList<Light> lights) {
-		this.lights = lights;
-	}
-
-	public ArrayList<Object3D> getObject3ds() {
-		return object3ds;
-	}
-
-	public void setObject3ds(ArrayList<Object3D> object3ds) {
-		this.object3ds = object3ds;
-	}
-
-	public Terrain getTerrain() {
-		return terrain;
-	}
-
-	public void setTerrain(Terrain terrain) {
-		this.terrain = terrain;
 	}
 }

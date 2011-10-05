@@ -42,8 +42,8 @@ public class Terrain extends Mesh {
 		super(position, isStatic, maxVertexes, maxindexes, attributes);
 	}
 
-	public Terrain(Vector3 position, VertexData Vertexes, IndexData indexes, boolean autoBind, boolean isVertexArray, Material material) {
-		super(position, Vertexes, indexes, autoBind, isVertexArray, material);
+	public Terrain(Vector3 position, VertexData Vertexes, IndexData indexes, boolean autoBind, boolean isVertexArray, Material material, int numVertexes) {
+		super(position, Vertexes, indexes, autoBind, isVertexArray, material, numVertexes);
 	}
 
 	public Terrain(Vector3 position, VertexDataType type, boolean isStatic, int maxVertexes, int maxindexes, VertexAttribute... attributes) {
@@ -51,9 +51,7 @@ public class Terrain extends Mesh {
 	}
 
 	public void calulateTerrainTriangleAprox() {
-		boolean useindexes = indexes != null && indexes.getNumindexes() > 0;
-
-		int numTriangles = (int)(vertexes.getNumVertexes() / 3);
+		int numTriangles = (int) (numVertexes / 3);
 
 		triangleAproxs = new TriangleAprox[numTriangles];
 
@@ -62,7 +60,7 @@ public class Terrain extends Mesh {
 
 			for (int j = 0; j < 3; j++) {
 				if (useindexes) {
-					int vertexIndex = indexes.getVertexIndex(i*3+j);
+					int vertexIndex = indexes.getVertexIndex(i * 3 + j);
 
 					float[] xyz = vertexes.getvertex(vertexIndex);
 
@@ -84,7 +82,7 @@ public class Terrain extends Mesh {
 					if (box.max.z < z)
 						box.max.z = z;
 				} else {
-					float[] xyz = vertexes.getvertex(i*3+j);
+					float[] xyz = vertexes.getvertex(i * 3 + j);
 
 					float x = xyz[0];
 					float y = xyz[1];
@@ -112,130 +110,131 @@ public class Terrain extends Mesh {
 		}
 	}
 
-	private boolean isOver(TriangleAprox triangleAprox, float x, float y, float z) {	
+	private static boolean testCollision(TriangleAprox triangleAprox, float x, float y, float z, boolean over) {
+		
+		
 		return x <= triangleAprox.max.x && x >= triangleAprox.min.x &&
-		// y <= b->max.y && y >= b->min.y &&
+				((!over)?(y <= triangleAprox.max.y && y >= triangleAprox.min.y):true) &&
 				z <= triangleAprox.max.z && z >= triangleAprox.min.z;
 	}
 
-	private TriangleAprox findTerrainBox(float x, float y, float z, boolean useindexes, boolean fast) {
+	private static TriangleAprox findTerrainBox(Terrain terrain, float x, float y, float z, boolean useindexes, boolean fast, boolean over) {
 		TriangleAprox candidate = null;
-		
+
 		float minDistance = 0;
-		for (int i = 0; i < triangleAproxs.length; i++) {
-			if (isOver(triangleAproxs[i], x, y, z)){
-				
-				if(fast){
-				float[] xyz = null;
-				
-				int vertexOffset = triangleAproxs[i].triangleIndex*3;
-				int vertexIndex = -1;
-				
-				if (useindexes) {
-					vertexIndex = indexes.getVertexIndex(vertexOffset);
-					
-					xyz = vertexes.getvertex(vertexIndex);
+		for (int i = 0; i < terrain.triangleAproxs.length; i++) {
+			if (testCollision(terrain.triangleAproxs[i], x, y, z, over)) {
+
+				if (fast) {
+					float[] xyz = null;
+
+					int vertexOffset = terrain.triangleAproxs[i].triangleIndex * 3;
+					int vertexIndex = -1;
+
+					if (useindexes) {
+						vertexIndex = terrain.indexes.getVertexIndex(vertexOffset);
+
+						xyz = terrain.vertexes.getvertex(vertexIndex);
+					} else {
+						xyz = terrain.vertexes.getvertex(vertexOffset);
+					}
+
+					float dst = Vector2.dst2(xyz[0], xyz[2], x, z);
+
+					if (useindexes) {
+						vertexIndex = terrain.indexes.getVertexIndex(vertexOffset + 1);
+
+						xyz = terrain.vertexes.getvertex(vertexIndex);
+					} else {
+						xyz = terrain.vertexes.getvertex(vertexOffset + 1);
+					}
+
+					dst += Vector2.dst2(xyz[0], xyz[2], x, z);
+
+					if (useindexes) {
+						vertexIndex = terrain.indexes.getVertexIndex(vertexOffset + 2);
+
+						xyz = terrain.vertexes.getvertex(vertexIndex);
+					} else {
+						xyz = terrain.vertexes.getvertex(vertexOffset + 2);
+					}
+
+					dst += Vector2.dst2(xyz[0], xyz[2], x, z);
+
+					if (candidate == null || dst < minDistance) {
+						candidate = terrain.triangleAproxs[i];
+						minDistance = dst;
+					}
 				} else {
-					xyz = vertexes.getvertex(vertexOffset);
-				}
-				
-				float dst = Vector2.dst2(xyz[0], xyz[2], x, z);
-				
-				if (useindexes) {
-					vertexIndex = indexes.getVertexIndex(vertexOffset+1);
-					
-					xyz = vertexes.getvertex(vertexIndex);
-				} else {
-					xyz = vertexes.getvertex(vertexOffset+1);
-				}
-				
-				dst += Vector2.dst2(xyz[0], xyz[2], x, z);
-				
-				if (useindexes) {
-					vertexIndex = indexes.getVertexIndex(vertexOffset+2);
-					
-					xyz = vertexes.getvertex(vertexIndex);
-				} else {
-					xyz = vertexes.getvertex(vertexOffset+2);
-				}
-				
-				dst += Vector2.dst2(xyz[0], xyz[2], x, z);
-				
-				if(candidate==null || dst<minDistance){
-					candidate = triangleAproxs[i];
-					minDistance = dst;
-				}
-				}
-				else{
-					return triangleAproxs[i];
+					return terrain.triangleAproxs[i];
 				}
 			}
 		}
-		
+
 		return candidate;
 	}
 
-	public float calculateTerrainHeight(SVector3 position, boolean fast) throws OutOfTerrainException{
-		return calculateTerrainHeight(position.x, position.y, position.z, fast);
+	public static float calculateTerrainHeight(Terrain terrain, SVector3 position, boolean fast) throws OutOfTerrainException {
+		return calculateTerrainHeight(terrain, position.x, position.y, position.z, fast);
 	}
 
-	public float calculateTerrainHeight(SVector3 position) throws OutOfTerrainException{
-		return calculateTerrainHeight(position.x, position.y, position.z, false);
+	public static float calculateTerrainHeight(Terrain terrain, SVector3 position) throws OutOfTerrainException {
+		return calculateTerrainHeight(terrain, position.x, position.y, position.z, false);
 	}
 
-	public float calculateTerrainHeight(float px, float py, float pz) throws OutOfTerrainException{
-		return calculateTerrainHeight(px, py, pz, false);
+	public static float calculateTerrainHeight(Terrain terrain, float px, float py, float pz) throws OutOfTerrainException {
+		return calculateTerrainHeight(terrain, px, py, pz, false);
 	}
-	
-	public float calculateTerrainHeight(float px, float py, float pz, boolean fast) throws OutOfTerrainException{
-		boolean useindexes = indexes != null && indexes.getNumindexes() > 0;
-		
-		TriangleAprox triangleAprox = findTerrainBox(px, py, pz, useindexes, fast);
 
-		if (triangleAprox == null){
-			throw new OutOfTerrainException("Position is not over/behind terrain"); // broken map? no triangle under the character???
+	public static float calculateTerrainHeight(Terrain terrain, float px, float py, float pz, boolean fast) throws OutOfTerrainException {
+		TriangleAprox triangleAprox = findTerrainBox(terrain, px, py, pz, terrain.useindexes, fast, true);
+
+		if (triangleAprox == null) {
+			throw new OutOfTerrainException("Position is not over/behind terrain");
 		}
 
 		float[] xyz = null;
-		
-		int vertexOffset = triangleAprox.triangleIndex*3;
-		
-		int vertexIndex = -1;
-		if (useindexes) {
-			vertexIndex = indexes.getVertexIndex(vertexOffset);
 
-			xyz = vertexes.getvertex(vertexIndex);
+		int vertexOffset = triangleAprox.triangleIndex * 3;
+
+		int vertexIndex = -1;
+		if (terrain.useindexes) {
+			vertexIndex = terrain.indexes.getVertexIndex(vertexOffset);
+
+			xyz = terrain.vertexes.getvertex(vertexIndex);
 		} else {
-			xyz = vertexes.getvertex(vertexOffset);
+			xyz = terrain.vertexes.getvertex(vertexOffset);
 		}
 
 		float x1 = xyz[0];
 		float y1 = xyz[1];
 		float z1 = xyz[2];
 
-		if (useindexes) {
-			vertexIndex = indexes.getVertexIndex(vertexOffset + 1);
-			
-			xyz = vertexes.getvertex(vertexIndex);
+		if (terrain.useindexes) {
+			vertexIndex = terrain.indexes.getVertexIndex(vertexOffset + 1);
+
+			xyz = terrain.vertexes.getvertex(vertexIndex);
 		} else {
-			xyz = vertexes.getvertex(vertexOffset + 1);
+			xyz = terrain.vertexes.getvertex(vertexOffset + 1);
 		}
 
 		float x2 = xyz[0];
 		float y2 = xyz[1];
 		float z2 = xyz[2];
 
-		if (useindexes) {
-			vertexIndex = indexes.getVertexIndex(vertexOffset + 2);
-			
-			xyz = vertexes.getvertex(vertexIndex);
+		if (terrain.useindexes) {
+			vertexIndex = terrain.indexes.getVertexIndex(vertexOffset + 2);
+
+			xyz = terrain.vertexes.getvertex(vertexIndex);
 		} else {
-			xyz = vertexes.getvertex(vertexOffset + 2);
+			xyz = terrain.vertexes.getvertex(vertexOffset + 2);
 		}
 
 		float x3 = xyz[0];
 		float y3 = xyz[1];
-		float z3 = xyz[2];float a = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
+		float z3 = xyz[2];
+		
+		float a = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
 		float b = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
 		float c = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
 		float d = -(x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1));

@@ -9,7 +9,6 @@ import android.view.WindowManager;
 import es.alvsanand.asaengine.graphics.cameras.LookAtCamera;
 import es.alvsanand.asaengine.input.Input;
 import es.alvsanand.asaengine.input.InputImpl;
-import es.alvsanand.asaengine.input.InputThread;
 import es.alvsanand.asaengine.math.Vector2;
 import es.alvsanand.asaengine.math.Vector3;
 import es.alvsanand.asaengine.math.trajectory.XZPointsTrajectory;
@@ -37,17 +36,23 @@ public class TestActivity extends Activity{
 		//Initializing Camera
 		loadCamera();
 		
-		TestOpenGLRenderer testOpenGLRenderer = new TestOpenGLRenderer();
-		testOpenGLRenderer.setCamera(camera);
+		TestOpenGLRenderer openGLRenderer = new TestOpenGLRenderer();
+		openGLRenderer.camera = camera;
 		
 		//Initializing Renderer
-		glView.setRenderer(testOpenGLRenderer);
-		setContentView(glView);
+		glView.setRenderer(openGLRenderer);
+		setContentView(glView); 
 		
 		Input input = new InputImpl(this, glView, 1, 1);
 		
-		InputThread inputThread = new TestInputThread(camera, testOpenGLRenderer, input);
-		inputThread.start();		
+		TestInputManager inputManager = new TestInputManager(input);		
+		
+		TestGameProcessingThread gameProcessingThread = new TestGameProcessingThread(openGLRenderer, inputManager);
+		
+		inputManager.setGameProcessingThread(gameProcessingThread);
+		inputManager.setOpenGLRenderer(openGLRenderer);
+		
+		gameProcessingThread.start();
 	}
 	
 	private LookAtCamera camera;

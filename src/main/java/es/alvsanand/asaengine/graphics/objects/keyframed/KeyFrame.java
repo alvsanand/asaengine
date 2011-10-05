@@ -48,6 +48,8 @@ public class KeyFrame implements Disposable, Renderable {
 	protected final VertexData vertexes;
 	protected final IndexData indexes;
 	protected final boolean isVertexArray;
+	protected boolean useindexes = false;
+	protected int numVertexes;
 
 	protected Material material;
 
@@ -102,21 +104,26 @@ public class KeyFrame implements Disposable, Renderable {
 		addManagedKeyFrame(this);
 	}
 
-	public KeyFrame(int frameNumber, VertexData vertexes, IndexData indexes, boolean isVertexArray, Material material) {
+	public KeyFrame(int frameNumber, VertexData vertexes, IndexData indexes, boolean isVertexArray, Material material, int numVertexes) {
 		frameNumber = this.frameNumber;
 
 		this.vertexes = vertexes;
 		this.indexes = indexes;
 		this.isVertexArray = isVertexArray;
 		this.material = material;
+		this.numVertexes = numVertexes;
 	}
 
-	public void setVertexes(float[] vertexes) {
+	public void setVertexes(float[] vertexes) {		
 		this.vertexes.setVertexes(vertexes, 0, vertexes.length);
+		
+		this.numVertexes = this.vertexes.getNumVertexes();
 	}
 
 	public void setVertexes(float[] vertexes, int offset, int count) {
 		this.vertexes.setVertexes(vertexes, offset, count);
+		
+		this.numVertexes = this.vertexes.getNumVertexes();
 	}
 
 	public void getVertexes(float[] vertexes) {
@@ -130,10 +137,14 @@ public class KeyFrame implements Disposable, Renderable {
 	}
 
 	public void setindexes(short[] indexes) {
+		this.useindexes = indexes != null && indexes.length > 0;
+		
 		this.indexes.setindexes(indexes, 0, indexes.length);
 	}
 
 	public void setindexes(short[] indexes, int offset, int count) {
+		this.useindexes = indexes != null && count > 0;
+		
 		this.indexes.setindexes(indexes, offset, count);
 	}
 
@@ -320,7 +331,7 @@ public class KeyFrame implements Disposable, Renderable {
 	}
 
 	public KeyFrame duplicate() {
-		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertexes, indexes, isVertexArray, material);
+		KeyFrame newKeyFrame = new KeyFrame(frameNumber, vertexes, indexes, isVertexArray, material, numVertexes);
 
 		return newKeyFrame;
 	}
