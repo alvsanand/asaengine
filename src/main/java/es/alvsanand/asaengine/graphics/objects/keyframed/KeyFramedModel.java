@@ -20,6 +20,7 @@ import es.alvsanand.asaengine.graphics.objects.Object3D;
 import es.alvsanand.asaengine.graphics.objects.keyframed.animation.Animation;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.Vector3Util;
 
 public class KeyFramedModel extends Object3D{
 	protected final KeyFrame[] keyFrames;
@@ -118,12 +119,12 @@ public class KeyFramedModel extends Object3D{
 	@Override
 	public void renderPosition() {		
 		if (trajectory != null && trajectory.direction!=null) {
-			Vector3 direction = trajectory.direction.nor();
+			Vector3 direction = Vector3Util.nor(trajectory.direction);
 			
 			float angleY = 0;
 
 			{
-				angleY = (float) Math.toDegrees(direction.angleBetweenXZ(0, 1));
+				angleY = (float) Math.toDegrees(Vector3Util.angleBetweenXZ(direction, 0, 1));
 
 				if (direction.x < 0) {
 					angleY = 180 + angleY;

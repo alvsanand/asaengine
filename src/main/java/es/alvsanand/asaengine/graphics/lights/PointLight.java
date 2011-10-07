@@ -6,6 +6,7 @@ import es.alvsanand.asaengine.graphics.Dynamic;
 import es.alvsanand.asaengine.graphics.color.Color;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.Vector3Util;
 import es.alvsanand.asaengine.math.trajectory.Trajectory;
 
 public class PointLight extends Light implements Dynamic {
@@ -80,7 +81,7 @@ public class PointLight extends Light implements Dynamic {
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_AMBIENT, ambient.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_DIFFUSE, diffuse.toArray(), 0);
 		OpenGLRenderer.gl.glLightfv(id, GL10.GL_SPECULAR, specular.toArray(), 0);
-		OpenGLRenderer.gl.glLightfv(id, GL10.GL_POSITION, position.toArray(), 0);
+		OpenGLRenderer.gl.glLightfv(id, GL10.GL_POSITION, Vector3Util.toArray(position), 0);
 		OpenGLRenderer.gl.glEnable(id);
 	}
 

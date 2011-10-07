@@ -1,7 +1,9 @@
 package es.alvsanand.asaengine.math.trajectory;
 
 import es.alvsanand.asaengine.math.Vector2;
+import es.alvsanand.asaengine.math.Vector2Util;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.Vector3Util;
 
 public class XZPointsTrajectory extends Trajectory {
 	protected int lastPoint;
@@ -19,7 +21,7 @@ public class XZPointsTrajectory extends Trajectory {
 		float y = lastPosition.y;
 		
 		if(!running){
-			return new Vector3(lastPosition);
+			return Vector3Util.cpy(lastPosition);
 		}
 		
 		long now = System.currentTimeMillis();
@@ -46,7 +48,7 @@ public class XZPointsTrajectory extends Trajectory {
 			actualSpeed = this.speed + time * this.acceleration;
 			
 			if(actualSpeed<=0){
-				return new Vector3(lastPosition);
+				return Vector3Util.cpy(lastPosition);
 			}
 			
 			if(actualSpeed >= this.maxSpeed)
@@ -65,25 +67,25 @@ public class XZPointsTrajectory extends Trajectory {
 		float distance = totalDistance;
 
 		if (distance == 0) {
-			return new Vector3(lastPosition);
+			return Vector3Util.cpy(lastPosition);
 		}
 		
 		Vector2 actualPointVector2 = points[actualPoint];
 		Vector2 fromPointVector2 = new Vector2(lastPosition.x, lastPosition.z);
 		
-		while (fromPointVector2.dst(actualPointVector2) <= distance) {
-			distance -= fromPointVector2.dst(actualPointVector2);
+		while (Vector2Util.dst(fromPointVector2, actualPointVector2) <= distance) {
+			distance -= Vector2Util.dst(fromPointVector2, actualPointVector2);
 
 			actualPoint = (actualPoint + 1 == points.length) ? 0 : actualPoint + 1;
 
-			fromPointVector2 = new Vector2(actualPointVector2);
+			fromPointVector2 = Vector2Util.cpy(actualPointVector2);
 			actualPointVector2 = points[actualPoint];
 		}
 
-		Vector2 n = (new Vector2(actualPointVector2)).sub(fromPointVector2);
+		Vector2 n = Vector2Util.sub(Vector2Util.cpy(actualPointVector2), fromPointVector2);
 
 		if (n.x + n.y == 0) {
-			return new Vector3(lastPosition);
+			return Vector3Util.cpy(lastPosition);
 		}
 
 		float t = distance / (n.x + n.y);
@@ -93,7 +95,7 @@ public class XZPointsTrajectory extends Trajectory {
 
 		Vector2 actualPositionVector2;
 
-		if (a1.dst(actualPointVector2) > fromPointVector2.dst(actualPointVector2)) {
+		if (Vector2Util.dst(a1, actualPointVector2) > Vector2Util.dst(fromPointVector2, actualPointVector2)) {
 			actualPositionVector2 = a2;
 		} else {
 			actualPositionVector2 = a1;

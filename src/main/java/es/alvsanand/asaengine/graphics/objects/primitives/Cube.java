@@ -62,6 +62,7 @@ public class Cube extends PrimitiveObject {
         setBorderIndexes(borderIndexes);
         setBorderVertexes(borderVertexes);
     }
+	
 	public Cube(Vector3 position, Color fillColor, Color borderColor, float width, float height, float depth) {
 		super(position, fillColor, borderColor);
 		

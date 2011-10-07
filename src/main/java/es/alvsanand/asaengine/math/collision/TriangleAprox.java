@@ -15,11 +15,11 @@
  ******************************************************************************/
 package es.alvsanand.asaengine.math.collision;
 
-import es.alvsanand.asaengine.math.SVector3;
+import es.alvsanand.asaengine.math.Vector3;
 
 public class TriangleAprox {
-	public SVector3 max = new SVector3();
-	public SVector3 min = new SVector3();
+	public Vector3 max = new Vector3();
+	public Vector3 min = new Vector3();
 	public int triangleIndex; // index of triangle
 	
 	public TriangleAprox(){		

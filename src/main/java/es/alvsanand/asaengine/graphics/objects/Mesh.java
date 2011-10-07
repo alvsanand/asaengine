@@ -38,6 +38,7 @@ import es.alvsanand.asaengine.graphics.objects.utils.VertexData.VertexDataType;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer;
 import es.alvsanand.asaengine.graphics.renderer.OpenGLRenderer.GL_TYPE;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.Vector3Util;
 import es.alvsanand.asaengine.math.collision.BoundingBox;
 
 public class Mesh extends Object3D {
@@ -54,7 +55,7 @@ public class Mesh extends Object3D {
 	protected Material material;
 
 	public Mesh(boolean isStatic, int maxVertexes, int maxindexes, VertexAttribute... attributes) {
-		super(new Vector3(0, 0, 0));
+		super(new Vector3());
 
 		if (OpenGLRenderer.glType == GL_TYPE.GL11) {
 			vertexes= new VertexBufferObject(isStatic, maxVertexes, attributes);
@@ -397,12 +398,12 @@ public class Mesh extends Object3D {
 	@Override
 	public void renderPosition() {
 		if (trajectory != null && trajectory.direction != null) {
-			Vector3 direction = trajectory.direction.nor();
+			Vector3 direction = Vector3Util.nor(trajectory.direction);
 
 			float angleY = 0;
 
 			{
-				angleY = (float) Math.toDegrees(direction.angleBetweenXZ(0, 1));
+				angleY = (float) Math.toDegrees(Vector3Util.angleBetweenXZ(direction, 0, 1));
 
 				if (direction.x < 0) {
 					angleY = 360 - angleY;

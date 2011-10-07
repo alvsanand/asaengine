@@ -22,8 +22,7 @@ import es.alvsanand.asaengine.graphics.objects.error.OutOfTerrainException;
 import es.alvsanand.asaengine.graphics.objects.utils.IndexData;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexData;
 import es.alvsanand.asaengine.graphics.objects.utils.VertexData.VertexDataType;
-import es.alvsanand.asaengine.math.SVector3;
-import es.alvsanand.asaengine.math.Vector2;
+import es.alvsanand.asaengine.math.Vector2Util;
 import es.alvsanand.asaengine.math.Vector3;
 import es.alvsanand.asaengine.math.collision.TriangleAprox;
 
@@ -139,7 +138,7 @@ public class Terrain extends Mesh {
 						xyz = terrain.vertexes.getvertex(vertexOffset);
 					}
 
-					float dst = Vector2.dst2(xyz[0], xyz[2], x, z);
+					float dst = Vector2Util.dst2(xyz[0], xyz[2], x, z);
 
 					if (useindexes) {
 						vertexIndex = terrain.indexes.getVertexIndex(vertexOffset + 1);
@@ -149,7 +148,7 @@ public class Terrain extends Mesh {
 						xyz = terrain.vertexes.getvertex(vertexOffset + 1);
 					}
 
-					dst += Vector2.dst2(xyz[0], xyz[2], x, z);
+					dst += Vector2Util.dst2(xyz[0], xyz[2], x, z);
 
 					if (useindexes) {
 						vertexIndex = terrain.indexes.getVertexIndex(vertexOffset + 2);
@@ -159,7 +158,7 @@ public class Terrain extends Mesh {
 						xyz = terrain.vertexes.getvertex(vertexOffset + 2);
 					}
 
-					dst += Vector2.dst2(xyz[0], xyz[2], x, z);
+					dst += Vector2Util.dst2(xyz[0], xyz[2], x, z);
 
 					if (candidate == null || dst < minDistance) {
 						candidate = terrain.triangleAproxs[i];
@@ -174,11 +173,11 @@ public class Terrain extends Mesh {
 		return candidate;
 	}
 
-	public static float calculateTerrainHeight(Terrain terrain, SVector3 position, boolean fast) throws OutOfTerrainException {
+	public static float calculateTerrainHeight(Terrain terrain, Vector3 position, boolean fast) throws OutOfTerrainException {
 		return calculateTerrainHeight(terrain, position.x, position.y, position.z, fast);
 	}
 
-	public static float calculateTerrainHeight(Terrain terrain, SVector3 position) throws OutOfTerrainException {
+	public static float calculateTerrainHeight(Terrain terrain, Vector3 position) throws OutOfTerrainException {
 		return calculateTerrainHeight(terrain, position.x, position.y, position.z, false);
 	}
 

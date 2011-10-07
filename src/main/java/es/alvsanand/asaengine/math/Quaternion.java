@@ -17,6 +17,7 @@ package es.alvsanand.asaengine.math;
 
 import java.io.Serializable;
 
+import android.util.FloatMath;
 import es.alvsanand.asaengine.math.util.MathUtils;
 
 public class Quaternion implements Serializable {
@@ -60,8 +61,8 @@ public class Quaternion implements Serializable {
 
 	public Quaternion set(Vector3 axis, float angle) {
 		float l_ang = (float) Math.toRadians(angle);
-		float l_sin = (float) Math.sin(l_ang / 2);
-		float l_cos = (float) Math.cos(l_ang / 2);
+		float l_sin = FloatMath.sin(l_ang / 2);
+		float l_cos = FloatMath.cos(l_ang / 2);
 		return this.set(axis.x * l_sin, axis.y * l_sin, axis.z * l_sin, l_cos).nor();
 	}
 

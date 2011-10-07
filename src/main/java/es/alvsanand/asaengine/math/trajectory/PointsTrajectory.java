@@ -1,7 +1,7 @@
 package es.alvsanand.asaengine.math.trajectory;
 
-import android.util.Log;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.Vector3Util;
 
 public class PointsTrajectory extends Trajectory {
 	protected int lastPoint;
@@ -17,7 +17,7 @@ public class PointsTrajectory extends Trajectory {
 	@Override
 	public Vector3 getActualPosition(Vector3 lastPosition) {
 		if(!running){
-			return new Vector3(lastPosition);
+			return Vector3Util.cpy(lastPosition);
 		}
 		
 		long now = System.currentTimeMillis();
@@ -44,7 +44,7 @@ public class PointsTrajectory extends Trajectory {
 			actualSpeed = this.speed + time * this.acceleration;
 			
 			if(actualSpeed<=0){
-				return new Vector3(lastPosition);
+				return Vector3Util.cpy(lastPosition);
 			}
 			
 			if(actualSpeed >= this.maxSpeed)
@@ -63,25 +63,25 @@ public class PointsTrajectory extends Trajectory {
 		float distance = totalDistance;
 
 		if (distance == 0) {
-			return new Vector3(lastPosition);
+			return Vector3Util.cpy(lastPosition);
 		}
 		
 		Vector3 actualPointVector3 = points[actualPoint];
-		Vector3 fromPointVector3 = new Vector3(lastPosition);
+		Vector3 fromPointVector3 = Vector3Util.cpy(lastPosition);
 		
-		while (fromPointVector3.dst(actualPointVector3) <= distance) {
-			distance -= fromPointVector3.dst(actualPointVector3);
+		while (Vector3Util.dst(fromPointVector3, actualPointVector3) <= distance) {
+			distance -= Vector3Util.dst(fromPointVector3, actualPointVector3);
 
 			actualPoint = (actualPoint + 1 == points.length) ? 0 : actualPoint + 1;
 
-			fromPointVector3 = new Vector3(actualPointVector3);
+			fromPointVector3 = Vector3Util.cpy(actualPointVector3);
 			actualPointVector3 = points[actualPoint];
 		}
 
-		this.direction = (new Vector3(actualPointVector3)).sub(fromPointVector3);
+		this.direction = Vector3Util.sub(Vector3Util.cpy(actualPointVector3), fromPointVector3);
 
 		if (direction.x + direction.y + direction.z == 0) {
-			return new Vector3(lastPosition);
+			return Vector3Util.cpy(lastPosition);
 		}
 
 		float t = distance / (this.direction.x + this.direction.y + this.direction.z);
@@ -91,7 +91,7 @@ public class PointsTrajectory extends Trajectory {
 
 		Vector3 actualPositionVector3;
 
-		if (a1.dst(actualPointVector3) > fromPointVector3.dst(actualPointVector3)) {
+		if (Vector3Util.dst(a1, actualPointVector3) > Vector3Util.dst(fromPointVector3, actualPointVector3)) {
 			actualPositionVector3 = a2;
 		} else {
 			actualPositionVector3 = a1;
@@ -105,24 +105,5 @@ public class PointsTrajectory extends Trajectory {
 		this.lastPoint = actualPoint;
 
 		return actualPositionVector3;
-	}
-
-	public static void main() {
-		Vector3[] points = new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 1), new Vector3(0, 1, 1), new Vector3(0, 1, 0) };
-
-		PointsTrajectory pointsTrayectory = new PointsTrajectory(0, 0.5f, 0.5f, points);
-
-		Vector3 lastPosition = new Vector3(0, 0, 0);
-
-		for(int i=0; i<10; i++) {
-			lastPosition = pointsTrayectory.getActualPosition(lastPosition);
-			Log.i("PointsTrajectory", lastPosition.toString());
-
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 }

@@ -423,7 +423,7 @@ public class Matrix4 implements Serializable {
 	public Matrix4 setToRotation (float axisX, float axisY, float axisZ, float angle) {
 		idt();
 		if (angle == 0) return this;
-		return this.set(quat.set(tmpV.set(axisX, axisY, axisZ), angle));
+		return this.set(quat.set(Vector3Util.set(tmpV, axisX, axisY, axisZ), angle));
 	}
 	
 	static final Vector3 tmpV = new Vector3();
@@ -455,10 +455,10 @@ public class Matrix4 implements Serializable {
 	static Vector3 l_vey = new Vector3();
 
 	public Matrix4 setToLookAt (Vector3 direction, Vector3 up) {
-		l_vez.set(direction).nor();
-		l_vex.set(direction).nor();
-		l_vex.crs(up).nor();
-		l_vey.set(l_vex).crs(l_vez).nor();
+		Vector3Util.nor(Vector3Util.set(l_vez, direction));
+		Vector3Util.nor(Vector3Util.set(l_vex, direction));
+		Vector3Util.nor(Vector3Util.crs(l_vex, up));
+		Vector3Util.nor(Vector3Util.crs(Vector3Util.set(l_vey, l_vex), l_vez));
 		idt();
 		val[M00] = l_vex.x;
 		val[M01] = l_vex.y;
@@ -477,9 +477,9 @@ public class Matrix4 implements Serializable {
 	static final Matrix4 tmpMat = new Matrix4();
 
 	public Matrix4 setToLookAt (Vector3 position, Vector3 target, Vector3 up) {
-		tmpVec.set(target).sub(position);
+		Vector3Util.sub(Vector3Util.set(tmpVec, target), position);
 		setToLookAt(tmpVec, up);
-		this.mul(tmpMat.setToTranslation(position.tmp().mul(-1)));
+		this.mul(tmpMat.setToTranslation(Vector3Util.mul(Vector3Util.cpy(position), -1)));
 
 		return this;
 	}
@@ -489,9 +489,9 @@ public class Matrix4 implements Serializable {
 	static Vector3 tmpUp = new Vector3();
 
 	public Matrix4 setToWorld (Vector3 position, Vector3 forward, Vector3 up) {
-		tmpForward.set(forward).nor();
-		right.set(tmpForward).crs(up).nor();
-		tmpUp.set(right).crs(tmpForward).nor();
+		Vector3Util.nor(Vector3Util.set(tmpForward, forward));
+		Vector3Util.nor(Vector3Util.crs(Vector3Util.set(right, tmpForward), up));
+		Vector3Util.nor(Vector3Util.crs(Vector3Util.set(tmpUp, right), tmpForward));
 
 		this.set(right, tmpUp, tmpForward, position);
 		return this;

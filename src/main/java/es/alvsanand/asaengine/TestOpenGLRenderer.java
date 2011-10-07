@@ -60,8 +60,8 @@ public class TestOpenGLRenderer extends OpenGLRenderer {
 //		Plane plane = new Plane(new Vector3(-50,-1f,-50), new Color(0f, 1f, 0f, 1.0f), 100, 100);
 //		object3ds.add(plane);
 //		
-		for(int i=0; i<5; i++){
-			Cube cube = new Cube(new Vector3(i*1.5f,0,0), (i%2==0)?(new Color(0f, 1f, 0f, 1.0f)):(new Color(1f, 0f, 0f, 1.0f)), new Color(1f, 1f, 1f, 1.0f), 0.5f, 0.5f, 0.5f);
+		for(int i=0; i<50; i++){
+			Cube cube = new Cube(new Vector3(i*0.1f,0,0), (i%2==0)?(new Color(0f, 1f, 0f, 1.0f)):(new Color(1f, 0f, 0f, 1.0f)), new Color(1f, 1f, 1f, 1.0f), 0.5f, 0.5f, 0.5f);
 			
 			Vector2[] points = new Vector2[] { new Vector2(10f, 10f), new Vector2(-3.5f, 10f), new Vector2(-3.5f, -3.5f), new Vector2(10f, -3.5f)};
 			

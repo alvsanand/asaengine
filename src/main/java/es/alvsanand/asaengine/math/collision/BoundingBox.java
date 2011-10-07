@@ -20,6 +20,7 @@ import java.util.List;
 
 import es.alvsanand.asaengine.math.Matrix4;
 import es.alvsanand.asaengine.math.Vector3;
+import es.alvsanand.asaengine.math.Vector3Util;
 
 public class BoundingBox implements Serializable {
 	private static final long serialVersionUID = -1286036817192127343L;
@@ -37,14 +38,14 @@ public class BoundingBox implements Serializable {
 	protected void updateCorners () {
 		if (!crn_dirty) return;
 
-		crn[0].set(min.x, min.y, min.z);
-		crn[1].set(max.x, min.y, min.z);
-		crn[2].set(max.x, max.y, min.z);
-		crn[3].set(min.x, max.y, min.z);
-		crn[4].set(min.x, min.y, max.z);
-		crn[5].set(max.x, min.y, max.z);
-		crn[6].set(max.x, max.y, max.z);
-		crn[7].set(min.x, max.y, max.z);
+		Vector3Util.set(crn[0], min.x, min.y, min.z);
+		Vector3Util.set(crn[1], max.x, min.y, min.z);
+		Vector3Util.set(crn[2], max.x, max.y, min.z);
+		Vector3Util.set(crn[3], min.x, max.y, min.z);
+		Vector3Util.set(crn[4], min.x, min.y, max.z);
+		Vector3Util.set(crn[5], max.x, min.y, max.z);
+		Vector3Util.set(crn[6], max.x, max.y, max.z);
+		Vector3Util.set(crn[7], min.x, max.y, max.z);
 		crn_dirty = false;
 	}
 
@@ -92,12 +93,12 @@ public class BoundingBox implements Serializable {
 	}
 
 	public BoundingBox set (Vector3 minimum, Vector3 maximum) {
-		min.set(minimum.x < maximum.x ? minimum.x : maximum.x, minimum.y < maximum.y ? minimum.y : maximum.y,
+		Vector3Util.set(min, minimum.x < maximum.x ? minimum.x : maximum.x, minimum.y < maximum.y ? minimum.y : maximum.y,
 			minimum.z < maximum.z ? minimum.z : maximum.z);
-		max.set(minimum.x > maximum.x ? minimum.x : maximum.x, minimum.y > maximum.y ? minimum.y : maximum.y,
+		Vector3Util.set(max, minimum.x > maximum.x ? minimum.x : maximum.x, minimum.y > maximum.y ? minimum.y : maximum.y,
 			minimum.z > maximum.z ? minimum.z : maximum.z);
-		cnt.set(min).add(max).mul(0.5f);
-		dim.set(max).sub(min);
+		Vector3Util.mul(Vector3Util.add(Vector3Util.set(cnt, min), max), 0.5f);
+		Vector3Util.sub(Vector3Util.set(dim, max), min);
 		crn_dirty = true;
 		return this;
 	}
@@ -119,23 +120,23 @@ public class BoundingBox implements Serializable {
 	}
 
 	public BoundingBox inf () {
-		min.set(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
-		max.set(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
-		cnt.set(0, 0, 0);
-		dim.set(0, 0, 0);
+		Vector3Util.set(min, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
+		Vector3Util.set(max, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+		Vector3Util.set(cnt, 0, 0, 0);
+		Vector3Util.set(dim, 0, 0, 0);
 		crn_dirty = true;
 		return this;
 	}
 
 	public BoundingBox ext (Vector3 point) {
 		crn_dirty = true;
-		return this.set(min.set(min(min.x, point.x), min(min.y, point.y), min(min.z, point.z)),
-			max.set(Math.max(max.x, point.x), Math.max(max.y, point.y), Math.max(max.z, point.z)));
+		return this.set(Vector3Util.set(min, min(min.x, point.x), min(min.y, point.y), min(min.z, point.z)),
+				Vector3Util.set(max, Math.max(max.x, point.x), Math.max(max.y, point.y), Math.max(max.z, point.z)));
 	}
 
 	public BoundingBox clr () {
 		crn_dirty = true;
-		return this.set(min.set(0, 0, 0), max.set(0, 0, 0));
+		return this.set(Vector3Util.set(min, 0, 0, 0), Vector3Util.set(max, 0, 0, 0));
 	}
 
 	public boolean isValid () {
@@ -144,17 +145,17 @@ public class BoundingBox implements Serializable {
 
 	public BoundingBox ext (BoundingBox a_bounds) {
 		crn_dirty = true;
-		return this.set(min.set(min(min.x, a_bounds.min.x), min(min.y, a_bounds.min.y), min(min.z, a_bounds.min.z)),
-			max.set(max(max.x, a_bounds.max.x), max(max.y, a_bounds.max.y), max(max.z, a_bounds.max.z)));
+		return this.set(Vector3Util.set(min, min(min.x, a_bounds.min.x), min(min.y, a_bounds.min.y), min(min.z, a_bounds.min.z)),
+				Vector3Util.set(max, max(max.x, a_bounds.max.x), max(max.y, a_bounds.max.y), max(max.z, a_bounds.max.z)));
 	}
 
 	public BoundingBox mul (Matrix4 matrix) {
 		updateCorners();
 		this.inf();
 		for (Vector3 l_pnt : crn) {
-			l_pnt.mul(matrix);
-			min.set(min(min.x, l_pnt.x), min(min.y, l_pnt.y), min(min.z, l_pnt.z));
-			max.set(max(max.x, l_pnt.x), max(max.y, l_pnt.y), max(max.z, l_pnt.z));
+			Vector3Util.mul(l_pnt, matrix);
+			Vector3Util.set(min, min(min.x, l_pnt.x), min(min.y, l_pnt.y), min(min.z, l_pnt.z));
+			Vector3Util.set(max, max(max.x, l_pnt.x), max(max.y, l_pnt.y), max(max.z, l_pnt.z));
 		}
 		crn_dirty = true;
 		return this.set(min, max);
@@ -188,7 +189,7 @@ public class BoundingBox implements Serializable {
 
 	public BoundingBox ext (float x, float y, float z) {
 		crn_dirty = true;
-		return this.set(min.set(min(min.x, x), min(min.y, y), min(min.z, z)), max.set(max(max.x, x), max(max.y, y), max(max.z, z)));
+		return this.set(Vector3Util.set(min, min(min.x, x), min(min.y, y), min(min.z, z)), Vector3Util.set(max, max(max.x, x), max(max.y, y), max(max.z, z)));
 	}
 
 	static float min (float a, float b) {

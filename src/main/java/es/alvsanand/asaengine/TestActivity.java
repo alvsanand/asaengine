@@ -58,7 +58,7 @@ public class TestActivity extends Activity{
 	private LookAtCamera camera;
 	
 	private void loadCamera() {		
-		Vector2[] points = new Vector2[] {};
+		Vector2[] points = new Vector2[]{};
 
 		XZPointsTrajectory pointsTrayectory = new XZPointsTrajectory(0.2f, 0.1f, 3f, points);
 		
